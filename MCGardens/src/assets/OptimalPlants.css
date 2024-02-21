@@ -1,0 +1,9 @@
+.view-more:hover {
+  cursor: pointer;
+  color: blue;
+}
+
+.optimal-plants-entry:hover {
+  cursor: pointer;
+  color: blue;
+}
