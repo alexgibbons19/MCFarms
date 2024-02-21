@@ -10,7 +10,7 @@ const DiscussionBoard = () => {
     useEffect(() => {
         const storedThreads = JSON.parse(localStorage.getItem("threads"));
         if (storedThreads) {
-            storedThreads(storedThreads);
+            setThreads(storedThreads);
         }
     }, []);
 
@@ -54,6 +54,7 @@ const DiscussionBoard = () => {
                             <label htmlFor='threadTitle'>Title</label>
                             <input
                                 type='text'
+                                id='threadTitle'
                                 name='threadTitle'
                                 required
                                 value={threadTitle}
@@ -63,6 +64,7 @@ const DiscussionBoard = () => {
                             <label htmlFor='threadText'>Text(optional)</label>
                             <input
                                 type='text'
+                                id='threadText'
                                 name='threadText'
                                 required
                                 value={threadText}
