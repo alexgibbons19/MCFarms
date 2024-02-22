@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid';
 import './assets/Thread.css'
 
-const Thread = () => {
+const ThreadPage = ({ updateNumReplies }) => {
   const{ id } = useParams();
   const [thread, setThread] = useState(null);
   const [replyText, setReplyText] = useState("");
@@ -11,14 +11,12 @@ const Thread = () => {
   const [replies, setReplies] = useState();
   const [showForm, setShowForm] = useState(false);
   const [numReplies, setNumReplies] = useState(0);
-  
   console.log('Id: ',id);
 
   useEffect(() => {
     const storedThreads = JSON.parse(localStorage.getItem("threads"));
     if(storedThreads){
       const foundThread = storedThreads.find(thread => thread.id === id);
-      console.log('Found thread:',foundThread);
       setThread(foundThread);
     }
     const storedReplies = JSON.parse(localStorage.getItem("replies")) || [];
@@ -26,9 +24,6 @@ const Thread = () => {
       const foundReplies = storedReplies.filter(reply => reply.threadId === id);
       console.log('Replies:',foundReplies);
       setReplies(foundReplies);
-      const numReplies = foundReplies.length;
-      console.log(numReplies);
-      setNumReplies(numReplies);
     }
   }, [id]);
 
@@ -48,12 +43,12 @@ const Thread = () => {
       created_on: creationDate.toLocaleString()
     };
     console.log({ newReply });
-    
     const updatedReplies = [...replies, newReply];
     setReplies(updatedReplies);
-    const updatedNumReplies = numReplies + 1;
-    setNumReplies(updatedNumReplies);
-    console.log({ thread });
+    if (thread) {
+      const newNumReplies = (thread.numReplies || 0) + 1;
+      updateNumReplies(thread.id, newNumReplies);
+    }
     localStorage.setItem("replies", JSON.stringify(updatedReplies));
     setReplyTitle("");
     setReplyText("");
@@ -65,23 +60,6 @@ const Thread = () => {
     setShowForm(false);
   }
 
-
-  // TESTING
-  const handleRemoveReplies = () => {
-    localStorage.removeItem('replies');
-    console.log('All Replies removed from localStorage.');
-  };
-  const handleRemoveThisReply = (replyId) => {
-    const updatedReplies = replies.filter((reply) => reply.id !== replyId);
-    setReplies(updatedReplies);
-    // Update localStorage with the updated replies
-    localStorage.setItem('replies', JSON.stringify(updatedReplies));
-    const updatedNumReplies = numReplies - 1;
-    setNumReplies(updatedNumReplies);
-  };
-
-
-
   if( !thread ) {
     return <p> There was an error loading the thread. Please try again </p>
   }
@@ -89,26 +67,12 @@ const Thread = () => {
     <>
       <main className="home">
         <Link to="/" className="back-btn">Back to the Discussion Board</Link>
-        <button className="remove-replies-btn" onClick={handleRemoveReplies}>
-                Remove All Replies from LocalStorage
-        </button>
-        <div className="thread-container">
-          <h2 className="thread-title">Title: {thread.title}</h2>
-          <div className="thread-contents">
-            <div className="thread-info">
-              <p className="thread-author">Author: ME</p>
-              <div className="thread-date-container">
-                <p className="thread-date">Date: {thread.created_on}</p>
-              </div>
-            </div>
-            <div className="thread-text">{thread.text}</div>
-          </div>
-          <div className="reply-count">
-            <p className="reply-count-text">
-                Replies: {numReplies}
-            </p>
-        </div>
-        </div>
+
+        <Thread 
+          key={thread.id}
+          thread={thread}
+          updateNumReplies={updateNumReplies}
+          />
         
         {!showForm && (
           <button className="create-reply-btn" onClick={handleCreateReplyClick}
@@ -140,9 +104,6 @@ const Thread = () => {
           ) : (
             replies.map((reply,index) => (
               <div className="reply-container" key={index}>
-                <button className="remove-reply-btn" onClick={() => handleRemoveThisReply(reply.id)}>
-            Remove Reply
-        </button>
                 <p className="reply-title">Title: {reply.title}</p>
               
                 <div className="reply-contents">

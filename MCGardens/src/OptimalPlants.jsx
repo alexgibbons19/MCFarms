@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import './assets/OptimalPlants.css'
 
 const OptimalPlants = () => {
@@ -44,6 +45,7 @@ const OptimalPlants = () => {
 
   return (
     <>
+      <Link to='/' className="discussion-bard-link">Discussion Board</Link>
       <div className='optimal-plants-container'>
         <div className="search-bar-container">
           <h2>Find Optimal Plants For your Garden</h2>
