@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid';
 import './assets/Thread.css'
+import BurgerMenu from './BurgerMenu';
 
 const Thread = () => {
   const{ id } = useParams();
@@ -88,7 +89,8 @@ const Thread = () => {
   return (
     <>
       <main className="home">
-        <Link to="/" className="back-btn">Back to the Discussion Board</Link>
+      <BurgerMenu />
+        <Link to="/discussion-board" className="back-btn">Back to the Discussion Board</Link>
         <button className="remove-replies-btn" onClick={handleRemoveReplies}>
                 Remove All Replies from LocalStorage
         </button>

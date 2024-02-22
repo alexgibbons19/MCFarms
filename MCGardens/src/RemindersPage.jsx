@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import BurgerMenu from './BurgerMenu.jsx';
-import '../assets/RemindersStyle.css'
+import './assets/RemindersStyle.css'
 
 const Reminders = () => {
 

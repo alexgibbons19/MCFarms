@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import BurgerMenu from './BurgerMenu.jsx';
-import '../assets/Calendar.css';
+import './assets/Calendar.css';
 
 const Calendar = () => {
 

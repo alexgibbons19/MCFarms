@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import './assets/DiscussionBoard.css';
 import { v4 as uuidv4 } from 'uuid';
+import BurgerMenu from './BurgerMenu';
 
 const DiscussionBoard = () => {
     const [threadTitle, setThreadTitle] = useState("");
@@ -83,6 +84,7 @@ const DiscussionBoard = () => {
 
     return (
         <>
+            <BurgerMenu />
             <Link to='/optimal-plants' className="optimal-plants-link">
                 Go to Optimal Plants
             </Link>

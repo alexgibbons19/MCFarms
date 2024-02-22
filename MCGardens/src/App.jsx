@@ -4,6 +4,9 @@ import OptimalPlants from './OptimalPlants'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Thread from './Thread';
 import HomePage from './HomePage';
+import CalendarPage from './CalendarPage';
+import Reminders from './RemindersPage';
+
 
 function App() {
   return (
@@ -13,6 +16,10 @@ function App() {
         <Route exact path="/discussion-board" element={<DiscussionBoard />} />
         <Route path="/thread/:id" element={<Thread/>} />
         <Route path="/optimal-plants" element={<OptimalPlants />} />
+        <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/reminders" element={<Reminders />} />
+{/*         <Route path="/weather" element={<Weather />} />
+        <Route path="/inventory" element={<InventoryPage />} /> */}
       </Routes>
     </Router>      
   )
