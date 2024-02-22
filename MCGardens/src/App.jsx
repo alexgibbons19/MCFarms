@@ -10,9 +10,9 @@ function App() {
     <Router>
       <Routes>
         <Route exact path="/" element={<HomePage />}/>
-        {/* <Route exact path="/" element={<DiscussionBoard />} />
+        <Route exact path="/discussion-board" element={<DiscussionBoard />} />
         <Route path="/thread/:id" element={<Thread/>} />
-        <Route path="/optimal-plants" element={<OptimalPlants />} /> */}
+        <Route path="/optimal-plants" element={<OptimalPlants />} />
       </Routes>
     </Router>      
   )
