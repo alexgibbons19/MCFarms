@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import './Weather.css';
-import logo from './logo.png'
-import burger from './burger.png'
-import bell from './bell.png'
+import './assets/Weather.css';
+
+import BurgerMenu from './BurgerMenu';
 
 // Dummy weather data
 const weatherData = [
@@ -17,27 +16,12 @@ const weatherData = [
 
 const Weather = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    
 
     return (
         <div>
-            <nav className='navBar'>
-                <div className='menuLogoContainer'>
-                    <img
-                    src={burger}
-                    alt="Menu"
-                    className='menuIcon'
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    />
-
-                    <img src={logo} alt="Company Logo" className='companyLogo' />
-                    <h2 style={{marginLeft: 1 + 'em'}}>MCGardens</h2>
-                </div>
-
-                <button className='notificationButton'>
-                    <img src={bell} alt="Notifications" className='icon' />
-                </button>
-            </nav>
-
+            
+            <BurgerMenu />
             <div className='weatherContainer'>
                 <h1 className='header'>Weekly Weather Forecast</h1>
 

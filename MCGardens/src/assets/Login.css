@@ -1,4 +1,4 @@
-body{
+.login-page-container{
   background-image: url('https://images.unsplash.com/photo-1444858291040-58f756a3bdd6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmFybnxlbnwwfHwwfHx8MA%3D%3D');
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -9,7 +9,7 @@ body{
 }
 
 .backbox{
-  background-color: azure; 
+   
   width: 115%;
   border-radius: 25px;
 }

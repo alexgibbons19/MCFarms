@@ -1,8 +1,9 @@
 import { useState } from "react";
-import './App.css';
+import './assets/Login.css';
+import { Link } from "react-router-dom";
 
 
-function App() 
+function Login() 
 {
   const [formValues, setFormValues] = useState({});
 
@@ -13,10 +14,11 @@ function App()
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formValues);
+
   };
 
   return (
-    <div className="body">
+    <div className="login-page-container">
       <div className="center">
         <div className="backbox">
           <div>
@@ -58,7 +60,8 @@ function App()
             </div>
             
             <div>
-              <input type="submit" value="Sign In"  className="button"></input>
+              <Link to="/home-page" onClick={handleSubmit}><button className="sign-in-button">Sign In</button></Link>
+              
             </div>
           </form>
 
@@ -73,4 +76,4 @@ function App()
   );
 }
 
-export default App;
+export default Login;
