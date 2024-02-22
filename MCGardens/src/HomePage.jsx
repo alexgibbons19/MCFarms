@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import './assets/HomePage.css';
 import DropdownMenu from './DropdownMenu';
+import BurgerMenu from './BurgerMenu';
 const HomePage = () => {
   const toggleMenu = () => {
     const dropdownMenu = document.getElementById("dropdownMenu");
@@ -37,17 +38,18 @@ const HomePage = () => {
   return (
     <div className="container">
       <h1>Home Page</h1>
+      <BurgerMenu />
       <div className="giant-box">
         <button className="menu-button" onClick={toggleMenu}>
           &#9776;
         </button>
         <div id="dropdownMenu" className="dropdown-content">
           <Link to="/" onClick={closeDropdowns}>Home</Link>
-          <Link to="/weather" onClick={closeDropdowns}>Weather</Link>
-          <Link to="/inventory" onClick={closeDropdowns}>Inventory</Link>
-          <Link to="/calendar" onClick={closeDropdowns}>Calendar</Link>
+          <Link to="/" onClick={closeDropdowns}>Weather</Link>
+          <Link to="/" onClick={closeDropdowns}>Inventory</Link>
+          <Link to="/" onClick={closeDropdowns}>Calendar</Link>
           <Link to="/discussion-board" onClick={closeDropdowns}>Discussion Board</Link>
-          <Link to="/reminders" onClick={closeDropdowns}>Reminders</Link>
+          <Link to="/" onClick={closeDropdowns}>Reminders</Link>
           <Link to="/optimal-crops" onClick={closeDropdowns}>Optimal Crops</Link>
         </div>
         <div className="notification-box">

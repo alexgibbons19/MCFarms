@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import {Link} from 'react-router-dom';
-import '../assets/BurgerMenu.css';
+import './assets/BurgerMenu.css';
 import CalendarPage from "./CalendarPage.jsx";
 import RemindersPage from "./RemindersPage.jsx";
 
@@ -28,12 +28,14 @@ return (
       {/* Menu items - link to actual pages here but deafault is close */}
       
       <div className={`menu ${isOpen ? 'open' : ''}`}>
-        <ul>
-        <li onClick={closeMenu}>Home</li>
-        <li onClick={closeMenu}>Reminders</li>
-        <li onClick={closeMenu}>Calendar</li>
-        <li onClick={closeMenu}>Crop Search</li>
-        <li onClick={closeMenu}>Close</li>
+        <ul className="burger-menu-options">
+          <li><Link to="/" onClick={closeMenu}>Home</Link></li>
+          <li><Link to="/weather" onClick={closeMenu}>Weather</Link></li>
+          <li><Link to="/inventory" onClick={closeMenu}>Inventory</Link></li>
+          <li><Link to="/calendar" onClick={closeMenu}>Calendar</Link></li>
+          <li><Link to="/discussion-board" onClick={closeMenu}>Discussion Board</Link></li>
+          <li><Link to="/reminders" onClick={closeMenu}>Reminders</Link></li>
+          <li><Link to="/optimal-plants" onClick={closeMenu}>Optimal Plants</Link></li>
         </ul>
       </div>
     </div>

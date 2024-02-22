@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import './assets/OptimalPlants.css'
+import BurgerMenu from './BurgerMenu';
 
 const OptimalPlants = () => {
   const [location, setLocation] = useState('');
@@ -45,7 +46,10 @@ const OptimalPlants = () => {
 
   return (
     <>
-      <Link to='/' className="discussion-bard-link">Discussion Board</Link>
+      <BurgerMenu />
+      <Link to='/' className="home-page-link">Home</Link>
+      <p></p>
+      <Link to='/discussion-board' className="discussion-bard-link">Discussion Board</Link>
       <div className='optimal-plants-container'>
         <div className="search-bar-container">
           <h2>Find Optimal Plants For your Garden</h2>
