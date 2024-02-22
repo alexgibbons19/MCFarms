@@ -1,0 +1,81 @@
+/* Weather.module.css */
+
+.weatherContainer {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    max-width: 1000px; /* Corrected property */
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .header {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .forecast {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .dayForecast {
+    background: #f9f9f9;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .condition {
+    font-size: 1rem;
+    margin: 0.25rem 0;
+  }
+  
+  .icon {
+    font-size: 1.5rem;
+  }
+  
+  /* NavBar.css */
+
+.navBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+  }
+  
+  .menuLogoContainer {
+    display: flex;
+    align-items: center;
+  }
+  
+  .menuIcon {
+    margin-right: 20px;
+    cursor: pointer;
+    height: 30px; /* Adjust size as needed */
+  }
+  
+  .companyLogo {
+    height: 50px; /* Adjust size as needed */
+  }
+  
+  .notificationButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  .notificationButton img {
+    height: 30px; /* Adjust size as needed */
+  }
+  

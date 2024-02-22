@@ -1,0 +1,50 @@
+body{
+  background-image: url('https://images.unsplash.com/photo-1444858291040-58f756a3bdd6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmFybnxlbnwwfHwwfHx8MA%3D%3D');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: rgb(32, 7, 63);
+  font-size: 3vw;
+}
+
+.backbox{
+  background-color: azure; 
+  width: 115%;
+  border-radius: 25px;
+}
+
+.button{
+  cursor: pointer;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-57%, -55%);
+}
+
+.textbox{
+  width: 40vw;
+  height: 3vw;
+}
+
+label{
+  font-size: 2vw;
+}
+
+h2{
+  text-align: center;
+  top: 50%;
+}
+
+form{
+  text-align: center;
+}
+
+a{
+  font-size: 1vw;
+  padding: 3vw 2vw;
+  text-align: left;
+}
