@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import './assets/HomePage.css';
-
+import DropdownMenu from './DropdownMenu';
 const HomePage = () => {
   const toggleMenu = () => {
     const dropdownMenu = document.getElementById("dropdownMenu");
@@ -9,10 +10,18 @@ const HomePage = () => {
 
   const goToPage = (page) => {
     alert("Navigating to " + page);
-    // Implement your navigation logic here
+    
   };
 
-  // Close the dropdown if the user clicks outside of it
+  const closeDropdowns = () => {
+    const dropdowns = document.getElementsByClassName("dropdown-content");
+    for (let i = 0; i < dropdowns.length; i++) {
+      const openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  };
   window.onclick = (event) => {
     if (!event.target.matches('.menu-button')) {
       const dropdowns = document.getElementsByClassName("dropdown-content");
@@ -33,12 +42,13 @@ const HomePage = () => {
           &#9776;
         </button>
         <div id="dropdownMenu" className="dropdown-content">
-          <a href="#" onClick={() => goToPage('home')}>Home</a>
-          <a href="#" onClick={() => goToPage('weather')}>Weather</a>
-          <a href="#" onClick={() => goToPage('inventory')}>Inventory</a>
-          <a href="#" onClick={() => goToPage('calendar')}>Calendar</a>
-          <a href="#" onClick={() => goToPage('reminders')}>Reminders</a>
-          <a href="#" onClick={() => goToPage('optimalCrops')}>Optimal Crops</a>
+          <Link to="/" onClick={closeDropdowns}>Home</Link>
+          <Link to="/weather" onClick={closeDropdowns}>Weather</Link>
+          <Link to="/inventory" onClick={closeDropdowns}>Inventory</Link>
+          <Link to="/calendar" onClick={closeDropdowns}>Calendar</Link>
+          <Link to="/discussion-board" onClick={closeDropdowns}>Discussion Board</Link>
+          <Link to="/reminders" onClick={closeDropdowns}>Reminders</Link>
+          <Link to="/optimal-crops" onClick={closeDropdowns}>Optimal Crops</Link>
         </div>
         <div className="notification-box">
           <img src="https://cdn3.vectorstock.com/i/1000x1000/79/72/notification-bell-icon-vector-34877972.jpg" alt="Bell Icon" width="30" />
