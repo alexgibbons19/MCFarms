@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import './assets/DiscussionBoard.css'
+import { Link } from 'react-router-dom';
+import './assets/DiscussionBoard.css';
+import { v4 as uuidv4 } from 'uuid';
 
 const DiscussionBoard = () => {
     const [threadTitle, setThreadTitle] = useState("");
@@ -22,8 +24,10 @@ const DiscussionBoard = () => {
         e.preventDefault();
         const creationDate = new Date();
         const newThread = { 
+            id: uuidv4(),
             title: threadTitle, 
             text: threadText ,
+            author: 'Anonymous',
             created_on: creationDate.toLocaleString()
         };
         console.log({ newThread });
@@ -40,6 +44,11 @@ const DiscussionBoard = () => {
         setThreadText("");
         setShowForm(false);
     }
+
+    const handleLinkClick = (id) => {
+        console.log("Clicked thread ID: ", id);
+    };
+
     return (
         <>
             <main className='home'>
@@ -82,9 +91,12 @@ const DiscussionBoard = () => {
                 ) : (
                     threads.map((thread,index) => (
                         <div className='thread-container' key={index}>
-                            <div className="thread-title">
+                            <Link 
+                                to={`/thread/${thread.id}`} 
+                                className="thread-title"
+                                onClick={() => handleLinkClick(thread.id)}>
                                 <p>Title: {thread.title}</p>
-                            </div>
+                            </Link>
                             <div className="thread-contents">
                                 <div className="thread-info">
                                     <p className="thread-author">JOHN DOE</p>
