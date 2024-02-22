@@ -38,20 +38,9 @@ const HomePage = () => {
   return (
     <div className="container">
       <h1>Home Page</h1>
-      <BurgerMenu />
+      
       <div className="giant-box">
-        <button className="menu-button" onClick={toggleMenu}>
-          &#9776;
-        </button>
-        <div id="dropdownMenu" className="dropdown-content">
-          <Link to="/" onClick={closeDropdowns}>Home</Link>
-          <Link to="/" onClick={closeDropdowns}>Weather</Link>
-          <Link to="/" onClick={closeDropdowns}>Inventory</Link>
-          <Link to="/" onClick={closeDropdowns}>Calendar</Link>
-          <Link to="/discussion-board" onClick={closeDropdowns}>Discussion Board</Link>
-          <Link to="/" onClick={closeDropdowns}>Reminders</Link>
-          <Link to="/optimal-crops" onClick={closeDropdowns}>Optimal Crops</Link>
-        </div>
+      <BurgerMenu />
         <div className="notification-box">
           <img src="https://cdn3.vectorstock.com/i/1000x1000/79/72/notification-bell-icon-vector-34877972.jpg" alt="Bell Icon" width="30" />
         </div>

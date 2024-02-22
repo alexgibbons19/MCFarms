@@ -15,6 +15,7 @@ const BurgerMenu = () => {
     const closeMenu = () => {
         setIsOpen(false);
     };
+    
 
 return (
     <div className="burger-menu">
