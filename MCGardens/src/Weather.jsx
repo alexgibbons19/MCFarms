@@ -17,6 +17,11 @@ const weatherData = [
 const Weather = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     
+    // Retrieve credentials from local storage
+    let credentials = JSON.parse(localStorage.getItem('credentials'));
+    console.log("From Weather");
+    console.log(credentials['email']);
+    console.log(credentials['password']);
 
     return (
         <div>
