@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Set your OpenAI API key here
 openai.api_key = os.getenv('GPT_TOKEN')
 
 def chat_with_gpt(prompt):
