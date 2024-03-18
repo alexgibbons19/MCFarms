@@ -8,7 +8,7 @@ openai.api_key = os.getenv('GPT_TOKEN')
 
 def chat_with_gpt(prompt):
     prompt = prompt.lower()
-    filename = f"./backend/database/{prompt}.txt"  # File name based on user input
+    filename = f"./backend/database/locations/{prompt}.txt"  # File name based on user input
     if os.path.exists(filename):
         # If the file exists, read and print its content instead of making a new request
         with open(filename, 'r') as file:
