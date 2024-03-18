@@ -1,5 +1,4 @@
 
-
 .calendar-container {
   display: flex;
   flex-direction:column;
@@ -36,9 +35,9 @@
   justify-content: space-around;
   align-items: center;
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 columns */
-  grid-template-rows: repeat(4, 1fr); /* 4 rows */
-  gap: 10px; /* gap between grid items */
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 10px;
 }
 
 .day {
