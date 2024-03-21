@@ -31,7 +31,7 @@
     width: 100px;
     transform: translate(-50%, -50%);
     background-color: #60ff90;
-    padding-top: 250px;
+    margin-top: 250px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     display: none;

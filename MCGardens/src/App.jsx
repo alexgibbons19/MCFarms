@@ -8,6 +8,8 @@ import CalendarPage from './CalendarPage';
 import Reminders from './RemindersPage';
 import Login from './Login.jsx';
 import Weather from './Weather.jsx';
+import PlantDetails from './PlantDetails.jsx';
+import SearchPage from './SearchPage.jsx';
 
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/reminders" element={<Reminders />} />
         <Route path="/weather" element={<Weather />} />
+        <Route path="/plant-details" element={<PlantDetails />} />
+        <Route path="/search-page" element={<SearchPage />} />
         {/* <Route path="/inventory" element={<InventoryPage />} />  */}
       </Routes>
     </Router>      

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {useParams} from 'react-router-dom'
 import BurgerMenu from './BurgerMenu';
-import '../assets/PlantDetails.css';
-import defaultImage from '../assets/tomato.png';
+import './assets/PlantDetails.css';
+import defaultImage from './assets/tomato.png';
 
 //depending on header, we will know what data to pull where
 //i think ideally the search page submission will trigger an api call and the ID will be sent to PlantDetails
