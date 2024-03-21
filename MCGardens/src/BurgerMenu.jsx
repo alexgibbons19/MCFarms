@@ -31,6 +31,7 @@ return (
       <div className={`menu ${isOpen ? 'open' : ''}`}>
         <ul className="burger-menu-options">
           <li><Link to="/home-page" onClick={closeMenu}>Home</Link></li>
+          <li><Link to="/search-page" onClick={closeMenu}>Search</Link></li>
           <li><Link to="/weather" onClick={closeMenu}>Weather</Link></li>
           <li><Link to="/inventory" onClick={closeMenu}>Inventory</Link></li>
           <li><Link to="/calendar" onClick={closeMenu}>Calendar</Link></li>
