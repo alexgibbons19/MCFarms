@@ -6,13 +6,13 @@ load_dotenv()
 
 openai.api_key = os.getenv('GPT_TOKEN')
 
-def chat_with_gpt(prompt):
-    prompt = prompt.lower()
-    filename = f"./backend/database/crops/{prompt}.txt"  # File name based on user input
+def ask_gpt(plantInput):
+    plantInput = plantInput.lower()
+    filename = f"./backend/database/crops/{plantInput}.txt"  # File name based on user input
     if os.path.exists(filename):
-        # If the file exists, read and print its content instead of making a new request
         with open(filename, 'r') as file:
-            print(file.read())
+            content = file.read()
+        return filename, content  # Ensure to return both values
     else:
         try:
             # Initialize the chat session
@@ -27,20 +27,18 @@ def chat_with_gpt(prompt):
                             'In the directions to take care of the crop, you will give precise details. '
                             'For example, you will give the exact amount someone will have to '
                             'water the plant for it to have the best life.'},
-                    {"role": "user", "content": prompt}
+                    {"role": "user", "content": plantInput}
                 ]
             )
-            # Extract the response
             reply = chat_session.choices[0].message["content"]
-            
-            # Save the response to a file
             with open(filename, 'w') as file:
                 file.write(reply)
-            
-            print(reply)
+            return filename, reply  # Return both filename and content
         except Exception as e:
             print(f"An error occurred: {e}")
+            return None, f"An error occurred: {e}"  # Handle errors gracefully
 
 # Example usage
-user_input = input("User: ")
-chat_with_gpt(prompt=user_input)
+user_input = "tomato"
+fileName, reply = ask_gpt(plantInput=user_input)
+print(fileName, reply)
