@@ -12,7 +12,7 @@ def ask_gpt(prompt):
     if os.path.exists(filename):
         with open(filename, 'r') as file:
             content = file.read()
-        return filename, content  # Ensure to return both values
+        return content
     else:
         try:
             # Initialize the chat session
@@ -32,11 +32,11 @@ def ask_gpt(prompt):
             
             with open(filename, 'w') as file:
                 file.write(reply)
-            return filename, reply  # Return both filename and content
+            return reply
         except Exception as e:
             print(f"An error occurred: {e}")
 
 # Example usage
 user_input = "carmel ny"
-fileName, reply = ask_gpt(prompt=user_input)
-print(fileName, reply)
+reply = ask_gpt(prompt=user_input)
+print(reply)

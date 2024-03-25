@@ -12,7 +12,7 @@ def ask_gpt(plantInput):
     if os.path.exists(filename):
         with open(filename, 'r') as file:
             content = file.read()
-        return filename, content  # Ensure to return both values
+        return content  # Ensure to return both values
     else:
         try:
             # Initialize the chat session
@@ -41,5 +41,5 @@ def ask_gpt(plantInput):
 
 # Example usage
 user_input = "tomato"
-fileName, reply = ask_gpt(plantInput=user_input)
-print(fileName, reply)
+reply = ask_gpt(plantInput=user_input)
+print(reply)
