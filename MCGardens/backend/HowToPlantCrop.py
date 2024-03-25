@@ -23,10 +23,11 @@ def ask_gpt(plantInput):
                             'tell the users how to plant the crop the most optimal way and '
                             'take care of it for the future. The user will ' 
                             'input a crop and you will respond strictly only with the steps to '
-                            'plant the crop. Then after that you will respond with how to take care of it. '
+                            'plant the crop and a short biography of the crop. Then after that you will respond with how to take care of it. '
                             'In the directions to take care of the crop, you will give precise details. '
                             'For example, you will give the exact amount someone will have to '
-                            'water the plant for it to have the best life.'},
+                            'water the plant for it to have the best life. '
+                            'The output will be sorted by biography, how to plant, then how to take care of the crop.'},
                     {"role": "user", "content": plantInput}
                 ]
             )
