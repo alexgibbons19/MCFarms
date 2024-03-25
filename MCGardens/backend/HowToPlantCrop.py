@@ -34,10 +34,10 @@ def ask_gpt(plantInput):
             reply = chat_session.choices[0].message["content"]
             with open(filename, 'w') as file:
                 file.write(reply)
-            return filename, reply  # Return both filename and content
+            return reply  # Return both filename and content
         except Exception as e:
             print(f"An error occurred: {e}")
-            return None, f"An error occurred: {e}"  # Handle errors gracefully
+            return f"An error occurred: {e}"  # Handle errors gracefully
 
 # Example usage
 user_input = "tomato"

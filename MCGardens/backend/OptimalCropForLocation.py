@@ -35,6 +35,7 @@ def ask_gpt(prompt):
             return reply
         except Exception as e:
             print(f"An error occurred: {e}")
+            return f"An error occurred: {e}"  # Handle errors gracefully
 
 # Example usage
 user_input = "carmel ny"
