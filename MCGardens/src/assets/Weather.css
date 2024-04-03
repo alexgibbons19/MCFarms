@@ -3,7 +3,7 @@
 .weatherContainer {
   font-family: Arial, sans-serif;
   text-align: center;
-  max-width: 1000px; /* Corrected property */
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -61,11 +61,11 @@
 .menuIcon {
   margin-right: 20px;
   cursor: pointer;
-  height: 30px; /* Adjust size as needed */
+  height: 30px;
 }
 
 .companyLogo {
-  height: 50px; /* Adjust size as needed */
+  height: 50px;
 }
 
 .notificationButton {
@@ -76,5 +76,5 @@
 }
 
 .notificationButton img {
-  height: 30px; /* Adjust size as needed */
+  height: 30px;
 }

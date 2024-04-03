@@ -1,0 +1,60 @@
+.plant-details{
+    display:flex;
+    flex-direction: row;
+    width: 90vw; /* Set the width to 100% of the viewport's width */
+    height: 90vh; 
+}
+
+.left-container{
+    flex-grow: 1;
+    align-items: center;
+    width:25%;
+    background-color:rgb(145, 244, 123);
+    border:1px solid black;
+    margin: 0 auto;
+    padding-left:10px;
+}
+
+.pic{
+    width:100%; 
+    height:auto;
+    margin: 10px auto;
+    background-size:cover;
+    background-position:center;
+}
+
+.right-container{
+    flex-grow: 1;
+    justify-content: center;
+    width:75%;
+    background-color:green;
+}
+
+.bio-container,.care-info-container{
+    text-align: left;
+    background-color:aliceblue;
+    color:black;
+    margin: 10px auto;
+    width: 80%;
+    border:1px solid black;
+    border-color:black;
+
+}
+
+
+.title-banner{
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size:50px;
+    color:azure;
+}
+
+.smaller-title{
+    text-align: left;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size:30px;
+    padding-left: 10px;
+    color:azure;
+}
