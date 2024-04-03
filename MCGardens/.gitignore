@@ -8,7 +8,6 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
 dist-ssr
 *.local
 
@@ -23,6 +22,11 @@ dist-ssr
 *.sln
 *.sw?
 
+<<<<<<< HEAD
+credentials.json
+/backend/.env
+=======
 backend/.env
 credentials.json
 firebase.json
+>>>>>>> b8935b96dea4cff744bafb213cc6ebac7c057fd7
