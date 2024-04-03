@@ -12,7 +12,7 @@ def ask_gpt(plantInput):
     if os.path.exists(filename):
         with open(filename, 'r') as file:
             content = file.read()
-        return filename, content  # Ensure to return both values
+        return content  # Ensure to return both values
     else:
         try:
             # Initialize the chat session
@@ -23,22 +23,23 @@ def ask_gpt(plantInput):
                             'tell the users how to plant the crop the most optimal way and '
                             'take care of it for the future. The user will ' 
                             'input a crop and you will respond strictly only with the steps to '
-                            'plant the crop. Then after that you will respond with how to take care of it. '
+                            'plant the crop and a short biography of the crop. Then after that you will respond with how to take care of it. '
                             'In the directions to take care of the crop, you will give precise details. '
                             'For example, you will give the exact amount someone will have to '
-                            'water the plant for it to have the best life.'},
+                            'water the plant for it to have the best life. '
+                            'The output will be sorted by biography, how to plant, then how to take care of the crop.'},
                     {"role": "user", "content": plantInput}
                 ]
             )
             reply = chat_session.choices[0].message["content"]
             with open(filename, 'w') as file:
                 file.write(reply)
-            return filename, reply  # Return both filename and content
+            return reply  # Return both filename and content
         except Exception as e:
             print(f"An error occurred: {e}")
-            return None, f"An error occurred: {e}"  # Handle errors gracefully
+            return f"An error occurred: {e}"  # Handle errors gracefully
 
 # Example usage
 user_input = "tomato"
-fileName, reply = ask_gpt(plantInput=user_input)
-print(fileName, reply)
+reply = ask_gpt(plantInput=user_input)
+print(reply)
