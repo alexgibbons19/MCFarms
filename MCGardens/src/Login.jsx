@@ -5,11 +5,6 @@ import { Link, redirect, useNavigate } from "react-router-dom";
 
 function Login() 
 {
-  useEffect(() => {
-    // This code runs after the component is rendered
-    document.title = "My New Page Title";
-  }, []); // The empty array means this effect runs once on mount
-
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({});
 
