@@ -1,0 +1,13 @@
+{
+  "name": "backend",
+  "main": "checkForPlant.js",
+  "project_id": "mcgardens-bd0b1",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions"
+  }
+}
