@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import nodemailer from "nodemailer";
 import cron from "node-cron";
 
@@ -8,8 +9,8 @@ const sendEmail = async (email, tasks, test = false) => {
     port: 465,
     secure: true,
     auth: {
-      user: "mcgardens.reminders@gmail.com", // Your SMTP user
-      pass: "jayo oskh bgyg hqmp", // Your SMTP password
+      user: process.env.EMAIL_USER, // Your SMTP user
+      pass: process.env.EMAIL_PASS, // Your SMTP password
     },
   });
 
@@ -69,7 +70,7 @@ const sendTestEmail = (email, tasks) => {
 
 // Example usage:
 // For sending a test email with tasks:
-sendTestEmail("dottycr02@gmail.com", ["Test task 1", "Test task 2"]);
+sendTestEmail("example@gmail.com", ["Test task 1", "Test task 2"]);
 
 // For sending personalized daily tasks (could be triggered by specific events in your application):
-sendPersonalizedTasksEmail("dottycr02@gmail.com", ["Complete project report", "Call back the clients", "Review meeting notes"]);
+// sendPersonalizedTasksEmail("example@gmail.com", ["Complete project report", "Call back the clients", "Review meeting notes"]);
