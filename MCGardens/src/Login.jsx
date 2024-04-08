@@ -1,6 +1,6 @@
 import { useState } from "react";
 import './assets/Login.css';
-import { signIn } from '../backend/Firebase'; // Ensure this path is correct
+import { signIn, createUser } from '../backend/Firebase'; // Ensure this path is correct
 import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
@@ -26,6 +26,24 @@ function Login() {
     } catch (error) {
         console.error("Login error:", error); // For debugging purposes
         setError("Incorrect username or password."); // Display Firebase error message to the user
+    }
+  }
+
+  const handleRegistration = async (e) => {
+    e.preventDefault();
+
+    if (!formValues.email || !formValues.password) {
+      setError("Email and password are required for registration.");
+      return;
+    }
+
+    try {
+      await createUser(formValues.email, formValues.password);
+      console.log("User created successfully");
+      navigate('/home-page'); // Navigate or show a success message
+    } catch (error) {
+      console.error("Registration error:", error);
+      setError("Failed to create an account. " + error.message); // Display error message
     }
   };
 
@@ -78,7 +96,7 @@ function Login() {
           <div className="errorMessage">{error && <p className="error-message">{error}</p>}</div>
 
           <div className="additionalOptions">
-            <a href="signup.html">Sign Up</a>
+            <a onClick={handleRegistration} href="signup.html">Sign Up</a>
             <a href="forgotpassword.html">Forgot Password</a>
           </div>
         </div>

@@ -5,7 +5,10 @@ import {
     collection,
     getFirestore
 } from "firebase/firestore";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { 
+    getAuth, 
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBdBh6oBgnUZJ6dROPNOp5Wwxyvrr8epLQ",
@@ -37,3 +40,8 @@ const auth = getAuth();
 export const signIn = async (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
 };
+
+export const createUser = async (email, password) => {
+    const auth = getAuth();
+    return createUserWithEmailAndPassword(auth, email, password);
+  };
