@@ -27,7 +27,9 @@ def ask_gpt(plantInput):
                             'In the directions to take care of the crop, you will give precise details. '
                             'For example, you will give the exact amount someone will have to '
                             'water the plant for it to have the best life. '
-                            'The output will be sorted by biography, how to plant, then how to take care of the crop.'},
+                            'The output will be sorted by biography, how to plant, then how to take care of the crop.'
+                            'The header of all the outputs will start with -- then the name of the output. '
+                            'An example header is: --bio'},
                     {"role": "user", "content": plantInput}
                 ]
             )

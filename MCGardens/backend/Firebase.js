@@ -7,7 +7,8 @@ import {
 import { 
     getAuth, 
     signInWithEmailAndPassword, 
-    createUserWithEmailAndPassword } from "firebase/auth";
+    createUserWithEmailAndPassword,
+    sendPasswordResetEmail } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBdBh6oBgnUZJ6dROPNOp5Wwxyvrr8epLQ",
@@ -44,3 +45,14 @@ export const createUser = async (email, password) => {
     const auth = getAuth();
     return createUserWithEmailAndPassword(auth, email, password);
   };
+
+export const resetPassword = async (email) => {
+    try {
+        await sendPasswordResetEmail(auth, email);
+        console.log("Password reset email sent successfully.");
+        return { success: true, message: "Password reset email sent successfully." };
+    } catch (error) {
+        console.error("Error sending password reset email:", error);
+        return { success: false, message: error.message };
+    }
+};

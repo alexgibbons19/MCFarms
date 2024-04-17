@@ -1,6 +1,6 @@
 import { useState } from "react";
 import './assets/Login.css';
-import { signIn, createUser } from '../backend/Firebase'; // Ensure this path is correct
+import { signIn, createUser, resetPassword } from '../backend/Firebase';
 import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
@@ -44,6 +44,19 @@ function Login() {
     } catch (error) {
       console.error("Registration error:", error);
       setError("Failed to create an account. " + error.message); // Display error message
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!formValues.email) {
+        setError("Please enter your email to reset your password.");
+        return;
+    }
+    const { success, message } = await resetPassword(formValues.email);
+    if (success) {
+        setError("Please check your email to reset your password.");
+    } else {
+        setError("Failed to reset password: " + message);
     }
   };
 
@@ -97,7 +110,7 @@ function Login() {
 
           <div className="additionalOptions">
             <a onClick={handleRegistration} href="signup.html">Sign Up</a>
-            <a href="forgotpassword.html">Forgot Password</a>
+            <a onClick={handleForgotPassword} href="#" style={{ cursor: 'pointer' }}>Forgot Password</a>
           </div>
         </div>
       </div>

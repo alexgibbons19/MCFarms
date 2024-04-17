@@ -1,15 +1,16 @@
-Biography: Apple trees are deciduous trees producing delicious fruits, known as apples. They are grown in temperate climates and require a period of cold to set fruit. Apples are a rich source of vitamins, antioxidants, and fiber.
+--bio
+Apple trees (Malus domestica) are deciduous trees that are cultivated worldwide for their delicious fruit. They are native to Central Asia and are grown in temperate climates. Apple trees can live for many years and produce fruit seasonally.
 
-How to Plant:
-1. Choose a sunny location with well-draining soil for your apple tree.
-2. Dig a hole twice as wide and just as deep as the tree's root ball.
-3. Place the tree in the hole, making sure the graft union is above the soil level.
-4. Backfill the hole with soil and tamp it down gently to remove air pockets.
-5. Water the tree thoroughly after planting to settle the soil.
+--how to plant
+1. Choose a suitable location with full sun exposure and well-draining soil.
+2. Dig a hole twice as wide as the root ball and plant the tree at the same depth it was in the nursery pot.
+3. Water the tree thoroughly after planting and add a layer of mulch around the base to retain moisture.
+4. Stake the tree if needed and loosely tie it to the stake for support.
+5. Prune any damaged or crossing branches to promote healthy growth.
 
-How to Take Care of Apple Trees:
-1. Watering: Water newly planted apple trees deeply once or twice a week, especially during hot weather. Mature trees need about 1-2 inches of water per week.
-2. Fertilizing: Fertilize young apple trees in the spring with a balanced fertilizer. Mature trees can be fertilized in the early spring before new growth starts.
-3. Pruning: Prune apple trees during the dormant season to shape the tree, promote airflow, and remove dead or diseased branches.
-4. Pest and Disease Control: Monitor for pests like apple maggots and diseases like apple scab. Use appropriate insecticides and fungicides as needed.
-5. Harvesting: Harvest apples when they are ripe by twisting and pulling the fruit from the tree. Store apples in a cool, dark place to extend their shelf life.
+--how to take care of the crop
+1. Water regularly, especially during dry periods, aiming for about 1-2 inches of water per week.
+2. Fertilize the tree in early spring with a balanced fertilizer to support growth and fruit production.
+3. Prune the tree annually during the dormant season to maintain its shape and encourage fruiting.
+4. Protect the tree from common pests and diseases by monitoring regularly and taking appropriate action.
+5. Harvest the apples when they are mature and store them in a cool, dark place to prolong their shelf life.
