@@ -1,0 +1,13 @@
+.rbc-header{
+  background-color: green;
+  color:white;
+  padding:5px;
+  font:bold;
+}
+
+.rbc-event{
+  padding:0 !important;
+  font:600;
+  font-size:12px;
+  background-color: green !important;
+}

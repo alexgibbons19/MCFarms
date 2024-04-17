@@ -1,5 +1,6 @@
 .burger-menu {
     position: relative;
+    z-index:1000;
     width: 100px;
     cursor: pointer;
     padding-top: 100px;
