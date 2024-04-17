@@ -1,5 +1,3 @@
-/* Weather.module.css */
-
 .weatherContainer {
   font-family: Arial, sans-serif;
   text-align: center;
@@ -40,41 +38,4 @@
 
 .icon {
   font-size: 1.5rem;
-}
-
-/* NavBar.css */
-
-.navBar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #333;
-  color: white;
-  padding: 10px 20px;
-}
-
-.menuLogoContainer {
-  display: flex;
-  align-items: center;
-}
-
-.menuIcon {
-  margin-right: 20px;
-  cursor: pointer;
-  height: 30px;
-}
-
-.companyLogo {
-  height: 50px;
-}
-
-.notificationButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-.notificationButton img {
-  height: 30px;
 }

@@ -73,3 +73,7 @@ a{
   margin: 0px;
   padding: 5px 0px;
 }
+
+.errorMessage{
+  margin-left: 5vw;
+}

@@ -1,30 +1,51 @@
 import { useState } from "react";
 import './assets/Login.css';
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { signIn, createUser } from '../backend/Firebase'; // Ensure this path is correct
+import { useNavigate, Link } from "react-router-dom";
 
-
-function Login() 
-{
+function Login() {
   const navigate = useNavigate();
-  const [formValues, setFormValues] = useState({});
+  const [formValues, setFormValues] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    setFormValues({ ...formValues, [e.target.id]: e.target.value });
+    setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Store credentials to local storage.
-    localStorage.setItem('credentials', JSON.stringify(formValues))
 
-    // Retrieve credentials from local storage
-    let credentials = JSON.parse(localStorage.getItem('credentials'));
-    console.log(credentials['email']);
-    console.log(credentials['password']);
+    if (!formValues.email || !formValues.password) {
+        setError("Email and password are required.");
+        return;
+    }
 
-    navigate('/home-page');
+    try {
+        await signIn(formValues.email, formValues.password);
+        navigate('/home-page');
+    } catch (error) {
+        console.error("Login error:", error); // For debugging purposes
+        setError("Incorrect username or password."); // Display Firebase error message to the user
+    }
+  }
+
+  const handleRegistration = async (e) => {
+    e.preventDefault();
+
+    if (!formValues.email || !formValues.password) {
+      setError("Email and password are required for registration.");
+      return;
+    }
+
+    try {
+      await createUser(formValues.email, formValues.password);
+      console.log("User created successfully");
+      navigate('/home-page'); // Navigate or show a success message
+    } catch (error) {
+      console.error("Registration error:", error);
+      setError("Failed to create an account. " + error.message); // Display error message
+    }
   };
-
 
   return (
     <div className="main">
@@ -32,20 +53,18 @@ function Login()
         <div className="backbox">
           <div>
             <header className="App-header">
-              <h2>
-                MCGardens Login
-              </h2>
+              <h2> MCGardens Login </h2>
             </header>
           </div>
-
         
-          <form onSubmit={handleSubmit} autoComplete="on">
+          <form onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email"><b>Email</b></label><br />
               <input 
-                type="text" 
+                type="email" 
                 id="email" 
-                name="email" 
+                name="email"
+                autoComplete="email"
                 placeholder="Email"
                 className="textbox"
                 value={formValues.email || ""}
@@ -55,11 +74,12 @@ function Login()
             </div>
 
             <div>
-              <label htmlFor="password" autoComplete="on"><b>Password</b></label><br />
+              <label htmlFor="password"><b>Password</b></label><br />
               <input 
                 type="password" 
                 id="password" 
-                name="password" 
+                name="password"
+                autoComplete="current-password"
                 placeholder="Password" 
                 className="textbox" 
                 value={formValues.password || ""}
@@ -69,14 +89,14 @@ function Login()
             </div>
             
             <div>
-              <Link to="/home-page" onClick={handleSubmit}><button className="sign-in-button">Sign In</button></Link>
-              
+              <button type="submit" className="sign-in-button">Sign In</button>
             </div>
           </form>
 
+          <div className="errorMessage">{error && <p className="error-message">{error}</p>}</div>
 
           <div className="additionalOptions">
-            <a href="signup.html">Sign Up</a>
+            <a onClick={handleRegistration} href="signup.html">Sign Up</a>
             <a href="forgotpassword.html">Forgot Password</a>
           </div>
         </div>
