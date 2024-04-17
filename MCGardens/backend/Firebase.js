@@ -1,4 +1,4 @@
-
+import 'dotenv/config';
 import { initializeApp } from "firebase/app";
 import {
     getDocs,
@@ -11,7 +11,7 @@ import {
     createUserWithEmailAndPassword } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBdBh6oBgnUZJ6dROPNOp5Wwxyvrr8epLQ",
+    apiKey: process.env.EMAIL_API,
     authDomain: "mcgardens-bd0b1.firebaseapp.com",
     databaseURL: "https://mcgardens-bd0b1-default-rtdb.firebaseio.com",
     projectId: "mcgardens-bd0b1",
