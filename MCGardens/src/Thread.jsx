@@ -10,6 +10,7 @@ const Thread = () => {
   const [replyText, setReplyText] = useState("");
   const [replyTitle, setReplyTitle] = useState("");
   const [replies, setReplies] = useState();
+  const [allReplies,setAllReplies] = useState();
   const [showForm, setShowForm] = useState(false);
   const [numReplies, setNumReplies] = useState(0);
   
@@ -23,6 +24,7 @@ const Thread = () => {
       setThread(foundThread);
     }
     const storedReplies = JSON.parse(localStorage.getItem("replies")) || [];
+    setAllReplies(storedReplies);
     if(storedReplies) {
       const foundReplies = storedReplies.filter(reply => reply.threadId === id);
       console.log('Replies:',foundReplies);
@@ -50,7 +52,7 @@ const Thread = () => {
     };
     console.log({ newReply });
     
-    const updatedReplies = [...replies, newReply];
+    const updatedReplies = [...allReplies, newReply];
     setReplies(updatedReplies);
     const updatedNumReplies = numReplies + 1;
     setNumReplies(updatedNumReplies);
@@ -83,13 +85,15 @@ const Thread = () => {
 
 
 
-  if( !thread ) {
-    return <p> There was an error loading the thread. Please try again </p>
-  }
+  
   return (
     <>
-      <main className="home">
       <BurgerMenu />
+      {!thread && (
+        <p> There was an error loading the thread. Please try again </p>
+      )}
+      {thread && (
+      <main className="home">  
         <Link to="/discussion-board" className="back-btn">Back to the Discussion Board</Link>
         <button className="remove-replies-btn" onClick={handleRemoveReplies}>
                 Remove All Replies from LocalStorage
@@ -111,7 +115,7 @@ const Thread = () => {
             </p>
         </div>
         </div>
-        
+      
         {!showForm && (
           <button className="create-reply-btn" onClick={handleCreateReplyClick}
           >CREATE REPLY</button>
@@ -162,11 +166,10 @@ const Thread = () => {
                 </div>
               </div>
             ))
-          )}
+        )}
         </div>
-
-
       </main>
+    )}
     </>
   )
 }
