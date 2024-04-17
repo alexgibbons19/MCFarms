@@ -10,7 +10,7 @@ import {
     createUserWithEmailAndPassword } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: process.env.EMAIL_API,
+    apiKey: "AIzaSyBdBh6oBgnUZJ6dROPNOp5Wwxyvrr8epLQ",
     authDomain: "mcgardens-bd0b1.firebaseapp.com",
     databaseURL: "https://mcgardens-bd0b1-default-rtdb.firebaseio.com",
     projectId: "mcgardens-bd0b1",
