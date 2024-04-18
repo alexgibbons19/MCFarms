@@ -83,7 +83,7 @@ function Login() {
 
           <div className="additionalOptions">
             <a href="/sign-up">Sign Up</a>
-            <a href="#" style={{ cursor: 'pointer' }}>Forgot Password</a>
+            <a  href="/forgot-password" style={{ cursor: 'pointer' }}>Forgot Password</a>
           </div>
         </div>
       </div>
