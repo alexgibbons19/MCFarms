@@ -1,6 +1,6 @@
 import { useState } from "react";
 import './assets/Login.css';
-import { signIn, createUser, resetPassword } from '../backend/Authentication';
+import { signIn } from '../backend/Authentication';
 import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
@@ -24,39 +24,12 @@ function Login() {
         await signIn(formValues.email, formValues.password);
         navigate('/home-page');
     } catch (error) {
-        console.error("Login error:", error); // For debugging purposes
-        setError("Incorrect username or password."); // Display Firebase error message to the user
-    }
-  }
-
-  const handleRegistration = async (e) => {
-    e.preventDefault();
-
-    if (!formValues.email || !formValues.password) {
-      setError("Email and password are required for registration.");
-      return;
-    }
-
-    try {
-      await createUser(formValues.email, formValues.password);
-      console.log("User created successfully");
-      navigate('/home-page'); // Navigate or show a success message
-    } catch (error) {
-      console.error("Registration error:", error);
-      setError("Failed to create an account. " + error.message); // Display error message
-    }
-  };
-
-  const handleForgotPassword = async () => {
-    if (!formValues.email) {
-        setError("Please enter your email to reset your password.");
-        return;
-    }
-    const { success, message } = await resetPassword(formValues.email);
-    if (success) {
-        setError("Please check your email to reset your password.");
-    } else {
-        setError("Failed to reset password: " + message);
+        console.error("Login error:", error);
+        if (error.message.includes("verify your email")) {
+            setError("Please verify your email before signing in.");
+        } else {
+            setError("Incorrect username or password.");
+        }
     }
   };
 
@@ -110,7 +83,7 @@ function Login() {
 
           <div className="additionalOptions">
             <a href="/sign-up">Sign Up</a>
-            <a onClick={handleForgotPassword} href="#" style={{ cursor: 'pointer' }}>Forgot Password</a>
+            <a href="#" style={{ cursor: 'pointer' }}>Forgot Password</a>
           </div>
         </div>
       </div>
