@@ -1,6 +1,6 @@
 import { useState } from "react";
 import './assets/Login.css';
-import { signIn } from '../backend/Authentication';
+import { signIn } from '../backend/Firebase';
 import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
