@@ -1,15 +1,10 @@
-
-import { initializeApp } from "firebase/app";
 import {
     getDocs,
     collection,
     getFirestore,
     addDoc
 } from "firebase/firestore";
-import { 
-    getAuth, 
-    signInWithEmailAndPassword, 
-    createUserWithEmailAndPassword } from "firebase/auth";
+import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBdBh6oBgnUZJ6dROPNOp5Wwxyvrr8epLQ",
@@ -22,34 +17,9 @@ const firebaseConfig = {
     measurementId: "G-G642QLL9KX"
   };
 
-// Initialize Firebase
-initializeApp(firebaseConfig);
 const db = getFirestore();
 
-// Function to fetch users
-export const fetchUsers = async () => {
-    const colRef = collection(db, 'users');
-    const snapshot = await getDocs(colRef);
-    const users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-    return users;
-};
-
-// Initialize Firebase Authentication
-const auth = getAuth();
-
-// Function to sign in a user
-export const signIn = async (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
-};
-
-export const createUser = async (email, password) => {
-    const auth = getAuth();
-    return createUserWithEmailAndPassword(auth, email, password);
-  };
-
-
-
-  // Function to fetch threads
+// Function to fetch threads
 export const fetchThreads = async () => {
     const colRef = collection(db, 'threads');
     try {
@@ -70,7 +40,7 @@ export const fetchReplies = async () => {
     const replies = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
     return replies;
   } catch (error) {
-    console.error("Error fetching replies:",error);
+    console.error("Erorr fethcing replies:",error);
     throw error;
   }
     
@@ -97,9 +67,4 @@ export const addReply = async (replyData) => {
       throw error;
   }
 };
-
-export const getUser = async () => {
-    const currUser = userCredential.user.email;
-    return currUser;
-}
 
