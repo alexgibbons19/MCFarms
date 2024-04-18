@@ -10,6 +10,7 @@ import Login from './Login.jsx';
 import Weather from './Weather.jsx';
 import PlantDetails from './PlantDetails.jsx';
 import SearchPage from './SearchPage.jsx';
+import SignUp from './SignUp.jsx';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
     <Router>
       <Routes>
         <Route exact path="/" element={<Login />} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/home-page" element={<HomePage />}/>
         <Route path="/discussion-board" element={<DiscussionBoard />} />
         <Route path="/thread/:id" element={<Thread/>} />

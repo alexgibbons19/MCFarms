@@ -3,7 +3,7 @@ import './assets/Login.css';
 import { signIn, createUser, resetPassword } from '../backend/Authentication';
 import { useNavigate, Link } from "react-router-dom";
 
-function Login() {
+function SignUp() {
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -66,7 +66,7 @@ function Login() {
         <div className="backbox">
           <div>
             <header className="App-header">
-              <h2> MCGardens Login </h2>
+              <h2> MCGardens Create User </h2>
             </header>
           </div>
         
@@ -102,14 +102,14 @@ function Login() {
             </div>
             
             <div>
-              <button type="submit" className="sign-in-button">Sign In</button>
+              <button type="submit" className="sign-in-button">Sign Up</button>
             </div>
           </form>
 
           <div className="errorMessage">{error && <p className="error-message">{error}</p>}</div>
 
           <div className="additionalOptions">
-            <a href="/sign-up">Sign Up</a>
+            <a href="/">Sign In</a>
             <a onClick={handleForgotPassword} href="#" style={{ cursor: 'pointer' }}>Forgot Password</a>
           </div>
         </div>
@@ -118,4 +118,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SignUp;
