@@ -30,6 +30,7 @@ async function askGpt(plantInput) {
                                 'water the plant for it to have the best life. ' +
                                 'The output will be sorted by biography, how to plant, then how to take care of the crop. ' + 
                                 'The header of all the outputs will start with -- then the name of the output. ' +
+                                'The three headers that you will use are "--bio", "--how to plant" and "--how to take care". ' +
                                 'The output will be the header then under that will be the information. An example header is: --bio'
                         },
                         {
