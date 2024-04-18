@@ -1,6 +1,6 @@
 import { useState } from "react";
 import './assets/Login.css';
-import { resetPassword } from '../backend/Authentication';
+import { resetPassword } from '../backend/Firebase';
 import { useNavigate } from "react-router-dom";
 
 function ForgotPassword() {

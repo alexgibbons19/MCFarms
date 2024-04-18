@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import './assets/Login.css';
-import { createUserAndSendVerification, resendVerificationEmail } from '../backend/Authentication';
+import { createUserAndSendVerification, resendVerificationEmail } from '../backend/Firebase';
 import { useNavigate, Link } from "react-router-dom";
 
 function SignUp() {
@@ -147,7 +147,7 @@ function SignUp() {
 
           <div className="additionalOptions">
             <a href="/">Sign In</a>
-            <a href="#" style={{ cursor: 'pointer' }}>Forgot Password</a>
+            <a href="/forgot-password" style={{ cursor: 'pointer' }}>Forgot Password</a>
           </div>
         </div>
       </div>
