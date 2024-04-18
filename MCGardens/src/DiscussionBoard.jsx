@@ -5,11 +5,17 @@ import { v4 as uuidv4 } from 'uuid';
 import BurgerMenu from './BurgerMenu';
 
 const DiscussionBoard = () => {
+    const [threads, setThreads] = useState([]);
+    const [replies, setReplies] = useState([]);
+    const [showThreadForm, setShowThreadForm] = useState(false);
+    const [showReplyForm, setShowReplyForm] = useState(false);
     const [threadTitle, setThreadTitle] = useState("");
     const [threadText, setThreadText] = useState("");
-    const [threads, setThreads] = useState([]);
-    const [showForm, setShowForm] = useState(false);
+    const [replyTitle, setReplyTitle] = useState("");
+    const [replyText, setReplyText] = useState("");
     const [numReplies, setNumReplies] = useState(0);
+    const [threadReplies, setThreadReplies] = useState([]);
+    const [selectedThreadId, setSelectedThreadId] = useState(null);
 
     useEffect(() => {
         const storedThreads = JSON.parse(localStorage.getItem("threads"));
@@ -17,19 +23,27 @@ const DiscussionBoard = () => {
             setThreads(storedThreads);
             const updatedThreads = storedThreads.map(thread => {
                 const storedReplies = JSON.parse(localStorage.getItem("replies")) || [];
+                const threadReplies = storedReplies.filter(reply => reply.threadId === thread.id);
                 const numReplies = storedReplies.filter(reply => reply.threadId === thread.id).length;
+                setReplies(storedReplies);
                 setNumReplies(numReplies);
-                return { ...thread, numReplies };
+                setThreadReplies(threadReplies);
+                return { ...thread, numReplies,threadReplies };
             });
             setThreads(updatedThreads);
         }
     }, []);
 
     const handleCreateThreadClick = () => {
-        setShowForm(true);
+        setShowThreadForm(true);
     };
 
-    const handleSubmit = (e) => {
+    const handleCreateReplyClick = (threadId) => {
+        setSelectedThreadId(threadId);
+        setShowReplyForm(true);     
+    };
+
+    const handleSubmitThread = (e) => {
         e.preventDefault();
         const creationDate = new Date();
         const newThread = { 
@@ -46,14 +60,57 @@ const DiscussionBoard = () => {
         localStorage.setItem("threads", JSON.stringify(updatedThreads));
         setThreadTitle("");
         setThreadText("");
-        setShowForm(false);
+        setShowThreadForm(false);
     };
 
-    const handleCancel = () => {
+    const handleSubmitReply = (e, thread) => {
+        e.preventDefault();
+        const creationDate = new Date();
+        const newReply = {
+          id: uuidv4(),
+          threadId: thread.id,
+          title: 'RE:' + thread.title,
+          text: replyText,
+          author: 'Anonymous',
+          created_on: creationDate.toLocaleString()
+        };
+        console.log({ newReply });
+        
+        const updatedReplies = [...replies, newReply];
+        setReplies(updatedReplies);
+        console.log(updatedReplies);
+
+        console.log({ thread });
+
+        const updatedThreads = threads.map(t => {
+            if (t.id === thread.id) {
+                return {
+                    ...t,
+                    numReplies: t.numReplies + 1,
+                    threadReplies: [...t.threadReplies, newReply]
+                };
+            }
+            return t;
+        });
+        setThreads(updatedThreads);
+        localStorage.setItem("replies", JSON.stringify(updatedReplies));
+        localStorage.setItem("threads", JSON.stringify(updatedThreads));
+        setReplyTitle("");
+        setReplyText("");
+        setShowReplyForm(false);
+      }
+
+    const handleCancelThread = () => {
         setThreadTitle("");
         setThreadText("");
-        setShowForm(false);
+        setShowThreadForm(false);
     }
+
+    const handleCancelReply = () => {
+        setReplyText("");
+        setSelectedThreadId(null);
+        setShowReplyForm(false);
+      }
 
     const handleLinkClick = (id) => {
         console.log("Clicked thread ID: ", id);
@@ -73,31 +130,31 @@ const DiscussionBoard = () => {
     // TESTING
   const handleRemoveThreads = () => {
     localStorage.removeItem('threads');
-    console.log('All Threads removed from localStorage.');
+    localStorage.removeItem('replies');
+    console.log('All Threads and Replies removed from localStorage.');
   };
   const handleRemoveThisThread = (threadId) => {
     const updatedThreads = threads.filter((thread) => thread.id !== threadId);
     setThreads(updatedThreads);
+    const updatedReplies = replies.filter((reply) => reply.threadId !== threadId);
     localStorage.setItem('threads', JSON.stringify(updatedThreads));
-    console.log('Thread removed from localStorage.')
+    localStorage.setItem('replies', JSON.stringify(updatedReplies));
+    console.log('Thread and replies removed from localStorage.')
   }
 
     return (
         <>
             <BurgerMenu />
-            <Link to='/optimal-plants' className="optimal-plants-link">
-                Go to Optimal Plants
-            </Link>
             <button className="remove-threads-btn" onClick={handleRemoveThreads}>
                 Remove All Threads from LocalStorage
             </button>
             <main className='home'>
-                {!showForm && (
+                {!showThreadForm && (
                     <button className='create-thread-btn' onClick={handleCreateThreadClick}>CREATE THREAD</button>
 
                 )}
-                {showForm && (
-                    <form className='create-thread-form' onSubmit={handleSubmit}>
+                {showThreadForm && (
+                    <form className='create-thread-form' onSubmit={handleSubmitThread}>
                         <h2 className='create-title'>Create a Thread</h2>
                         <div className='create-thread-container'>
                             <label htmlFor='threadTitle'>Title</label>
@@ -121,7 +178,7 @@ const DiscussionBoard = () => {
                             />
                         </div>
                         <button className="submit-btn">SUBMIT THREAD</button>
-                        <button className="cancel-btn" onClick={handleCancel}>CANCEL POST</button>
+                        <button className="cancel-btn" onClick={handleCancelThread}>CANCEL POST</button>
                     </form>
                 )}
 				<div className="thread-flex-container">
@@ -151,11 +208,55 @@ const DiscussionBoard = () => {
                                         {thread.text}
                                     </div>
                                 </div>
-                                <div className="reply-count">
-                                    <p className="reply-count-text">
-                                        Replies: {thread.numReplies}
-                                    </p>
+                                <div className="replies-container">
+                                    <div className="reply-count">
+                                        <p className="reply-count-text">
+                                            Replies: {thread.numReplies}
+                                        </p>
+                                    </div>
+                                    
+                                    <form className="create-reply-form" onSubmit={(e) => handleSubmitReply(e, thread)}>
+                                        <h2 className='create-reply-title'>Create a Reply</h2>
+                                        <div className='create-reply-container'>
+                                            <label htmlFor={`replyText-${thread.id}`}>Text</label>
+                                            <input
+                                                type='text'
+                                                id='replyText'
+                                                name='replyText'
+                                                required
+                                                value={replyText}
+                                                onChange={(e) => setReplyText(e.target.value)}
+                                            />
+                                        </div>
+                                        <button className="submit-btn">SUBMIT REPLY</button>
+                                        <button className="cancel-btn" onClick={handleCancelReply}>CANCEL</button>
+                                            
+                                    </form>
+                                    
+                                    {thread.numReplies === 0 ? (
+                                        <p>NO REPLIES! BE THE FIRST!</p>
+                                    ) : (
+                                        thread.threadReplies.map((reply) => (
+                                            <div className="reply-container" key={reply.id}>
+                                                <div className="reply-contents">
+                                                    <div className="reply-info">
+                                                        <p className="reply-title">{reply.title}</p>
+                                                        <p className="reply-author">JOHN DOE</p>
+                                                        <div className="reply-date">
+                                                            <p className="date">
+                                                                Created On: {reply.created_on}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="reply-text">
+                                                        {reply.text}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )) 
+                                    )}
                                 </div>
+                                
                             </div>
                         ))
                     )}
