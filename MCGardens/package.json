@@ -4,14 +4,19 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"npm run serve\" \"npm run start-backend\"",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve": "vite",
+    "start-backend": "node ./server.js"
   },
   "dependencies": {
     "@firebase/auth": "^1.7.0",
+    "axios": "^1.6.8",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "firebase": "^10.6.0",
     "moment": "^2.30.1",
     "node-cron": "^3.0.3",
@@ -19,13 +24,14 @@
     "react": "^18.2.0",
     "react-big-calendar": "^1.11.6",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.1",
+    "react-router-dom": "^6.22.3",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react": "^4.2.1",
+    "concurrently": "^8.2.2",
     "eslint": "^8.55.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",

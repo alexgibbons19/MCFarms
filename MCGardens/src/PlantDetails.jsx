@@ -1,150 +1,105 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import BurgerMenu from './BurgerMenu';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import './assets/PlantDetails.css';
 import defaultImg from './assets/tomato.png';
 
-const getHeaderIdx = (header,lines) => {
-    for (let i = 0; i<lines.length; i++){
-        if (lines[i].startsWith(header)){
-            return i;
-        }
-    }
-    return -1; //header not passed correctly
-};
-
-const populateList = (idx,lines) => {
-    let list = [];
-    for(let i = idx; i < lines.length; i++){
-        if(lines[i].trim() !=""){
-            list= [...list,lines[i]]
-        }
-        else{
-            break
-        }
-    }
-    return list;
-}
-
-
-
-const PlantDetails = () => { 
+const PlantDetails = () => {
     const [plant, setPlant] = useState({
-        plantName: ["Default Plant"],
-        plantBio: ["Plant bio default"],
+        plantName: "Default Plant",
+        plantBio: "Plant bio default",
         plantInst: ["Planting instructions default"],
         plantCare: ["Plant care default"],
         plantImg: defaultImg
     });
-    const [notif,setNotif] = useState(false);
-    //const thisPlant = useParams();
-    
-    // testing
-    const thisPlant = "apple";
 
-    useEffect(() => {    
-    // will update with firebase connection
-        const fetchFileContent = async (plantName) => {
-        try {
-            const response = await fetch(plantName);
-            if(!response.ok){
-                throw new Error('Failed to fetch plant file..calling gbt');
-                //this is where we'd call gbt function
-            }
-            const fileContent = await response.text();
-            const lines = fileContent.split("\n");
+    const location = useLocation(); 
+    const searchParams = new URLSearchParams(location.search); // Use URLSearchParams to parse the query strings
+    const plantQuery = searchParams.get('query');
 
-    // remove header from bio
-            const thisBio = lines[0].substring("Biography: ".length).trim();
-    
-            let instIdx = getHeaderIdx("How to Plant:",lines);
-            let careIdx = getHeaderIdx("How to Take Care",lines)
-
-            const thisPlantInst = populateList(instIdx,lines);
-            const thisCare = populateList(careIdx,lines);
-
-    
-            console.log("Bio:",thisBio);
-            console.log("Planting Inst:",thisPlantInst);
-            console.log("Care Inst:",thisCare);
-
-
-        // update plant obj   
-            setPlant(prevPlant => ({
-                ...prevPlant,
-                plantName:thisPlant,
-                plantBio:thisBio,
-                plantInst:thisPlantInst,
-                plantCare:thisCare,
-                plantImg:defaultImg // this also needs a api call
-            }));
-
-        } catch (error) {
-            console.error("Error finding and parsing file",error);
+    useEffect(() => {
+        if (plantQuery) {
+            const plantName = plantQuery.toLowerCase(); // Ensure it's in lowercase for consistent processing
+            axios.post('http://localhost:3000/ask-gpt', { plantInput: plantName })
+                .then(response => {
+                    if (response.data.success) {
+                        console.log("Data received:", response.data.content);
+                        parsePlantDetails(response.data.content);
+                    }
+                })
+                .catch(error => {
+                    console.error("API call failed:", error.message);
+                });
         }
+    }, [location]); // Depend on location to re-run effect when URL changes
+
+    const parsePlantDetails = (data) => {
+        const lines = data.split("\n").map(line => line.trim()).filter(line => line);
+    
+        // Find the indices of each section, ensure these strings match exactly what you receive
+        const bioIndex = getHeaderIdx("--bio", lines);
+        const instIndex = getHeaderIdx("--how to plant", lines);
+        const careIndex = getHeaderIdx("--how to take care", lines);
+    
+        // Correctly extract the biography text
+        // Ensure to slice from the line after the bio index to the line before the instIndex
+        const bio = bioIndex !== -1 && instIndex !== -1 ? lines.slice(bioIndex + 1, instIndex).join(' ') : "No biography found";
+    
+        const instructions = instIndex !== -1 ? populateList(instIndex, lines) : ["No planting instructions found"];
+        const care = careIndex !== -1 ? populateList(careIndex, lines) : ["No care instructions found"];
+    
+        console.log("Bio Index:", bioIndex, "Inst Index:", instIndex, "Care Index:", careIndex);  // Check the indices
+        console.log("Biography:", bio);  // Log parsed biography
+        console.log("Instructions:", instructions);  // Log parsed instructions
+        console.log("Care:", care);  // Log parsed care instructions
+    
+        setPlant({
+            plantName: plantQuery,
+            plantBio: bio,
+            plantInst: instructions,
+            plantCare: care,
+            plantImg: defaultImg
+        });
     };
-    // call function to get file content
-        fetchFileContent(`../backend/crops/${thisPlant}.txt`)
-    }, [thisPlant]); 
+    
 
-    const addToInventory = (plantName) => {
-        //should add tuple to user db
-        //for now log in console
-        console.log("Plant name: %s", plant.plantName)
+    const getHeaderIdx = (header, lines) => {
+        return lines.findIndex(line => line.startsWith(header));
+    };
 
-        //after adding, display notif
-        setNotif(true);
-    }
-
-    const closeNotif = () => {
-        setNotif(false);
-    }
+    const populateList = (idx, lines) => {
+        let list = [];
+        for (let i = idx + 1; i < lines.length && !lines[i].startsWith("--"); i++) {
+            list.push(lines[i].trim());
+        }
+        return list;
+    };
 
     return (
-        <>
-        <BurgerMenu />
-            <div className="plant-details">
-                <div className="left-container">
-                    <div className="pic-container">
-                        {plant && <img className="pic" src={plant.plantImg} alt="Plant" />}
-                    </div>
-                    <div className="smaller-title">Biography</div>
-                   <div className="bio-container">
-                        {plant && (
-                            <p>{plant.plantBio}</p>
-                        )}
-                    </div>
-                    <button className="add-button" onClick={ () => addToInventory(plant && plant.plantName)}>Add to Inventory </button>
+        <div className="plant-details">
+            <div className="left-container">
+                <div className="pic-container">
+                    <img className="pic" src={plant.plantImg} alt="Plant" />
                 </div>
-                <div className="right-container">
-                    <div className="title-banner" title={plant ? plant.plantName : ''}>
-                        {plant ? plant.plantName : ''}
-                    </div>
-                    <div className="smaller-title">Planting Instructions</div>
-                    <div className="inst-container">
-                        {plant && plant.plantInst.map((instLine, index) => {
-                        if(index !==0){ 
-                            return <p key={index}>{instLine}</p>;}
-                        return null;
-                        })}
-                    </div>
-                    <div className="smaller-title">Care Instructions</div>
-                    <div className="care-info-container">
-                        {plant && plant.plantCare.map((careLine, index) => {
-                            if(index !==0){ 
-                                return <p key={index}>{careLine}</p>;}
-                            return null;
-                            })}
-                    </div>
+                <div className="smaller-title">Biography</div>
+                <div className="bio-container">
+                    <p>{plant.plantBio}</p>
                 </div>
-                </div>
-        {notif && (
-            <div className = "notif">
-            <span> Added {plant && plant.plantName} to user inventory!</span>
-            <button className="close-notif" onClick={closeNotif}>Close</button>
             </div>
-        )}     
-        </>
+            <div className="right-container">
+                <div className="title-banner">
+                    {plant.plantName}
+                </div>
+                <div className="smaller-title">Planting Instructions</div>
+                <div className="inst-container">
+                    {plant.plantInst.map((inst, idx) => <p key={idx}>{inst}</p>)}
+                </div>
+                <div className="smaller-title">Care Instructions</div>
+                <div className="care-info-container">
+                    {plant.plantCare.map((care, idx) => <p key={idx}>{care}</p>)}
+                </div>
+            </div>
+        </div>
     );
 };
 

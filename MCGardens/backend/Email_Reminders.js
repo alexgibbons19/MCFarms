@@ -70,7 +70,7 @@ const sendTestEmail = (email, tasks) => {
 
 // Example usage:
 // For sending a test email with tasks:
-sendTestEmail("example@gmail.com", ["Test task 1", "Test task 2"]);
+sendTestEmail("fdabain01@gmail.com", ["Test task 1", "Test task 2"]);
 
 // For sending personalized daily tasks (could be triggered by specific events in your application):
 // sendPersonalizedTasksEmail("example@gmail.com", ["Complete project report", "Call back the clients", "Review meeting notes"]);

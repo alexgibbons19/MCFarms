@@ -13,9 +13,9 @@ const SearchPage = () => {
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search plant..."
       />
-      {/* Link to PlantDetails.jsx with the query parameter */}
+      {/* Use the Link component to navigate */}
       <Link to={`/plant-details?query=${encodeURIComponent(query)}`}>
-        <button>Search</button>
+        <button type="button">Search</button>
       </Link>
     </div>
   );
