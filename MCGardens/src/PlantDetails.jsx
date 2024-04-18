@@ -1,37 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/PlantDetails.css';
+import BurgerMenu from './BurgerMenu';
 import defaultImg from './assets/tomato.png';
 
 const PlantDetails = () => {
     const [plant, setPlant] = useState({
-        plantName: "Default Plant",
-        plantBio: "Plant bio default",
-        plantInst: ["Planting instructions default"],
-        plantCare: ["Plant care default"],
+        plantName: "Generating Information",
+        plantBio: "Please wait while generating.",
+        plantInst: ["Please wait while generating."],
+        plantCare: ["Please wait while generating."],
         plantImg: defaultImg
     });
+    const [query, setQuery] = useState('');  // Ensure query is initialized here
 
-    const location = useLocation(); 
-    const searchParams = new URLSearchParams(location.search); // Use URLSearchParams to parse the query strings
+    const location = useLocation();
+    const navigate = useNavigate();
+    const searchParams = new URLSearchParams(location.search);
     const plantQuery = searchParams.get('query');
-
-    useEffect(() => {
-        if (plantQuery) {
-            const plantName = plantQuery.toLowerCase(); // Ensure it's in lowercase for consistent processing
-            axios.post('http://localhost:3000/ask-gpt', { plantInput: plantName })
-                .then(response => {
-                    if (response.data.success) {
-                        console.log("Data received:", response.data.content);
-                        parsePlantDetails(response.data.content);
-                    }
-                })
-                .catch(error => {
-                    console.error("API call failed:", error.message);
-                });
-        }
-    }, [location]); // Depend on location to re-run effect when URL changes
 
     const parsePlantDetails = (data) => {
         const lines = data.split("\n").map(line => line.trim()).filter(line => line);
@@ -61,7 +48,6 @@ const PlantDetails = () => {
             plantImg: defaultImg
         });
     };
-    
 
     const getHeaderIdx = (header, lines) => {
         return lines.findIndex(line => line.startsWith(header));
@@ -75,26 +61,79 @@ const PlantDetails = () => {
         return list;
     };
 
+    useEffect(() => {
+        if (plantQuery) {
+            const plantName = plantQuery.toLowerCase();
+            axios.post('http://localhost:3000/ask-gpt', { plantInput: plantName })
+                .then(response => {
+                    if (response.data.success) {
+                        console.log("Data received:", response.data.content);
+                        parsePlantDetails(response.data.content);
+                    }
+                })
+                .catch(error => {
+                    console.error("API call failed:", error.message);
+                });
+        }
+    }, [location]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Reset plant details to initial "loading" state before navigating
+        setPlant({
+            plantName: "Generating Information",
+            plantBio: "Please wait while generating.",
+            plantInst: ["Please wait while generating."],
+            plantCare: ["Please wait while generating."],
+            plantImg: defaultImg
+        });
+        navigate(`/plant-details?query=${encodeURIComponent(query)}`);
+    };
+    
+
     return (
         <div className="plant-details">
+
+            <BurgerMenu />
+
+            <form onSubmit={handleSubmit} style={{ textAlign: 'center', margin: '20px' }}>
+                <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search for another plant..."
+                />
+
+                <button type="submit">Search</button>
+            </form>
+
             <div className="left-container">
+
                 <div className="pic-container">
                     <img className="pic" src={plant.plantImg} alt="Plant" />
                 </div>
+
                 <div className="smaller-title">Biography</div>
+
                 <div className="bio-container">
                     <p>{plant.plantBio}</p>
                 </div>
             </div>
+
             <div className="right-container">
+
                 <div className="title-banner">
                     {plant.plantName}
                 </div>
+
                 <div className="smaller-title">Planting Instructions</div>
+
                 <div className="inst-container">
                     {plant.plantInst.map((inst, idx) => <p key={idx}>{inst}</p>)}
                 </div>
+
                 <div className="smaller-title">Care Instructions</div>
+
                 <div className="care-info-container">
                     {plant.plantCare.map((care, idx) => <p key={idx}>{care}</p>)}
                 </div>
