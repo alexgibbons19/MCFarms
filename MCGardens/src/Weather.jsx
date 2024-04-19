@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import './assets/Weather.css';
-
 import BurgerMenu from './BurgerMenu';
-
 
 const Weather = () => {
     const [weatherData, setWeatherData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [zipCode, setZipCode] = useState([]);
+    const [zipCode, setZipCode] = useState('');
 
     const fetchWeatherData = async (zipCode) => {
         try {
@@ -16,14 +14,12 @@ const Weather = () => {
             );
             const locationData = await locationResponse.json();
             if (locationData.lat !== undefined && locationData.lon !== undefined) {
-                const {lat,lon} = locationData;
-                console.log(lat, lon);
+                const { lat, lon } = locationData;
                 const weatherResponse = await fetch(
-                `http://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lon}&cnt=7&units=imperial&appid=c2a91f3cea984faeb2c4779182b5272e`
+                    `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lon}&cnt=7&units=imperial&appid=c2a91f3cea984faeb2c4779182b5272e`
                 );
                 const weatherData = await weatherResponse.json();
-                console.log(weatherData);
-                if(weatherData.list) {
+                if (weatherData.list) {
                     setWeatherData(weatherData.list);
                     setIsLoading(false);
                 }
@@ -35,18 +31,23 @@ const Weather = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        setIsLoading(true);
         fetchWeatherData(zipCode);
     };
 
-    // Retrieve credentials from local storage
-    let credentials = JSON.parse(localStorage.getItem('credentials'));
+    // Retrieve credentials from local storage safely
+    let credentials = JSON.parse(localStorage.getItem('credentials')) || {};
     console.log("From Weather");
-    console.log(credentials['email']);
-    console.log(credentials['password']);
+    if (!credentials.email) {
+        console.error("No credentials stored, redirecting to login.");
+        // navigate('/login'); // Use this if react-router is setup
+    } else {
+        console.log("Email:", credentials.email);
+        console.log("Password:", credentials.password);
+    }
 
     return (
         <div>
-            
             <BurgerMenu />
             <div className='weatherContainer'>
                 <h1 className='header'>Weekly Weather Forecast</h1>
@@ -75,7 +76,6 @@ const Weather = () => {
                 )}
             </div>
         </div>
-    
     );
 };
 
