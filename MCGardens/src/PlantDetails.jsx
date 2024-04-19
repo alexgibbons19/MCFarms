@@ -45,12 +45,11 @@ const PlantDetails = () => {
             }));
         }
     };
-         
     
     useEffect(() => {
         if (plantQuery) {
             const plantName = plantQuery.toLowerCase();
-            axios.post('https://us-central1-mcgardens-bd0b1.cloudfunctions.net/app/askGptFunction', { plantInput: plantName })
+            axios.post('https://us-central1-mcgardens-bd0b1.cloudfunctions.net/askGpt/askGpt', { plantInput: plantName })
                 .then(response => {
                     parsePlantDetails(response.data);
                 })

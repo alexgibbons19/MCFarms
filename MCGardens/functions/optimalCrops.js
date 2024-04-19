@@ -4,106 +4,66 @@ const axios = require('axios');
 const cors = require('cors');
 const express = require('express');
 
-const app = express();
+const appCrops = express();
 
-// Initialize Firebase Admin
-admin.initializeApp();
+// Check if admin apps are already initialized
+if (admin.apps.length === 0) {
+    admin.initializeApp();
+}
 
 const db = admin.firestore();
-
 const OPENAI_API_KEY = functions.config().openai.key;
 
-app.use(cors({ origin: true }));
+appCrops.use(cors({ origin: true }));
 
-async function checkPlantInFirebase(plantName) {
-    const plantRef = db.doc(`plants/${plantName}`);
-    const docSnap = await plantRef.get();
-
-    if (docSnap.exists) {
-        const data = docSnap.data();
-        return [data['how to take care'], data['how to plant'], data.bio];
-    } else {
-        return null;
+appCrops.post('/askOptimalCrops', async (req, res) => {
+    const locationInput = req.body.location;
+    if (!locationInput) {
+        return res.status(400).send('The function must be called with one argument "location".');
     }
-}
-
-function parseReply(reply) {
-    const bio = reply.match(/--bio\s*(.*?)(?=(--|$))/s)[1].trim();
-    const howToPlant = reply.match(/--how to plant\s*(.*?)(?=(--|$))/s)[1].trim();
-    const howToTakeCare = reply.match(/--how to take care\s*(.*?)(?=(--|$))/s)[1].trim();
-
-    return { bio, howToPlant, howToTakeCare };
-}
-
-async function askGpt(plantInput) {
-    plantInput = plantInput.toLowerCase();
-
-    const firebaseData = await checkPlantInFirebase(plantInput);
-    if (firebaseData) {
-        return firebaseData;
-    }
-
     try {
-        const chatSession = await axios.post(
-            'https://api.openai.com/v1/chat/completions',
-            {
+        const crops = await askOptimalCrops(locationInput);
+        res.json({ crops });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send(`Error processing request: ${error.message}`);
+    }
+});
+
+async function askOptimalCrops(locationInput) {
+    const locationRef = db.doc(`optimalCrops/${locationInput}`);
+    try {
+        const docSnap = await locationRef.get();
+        if (docSnap.exists) {
+            return docSnap.data().crops;
+        } else {
+            const chatSession = await axios.post('https://api.openai.com/v1/chat/completions', {
                 model: "gpt-3.5-turbo",
-                messages: [
-                    {
-                        role: "system",
-                        content: 'You are an application for people to ' +
-                            'tell the users how to plant the crop the most optimal way and ' +
-                            'take care of it for the future. The user will ' +
-                            'input a crop and you will respond strictly only with the steps to ' +
-                            'plant the crop and a short biography of the crop. Then after that you will respond with how to take care of it. ' +
-                            'In the directions to take care of the crop, you will give precise details. ' +
-                            'For example, you will give the exact amount someone will have to ' +
-                            'water the plant for it to have the best life. ' +
-                            'The output will be sorted by biography, how to plant, then how to take care of the crop. ' + 
-                            'The header of all the outputs will start with -- then the name of the output. ' +
-                            'The output will be the header then under that will be the information. The three headers that you ' +
-                            'will use are "--bio", "--how to plant" and "--how to take care". You will only use these headers strictly.'
-                    },
-                    {
-                        role: "user",
-                        content: plantInput
-                    }
-                ]
-            },
-            {
+                messages: [{
+                    role: "system",
+                    content: 'You are an application for people to ' +
+                                'tell the users what the best crops for their location is. The user will ' +
+                                'input a location and you will respond strictly only with a list of 20 ' +
+                                'best garden plants for the location that you receive. You will not respond ' +
+                                'with anything other than just the top 20 plants.'
+                }, {
+                    role: "user",
+                    content: locationInput
+                }]
+            }, {
                 headers: {
                     'Authorization': `Bearer ${OPENAI_API_KEY}`,
                     'Content-Type': 'application/json'
                 }
-            }
-        );
-
-        const reply = chatSession.data.choices[0].message.content;
-        const { bio, howToPlant, howToTakeCare } = parseReply(reply);
-
-        await db.doc(`plants/${plantInput}`).set({
-            bio, 'how to plant': howToPlant, 'how to take care': howToTakeCare
-        });
-
-        return [howToTakeCare, howToPlant, bio];
+            });
+            const crops = chatSession.data.choices[0].message.content;
+            await locationRef.set({ crops });
+            return crops;
+        }
     } catch (error) {
         console.error(`An error occurred: ${error}`);
         throw new functions.https.HttpsError('internal', `An error occurred: ${error}`);
     }
 }
 
-app.post('/askGptFunction', async (req, res) => {
-    const plantInput = req.body.plantInput;
-    if (!plantInput) {
-        return res.status(400).send('The function must be called with one argument "plantInput".');
-    }
-
-    try {
-        const plantDetails = await askGpt(plantInput);
-        res.send(plantDetails);
-    } catch (error) {
-        res.status(500).send(`Error processing request: ${error.message}`);
-    }
-});
-
-exports.app = functions.https.onRequest(app);
+module.exports = appCrops;
