@@ -23,15 +23,16 @@ const PlantDetails = () => {
     const splitInstructions = (text) => {
         // This regex looks for numbers followed by a dot and space ("1. ", "2. ", etc.) to split into array elements
         return text.split(/(?=\d+\. )/).filter(line => line.trim() !== '');
-    };    
+    };
 
     const parsePlantDetails = (response) => {
-        if (response.success && response.content && response.content.length === 3) {
+        // Assuming 'response' is an object like the one you mentioned in the error
+        if (response && response.length === 3) {
             setPlant({
                 plantName: plantQuery || "Unknown Plant",
-                plantBio: response.content[2],
-                plantInst: splitInstructions(response.content[1]),
-                plantCare: splitInstructions(response.content[0]),
+                plantBio: response[2],  // Assuming the third element is the bio
+                plantInst: splitInstructions(response[1]),  // Assuming the second element is how to plant
+                plantCare: splitInstructions(response[0]),  // Assuming the first element is how to take care
                 plantImg: defaultImg
             });
         } else {
@@ -44,22 +45,22 @@ const PlantDetails = () => {
             }));
         }
     };
+         
     
     useEffect(() => {
         if (plantQuery) {
             const plantName = plantQuery.toLowerCase();
-            axios.post('http://localhost:3000/ask-gpt', { plantInput: plantName })
+            axios.post('https://us-central1-mcgardens-bd0b1.cloudfunctions.net/app/askGptFunction', { plantInput: plantName })
                 .then(response => {
-                    console.log("API Response Data:", response.data);
                     parsePlantDetails(response.data);
                 })
                 .catch(error => {
                     console.error("API call failed:", error);
                     setPlant(prevState => ({
-                        ...prevState,
-                        plantBio: "Failed to load data.",
-                        plantInst: ["Failed to load data."],
-                        plantCare: ["Failed to load data."]
+                    ...prevState,
+                    plantBio: "Failed to load data.",
+                    plantInst: ["Failed to load data."],
+                    plantCare: ["Failed to load data."]
                     }));
                 });
         }
@@ -67,6 +68,13 @@ const PlantDetails = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+    
+        // Check if the query is empty
+        if (!query.trim()) {
+            alert('Please enter a valid plant name.'); // Display an alert if the input is empty
+            return; // Return to prevent further actions
+        }
+    
         // Set plant to generating/loading state before navigating to the new URL
         setPlant({
             plantName: "Generating Information",
@@ -75,11 +83,15 @@ const PlantDetails = () => {
             plantCare: ["Please wait while generating."],
             plantImg: defaultImg
         });
+    
+        // Clear the textbox by setting query to an empty string
+        setQuery('');
+    
         // Use a slight delay to ensure the state update is rendered before the navigation
         setTimeout(() => {
             navigate(`/plant-details?query=${encodeURIComponent(query)}`);
         }, 0);
-    };    
+    };
 
     return (
         <div className="plant-details">

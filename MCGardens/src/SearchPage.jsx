@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BurgerMenu from './BurgerMenu';
 
 const SearchPage = () => {
   const [query, setQuery] = useState('');
@@ -14,6 +15,7 @@ const SearchPage = () => {
   return (
     <div>
       <h1>Search Page</h1>
+      <BurgerMenu />
       <form onSubmit={handleSubmit}>
         <input
           type="text"
