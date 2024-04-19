@@ -26,13 +26,13 @@ const PlantDetails = () => {
     };
 
     const parsePlantDetails = (response) => {
-        // Assuming 'response' is an object like the one you mentioned in the error
-        if (response && response.length === 3) {
+        // Directly use the structured data from the response
+        if (response && response.bio && response.howToPlant && response.howToTakeCare) {
             setPlant({
                 plantName: plantQuery || "Unknown Plant",
-                plantBio: response[2],  // Assuming the third element is the bio
-                plantInst: splitInstructions(response[1]),  // Assuming the second element is how to plant
-                plantCare: splitInstructions(response[0]),  // Assuming the first element is how to take care
+                plantBio: response.bio,
+                plantInst: splitInstructions(response.howToPlant),
+                plantCare: splitInstructions(response.howToTakeCare),
                 plantImg: defaultImg
             });
         } else {
@@ -44,7 +44,7 @@ const PlantDetails = () => {
                 plantCare: ["Data format error or request unsuccessful."]
             }));
         }
-    };
+    };       
     
     useEffect(() => {
         if (plantQuery) {

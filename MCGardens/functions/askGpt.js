@@ -18,9 +18,14 @@ appPlant.use(cors({ origin: true }));
 async function checkPlantInFirebase(plantName) {
     const plantRef = db.doc(`plants/${plantName}`);
     const docSnap = await plantRef.get();
-    if (docSnap.exists) {  // Changed from docSnap.exists() to docSnap.exists
+    if (docSnap.exists) {
         const data = docSnap.data();
-        return [data['how to take care'], data['how to plant'], data.bio];
+        // Return as an object with specific keys
+        return {
+            bio: data.bio,
+            howToPlant: data['how to plant'],
+            howToTakeCare: data['how to take care']
+        };
     } else {
         return null;
     }
@@ -63,10 +68,15 @@ async function askGpt(plantInput) {
 }
 
 function parseReply(reply) {
-    const bio = reply.match(/--bio\s*(.*?)(?=(--|$))/s)[1].trim();
-    const howToPlant = reply.match(/--how to plant\s*(.*?)(?=(--|$))/s)[1].trim();
-    const howToTakeCare = reply.match(/--how to take care\s*(.*?)(?=(--|$))/s)[1].trim();
-    return { bio, howToPlant, howToTakeCare };
+    const bioMatch = reply.match(/--bio\s*(.*?)(?=(--|$))/s);
+    const plantMatch = reply.match(/--how to plant\s*(.*?)(?=(--|$))/s);
+    const careMatch = reply.match(/--how to take care\s*(.*?)(?=(--|$))/s);
+    
+    return {
+        bio: bioMatch ? bioMatch[1].trim() : '',
+        howToPlant: plantMatch ? plantMatch[1].trim() : '',
+        howToTakeCare: careMatch ? careMatch[1].trim() : ''
+    };
 }
 
 appPlant.post('/askGpt', async (req, res) => {
