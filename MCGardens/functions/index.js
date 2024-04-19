@@ -1,29 +1,24 @@
-import axios from 'axios';
-import dotenv from 'dotenv';
-dotenv.config();
-import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+const axios = require('axios');
+const cors = require('cors')();
+const express = require('express');
 
-const firebaseConfig = {
-    apiKey: "AIzaSyBdBh6oBgnUZJ6dROPNOp5Wwxyvrr8epLQ",
-    authDomain: "mcgardens-bd0b1.firebaseapp.com",
-    databaseURL: "https://mcgardens-bd0b1-default-rtdb.firebaseio.com",
-    projectId: "mcgardens-bd0b1",
-    storageBucket: "mcgardens-bd0b1.appspot.com",
-    messagingSenderId: "102086093090",
-    appId: "1:102086093090:web:f8c4183ccf4594d6eedd7b",
-    measurementId: "G-G642QLL9KX"
-};
-const firebaseApp = initializeApp(firebaseConfig);
-const db = getFirestore(firebaseApp);
+const app = express();
 
-const OPENAI_API_KEY = process.env.REACT_APP_GPT_TOKEN;
+app.use(cors);
+
+admin.initializeApp();
+
+const db = admin.firestore();
+
+const OPENAI_API_KEY = functions.config().openai.key;
 
 async function checkPlantInFirebase(plantName) {
-    const plantRef = doc(db, 'plants', plantName);
-    const docSnap = await getDoc(plantRef);
+    const plantRef = db.doc(`plants/${plantName}`);
+    const docSnap = await plantRef.get();
 
-    if (docSnap.exists()) {
+    if (docSnap.exists) {
         const data = docSnap.data();
         return [data['how to take care'], data['how to plant'], data.bio];
     } else {
@@ -34,13 +29,11 @@ async function checkPlantInFirebase(plantName) {
 async function askGpt(plantInput) {
     plantInput = plantInput.toLowerCase();
 
-    // Check in Firebase first
     const firebaseData = await checkPlantInFirebase(plantInput);
     if (firebaseData) {
         return firebaseData;
     }
 
-    // If not found, request from OpenAI
     try {
         const chatSession = await axios.post(
             'https://api.openai.com/v1/chat/completions',
@@ -75,25 +68,21 @@ async function askGpt(plantInput) {
             }
         );
 
-        const { bio, howToPlant, howToTakeCare } = parseReply(chatSession.data.choices[0].message.content);
-        
-        // Save new plant data to Firebase
-        const plantRef = doc(db, 'plants', plantInput);
-        await setDoc(plantRef, {
-            bio: bio,
-            'how to plant': howToPlant,
-            'how to take care': howToTakeCare
+        const reply = chatSession.data.choices[0].message.content;
+        const { bio, howToPlant, howToTakeCare } = parseReply(reply);
+
+        await db.doc(`plants/${plantInput}`).set({
+            bio, 'how to plant': howToPlant, 'how to take care': howToTakeCare
         });
 
         return [howToTakeCare, howToPlant, bio];
     } catch (error) {
         console.error(`An error occurred: ${error}`);
-        return `An error occurred: ${error}`;
+        throw new functions.https.HttpsError('internal', `An error occurred: ${error}`);
     }
 }
 
 function parseReply(reply) {
-    // Extract information based on --bio, --how to plant, --how to take care
     const bio = reply.match(/--bio\s*(.*?)(?=(--|$))/s)[1].trim();
     const howToPlant = reply.match(/--how to plant\s*(.*?)(?=(--|$))/s)[1].trim();
     const howToTakeCare = reply.match(/--how to take care\s*(.*?)(?=(--|$))/s)[1].trim();
@@ -101,4 +90,10 @@ function parseReply(reply) {
     return { bio, howToPlant, howToTakeCare };
 }
 
-export { askGpt };
+exports.askGptFunction = functions.https.onCall(async (data, context) => {
+    const plantInput = data.plantInput;
+    if (!plantInput) {
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with one argument "plantInput".');
+    }
+    return askGpt(plantInput);
+});

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/PlantDetails.css';
 import BurgerMenu from './BurgerMenu';
-import defaultImg from './assets/tomato.png';
+import defaultImg from './assets/logo.png';
 
 const PlantDetails = () => {
     const [plant, setPlant] = useState({
@@ -13,73 +13,61 @@ const PlantDetails = () => {
         plantCare: ["Please wait while generating."],
         plantImg: defaultImg
     });
-    const [query, setQuery] = useState('');  // Ensure query is initialized here
+    const [query, setQuery] = useState('');
 
     const location = useLocation();
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(location.search);
     const plantQuery = searchParams.get('query');
 
-    const parsePlantDetails = (data) => {
-        const lines = data.split("\n").map(line => line.trim()).filter(line => line);
-    
-        // Find the indices of each section, ensure these strings match exactly what you receive
-        const bioIndex = getHeaderIdx("--bio", lines);
-        const instIndex = getHeaderIdx("--how to plant", lines);
-        const careIndex = getHeaderIdx("--how to take care", lines);
-    
-        // Correctly extract the biography text
-        // Ensure to slice from the line after the bio index to the line before the instIndex
-        const bio = bioIndex !== -1 && instIndex !== -1 ? lines.slice(bioIndex + 1, instIndex).join(' ') : "No biography found";
-    
-        const instructions = instIndex !== -1 ? populateList(instIndex, lines) : ["No planting instructions found"];
-        const care = careIndex !== -1 ? populateList(careIndex, lines) : ["No care instructions found"];
-    
-        console.log("Bio Index:", bioIndex, "Inst Index:", instIndex, "Care Index:", careIndex);  // Check the indices
-        console.log("Biography:", bio);  // Log parsed biography
-        console.log("Instructions:", instructions);  // Log parsed instructions
-        console.log("Care:", care);  // Log parsed care instructions
-    
-        setPlant({
-            plantName: plantQuery,
-            plantBio: bio,
-            plantInst: instructions,
-            plantCare: care,
-            plantImg: defaultImg
-        });
-    };
+    const splitInstructions = (text) => {
+        // This regex looks for numbers followed by a dot and space ("1. ", "2. ", etc.) to split into array elements
+        return text.split(/(?=\d+\. )/).filter(line => line.trim() !== '');
+    };    
 
-    const getHeaderIdx = (header, lines) => {
-        return lines.findIndex(line => line.startsWith(header));
-    };
-
-    const populateList = (idx, lines) => {
-        let list = [];
-        for (let i = idx + 1; i < lines.length && !lines[i].startsWith("--"); i++) {
-            list.push(lines[i].trim());
+    const parsePlantDetails = (response) => {
+        if (response.success && response.content && response.content.length === 3) {
+            setPlant({
+                plantName: plantQuery || "Unknown Plant",
+                plantBio: response.content[2],
+                plantInst: splitInstructions(response.content[1]),
+                plantCare: splitInstructions(response.content[0]),
+                plantImg: defaultImg
+            });
+        } else {
+            console.error("Received data is in an unexpected format or not successful:", response);
+            setPlant(prevState => ({
+                ...prevState,
+                plantBio: "Data format error or request unsuccessful.",
+                plantInst: ["Data format error or request unsuccessful."],
+                plantCare: ["Data format error or request unsuccessful."]
+            }));
         }
-        return list;
     };
-
+    
     useEffect(() => {
         if (plantQuery) {
             const plantName = plantQuery.toLowerCase();
             axios.post('http://localhost:3000/ask-gpt', { plantInput: plantName })
                 .then(response => {
-                    if (response.data.success) {
-                        console.log("Data received:", response.data.content);
-                        parsePlantDetails(response.data.content);
-                    }
+                    console.log("API Response Data:", response.data);
+                    parsePlantDetails(response.data);
                 })
                 .catch(error => {
-                    console.error("API call failed:", error.message);
+                    console.error("API call failed:", error);
+                    setPlant(prevState => ({
+                        ...prevState,
+                        plantBio: "Failed to load data.",
+                        plantInst: ["Failed to load data."],
+                        plantCare: ["Failed to load data."]
+                    }));
                 });
         }
-    }, [location]);
+    }, [location, plantQuery]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Reset plant details to initial "loading" state before navigating
+        // Set plant to generating/loading state before navigating to the new URL
         setPlant({
             plantName: "Generating Information",
             plantBio: "Please wait while generating.",
@@ -87,15 +75,15 @@ const PlantDetails = () => {
             plantCare: ["Please wait while generating."],
             plantImg: defaultImg
         });
-        navigate(`/plant-details?query=${encodeURIComponent(query)}`);
-    };
-    
+        // Use a slight delay to ensure the state update is rendered before the navigation
+        setTimeout(() => {
+            navigate(`/plant-details?query=${encodeURIComponent(query)}`);
+        }, 0);
+    };    
 
     return (
         <div className="plant-details">
-
             <BurgerMenu />
-
             <form onSubmit={handleSubmit} style={{ textAlign: 'center', margin: '20px' }}>
                 <input
                     type="text"
@@ -103,43 +91,36 @@ const PlantDetails = () => {
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search for another plant..."
                 />
-
                 <button type="submit">Search</button>
             </form>
-
             <div className="left-container">
-
                 <div className="pic-container">
                     <img className="pic" src={plant.plantImg} alt="Plant" />
                 </div>
-
                 <div className="smaller-title">Biography</div>
-
                 <div className="bio-container">
                     <p>{plant.plantBio}</p>
                 </div>
             </div>
-
             <div className="right-container">
-
                 <div className="title-banner">
                     {plant.plantName}
                 </div>
-
                 <div className="smaller-title">Planting Instructions</div>
-
                 <div className="inst-container">
-                    {plant.plantInst.map((inst, idx) => <p key={idx}>{inst}</p>)}
+                    {plant.plantInst.map((inst, idx) => (
+                        <p key={idx} className="instruction-text">{inst}</p> // Changed from list to paragraph
+                    ))}
                 </div>
-
                 <div className="smaller-title">Care Instructions</div>
-
                 <div className="care-info-container">
-                    {plant.plantCare.map((care, idx) => <p key={idx}>{care}</p>)}
+                    {plant.plantCare.map((care, idx) => (
+                        <p key={idx} className="instruction-text">{care}</p> // Changed from list to paragraph
+                    ))}
                 </div>
             </div>
         </div>
-    );
+    );    
 };
 
 export default PlantDetails;

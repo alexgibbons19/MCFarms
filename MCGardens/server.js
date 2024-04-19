@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
 import { askGpt } from './backend/HowToPlantCrop.js';
-import { askOptimalCrops } from './backend/OptimalCrop.js'; // Corrected import syntax
+import { askOptimalCrops } from './backend/OptimalCrop.js';
 
 const app = express();
 const port = 3000;

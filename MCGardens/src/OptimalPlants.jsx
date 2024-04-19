@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './assets/OptimalPlants.css'; // Make sure this is the correct path
+import './assets/OptimalPlants.css';
 import BurgerMenu from './BurgerMenu';
 
 const OptimalPlants = () => {
   const [location, setLocation] = useState('');
   const [plants, setPlants] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [lastSearchedLocation, setLastSearchedLocation] = useState('');
   const navigate = useNavigate();
 
   const handleLocationChange = (e) => {
@@ -15,15 +17,19 @@ const OptimalPlants = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsLoading(true); // Set loading to true on submit
     axios.post('http://localhost:3000/get-optimal-crops', { location })
       .then(response => {
+        setIsLoading(false); // Turn off loading once data is received
         if (response.data.success) {
           const optimalPlants = response.data.data.split('\n').map(line => line.trim());
           setPlants(optimalPlants.filter(plant => plant !== ''));
+          setLastSearchedLocation(location); // Update the location for the title only after fetching
         }
       })
       .catch(error => {
         console.error('Failed to fetch optimal plants:', error);
+        setIsLoading(false); // Ensure loading is turned off on error too
       });
   };
 
@@ -58,9 +64,11 @@ const OptimalPlants = () => {
           </form>
         </div>
         <div className="optimal-plants-list-container">
-          {plants.length > 0 ? (
+          {isLoading ? (
+            <p>Generating Information...</p>
+          ) : plants.length > 0 ? (
             <>
-              <h2>Optimal plants for {location}:</h2>
+              <h2>Optimal plants for {lastSearchedLocation}:</h2>
               <div>
                 {plants.map((plant, index) => (
                   <div key={index} className="plant-entry" onClick={() => handlePlantClick(plant)}>

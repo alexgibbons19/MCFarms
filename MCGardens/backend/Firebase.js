@@ -9,7 +9,8 @@ import {
     signInWithEmailAndPassword, 
     createUserWithEmailAndPassword,
     sendPasswordResetEmail,
-    sendEmailVerification } from "firebase/auth";
+    sendEmailVerification 
+} from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBdBh6oBgnUZJ6dROPNOp5Wwxyvrr8epLQ",
@@ -20,7 +21,7 @@ const firebaseConfig = {
     messagingSenderId: "102086093090",
     appId: "1:102086093090:web:f8c4183ccf4594d6eedd7b",
     measurementId: "G-G642QLL9KX"
-  };
+};
 
 // Initialize Firebase
 initializeApp(firebaseConfig);
