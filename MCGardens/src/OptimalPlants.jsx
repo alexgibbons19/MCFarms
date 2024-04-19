@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './assets/OptimalPlants.css'; // Make sure this is the correct path
+import './assets/OptimalPlants.css';
 import BurgerMenu from './BurgerMenu';
 
 const OptimalPlants = () => {
   const [location, setLocation] = useState('');
   const [plants, setPlants] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [lastSearchedLocation, setLastSearchedLocation] = useState('');
   const navigate = useNavigate();
 
   const handleLocationChange = (e) => {
@@ -15,17 +17,29 @@ const OptimalPlants = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3000/get-optimal-crops', { location })
+    setIsLoading(true); // Set loading to true on submit
+    axios.post('https://us-central1-mcgardens-bd0b1.cloudfunctions.net/askOptimalCrops/askOptimalCrops', { location })
       .then(response => {
-        if (response.data.success) {
-          const optimalPlants = response.data.data.split('\n').map(line => line.trim());
+        setIsLoading(false); // Turn off loading once data is received
+        // Directly accessing response.data.crops since that's where your data is
+        if (response.data && response.data.crops) {
+          const optimalPlants = response.data.crops.split('\n').map(line => line.trim());
           setPlants(optimalPlants.filter(plant => plant !== ''));
+          setLastSearchedLocation(location); // Update the location for the title only after fetching
+          setLocation(''); // Clear the input field
+        } else {
+          // Handle case where data might be received but not as expected
+          setPlants([]); // Clear any previous plants
+          console.error('No crops data found in response:', response.data);
         }
       })
       .catch(error => {
         console.error('Failed to fetch optimal plants:', error);
+        setIsLoading(false); // Ensure loading is turned off on error too
+        setPlants([]); // Clear any previous plants on error
+        setLocation(''); // Clear the input field even if there's an error
       });
-  };
+  };    
 
   const handlePlantClick = (plant) => {
     const plantName = plant.substring(plant.indexOf(' ') + 1);
@@ -58,9 +72,11 @@ const OptimalPlants = () => {
           </form>
         </div>
         <div className="optimal-plants-list-container">
-          {plants.length > 0 ? (
+          {isLoading ? (
+            <p>Generating Information...</p>
+          ) : plants.length > 0 ? (
             <>
-              <h2>Optimal plants for {location}:</h2>
+              <h2>Optimal plants for {lastSearchedLocation}:</h2>
               <div>
                 {plants.map((plant, index) => (
                   <div key={index} className="plant-entry" onClick={() => handlePlantClick(plant)}>

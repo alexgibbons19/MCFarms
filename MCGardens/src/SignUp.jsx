@@ -1,64 +1,75 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './assets/Login.css';
-import { signIn, createUser, resetPassword } from '../backend/Authentication';
+import { createUserAndSendVerification, resendVerificationEmail } from '../backend/Firebase';
 import { useNavigate, Link } from "react-router-dom";
 
 function SignUp() {
   const navigate = useNavigate();
-  const [formValues, setFormValues] = useState({ email: '', password: '' });
+  const [formValues, setFormValues] = useState({ email: '', password: '', confirmPassword: '' });
   const [error, setError] = useState('');
+  const [user, setUser] = useState(null);
+  const [showResend, setShowResend] = useState(false);
+  const [countdown, setCountdown] = useState(60);
 
   const handleChange = (e) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!formValues.email || !formValues.password) {
-        setError("Email and password are required.");
-        return;
-    }
-
-    try {
-        await signIn(formValues.email, formValues.password);
-        navigate('/home-page');
-    } catch (error) {
-        console.error("Login error:", error); // For debugging purposes
-        setError("Incorrect username or password."); // Display Firebase error message to the user
-    }
-  }
-
   const handleRegistration = async (e) => {
     e.preventDefault();
 
-    if (!formValues.email || !formValues.password) {
-      setError("Email and password are required for registration.");
+    if (!formValues.email || !formValues.password || !formValues.confirmPassword) {
+      setError("All fields are required.");
+      return;
+    }
+
+    if (formValues.password !== formValues.confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
 
     try {
-      await createUser(formValues.email, formValues.password);
-      console.log("User created successfully");
-      navigate('/home-page'); // Navigate or show a success message
+      const userCredential = await createUserAndSendVerification(formValues.email, formValues.password);
+      setUser(userCredential.user);
+      setError("A verification email has been sent. Please verify your email before logging in.");
+      setShowResend(true);
+      startCountdown();
     } catch (error) {
       console.error("Registration error:", error);
-      setError("Failed to create an account. " + error.message); // Display error message
+      setError("Failed to create an account. " + error.message);
     }
   };
 
-  const handleForgotPassword = async () => {
-    if (!formValues.email) {
-        setError("Please enter your email to reset your password.");
-        return;
-    }
-    const { success, message } = await resetPassword(formValues.email);
-    if (success) {
-        setError("Please check your email to reset your password.");
-    } else {
-        setError("Failed to reset password: " + message);
+  const startCountdown = () => {
+    setCountdown(60);
+    let timer = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const handleResendVerification = async () => {
+    if (formValues.email) {
+      try {
+        await resendVerificationEmail(formValues.email);
+        setError("A new verification email has been sent.");
+        startCountdown();
+      } catch (error) {
+        setError("Failed to resend verification email. " + error.message);
+      }
     }
   };
+
+  useEffect(() => {
+    if (user && user.emailVerified) {
+      navigate('/home-page');
+    }
+  }, [user, navigate]);
 
   return (
     <div className="main">
@@ -69,8 +80,8 @@ function SignUp() {
               <h2> MCGardens Create User </h2>
             </header>
           </div>
-        
-          <form onSubmit={handleSubmit}>
+
+          <form onSubmit={handleRegistration}>
             <div>
               <label htmlFor="email"><b>Email</b></label><br />
               <input 
@@ -92,7 +103,7 @@ function SignUp() {
                 type="password" 
                 id="password" 
                 name="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 placeholder="Password" 
                 className="textbox" 
                 value={formValues.password || ""}
@@ -100,9 +111,35 @@ function SignUp() {
                 required
               /><br />
             </div>
+
+            <div>
+              <label htmlFor="confirmPassword"><b>Confirm Password</b></label><br />
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                autoComplete="new-password"
+                placeholder="Confirm Password"
+                className="textbox"
+                value={formValues.confirmPassword || ""}
+                onChange={handleChange}
+                required
+              /><br />
+            </div>
             
             <div>
-              <button type="submit" className="sign-in-button">Sign Up</button>
+              {!showResend ? (
+                <button type="submit" className="sign-in-button">Sign Up</button>
+              ) : (
+                <button 
+                  type="button" 
+                  onClick={handleResendVerification} 
+                  disabled={countdown > 0} 
+                  className="sign-in-button"
+                >
+                  Resend Email {countdown > 0 ? `(${countdown}s)` : ""}
+                </button>
+              )}
             </div>
           </form>
 
@@ -110,7 +147,7 @@ function SignUp() {
 
           <div className="additionalOptions">
             <a href="/">Sign In</a>
-            <a onClick={handleForgotPassword} href="#" style={{ cursor: 'pointer' }}>Forgot Password</a>
+            <a href="/forgot-password" style={{ cursor: 'pointer' }}>Forgot Password</a>
           </div>
         </div>
       </div>

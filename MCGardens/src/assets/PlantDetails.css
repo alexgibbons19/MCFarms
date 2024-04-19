@@ -58,3 +58,9 @@
     padding-left: 10px;
     color:azure;
 }
+
+.instruction-text {
+    margin-bottom: 10px; /* Adds space between each instruction */
+    padding-left: 20px;  /* Adds some padding for better readability */
+    text-indent: -20px;  /* Optional: If you want to align the first line differently */
+}

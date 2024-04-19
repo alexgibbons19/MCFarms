@@ -1,17 +1,34 @@
-const fs = require('fs');
-const axios = require('axios');
-require('dotenv').config();
+import axios from 'axios';
+import dotenv from 'dotenv';
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+
+dotenv.config();
+
+// Assuming Firebase is configured elsewhere and imported here, or configure it in this file
+const firebaseConfig = {
+    apiKey: "AIzaSyBdBh6oBgnUZJ6dROPNOp5Wwxyvrr8epLQ",
+    authDomain: "mcgardens-bd0b1.firebaseapp.com",
+    databaseURL: "https://mcgardens-bd0b1-default-rtdb.firebaseio.com",
+    projectId: "mcgardens-bd0b1",
+    storageBucket: "mcgardens-bd0b1.appspot.com",
+    messagingSenderId: "102086093090",
+    appId: "1:102086093090:web:f8c4183ccf4594d6eedd7b",
+    measurementId: "G-G642QLL9KX"
+};
+initializeApp(firebaseConfig);
+const db = getFirestore();
 
 const OPENAI_API_KEY = process.env.REACT_APP_GPT_TOKEN;
 
 async function askOptimalCrops(locationInput) {
     locationInput = locationInput.toLowerCase();
-    const filename = `./backend/database/locations/${locationInput}.txt`;
+    const locationRef = doc(db, 'optimalCrops', locationInput);
 
     try {
-        if (fs.existsSync(filename)) {
-            const content = fs.readFileSync(filename, 'utf8');
-            return content;
+        const docSnap = await getDoc(locationRef);
+        if (docSnap.exists()) {
+            return docSnap.data().crops; // Assuming 'crops' is the stored field
         } else {
             const chatSession = await axios.post(
                 'https://api.openai.com/v1/chat/completions',
@@ -40,9 +57,9 @@ async function askOptimalCrops(locationInput) {
                 }
             );
 
-            const reply = chatSession.data.choices[0].message.content;
-            fs.writeFileSync(filename, reply);
-            return reply;
+            const crops = chatSession.data.choices[0].message.content;
+            await setDoc(locationRef, { crops }); // Store the response in Firebase
+            return crops;
         }
     } catch (error) {
         console.error(`An error occurred: ${error}`);
@@ -50,11 +67,4 @@ async function askOptimalCrops(locationInput) {
     }
 }
 
-module.exports.askOptimalCrops = askOptimalCrops;
-
-// Example usage
-// (async () => {
-//     const userInput = "new york";
-//     const reply = await askOptimalCrops(userInput);
-//     console.log(reply);
-// })();
+export { askOptimalCrops };
