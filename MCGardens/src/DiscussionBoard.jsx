@@ -26,6 +26,7 @@ const DiscussionBoard = () => {
     const [threadReplies, setThreadReplies] = useState([]);
     const [selectedThreadId, setSelectedThreadId] = useState(null);
     const [currUser, setCurrUser] = useState("");
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -137,11 +138,6 @@ const DiscussionBoard = () => {
         setShowThreadForm(false);
     }
 
-    const handleCancelReply = () => {
-        setReplyText("");
-        setSelectedThreadId(null);
-        setShowReplyForm(false);
-      }
 
     const handleLinkClick = (id) => {
         console.log("Clicked thread ID: ", id);
@@ -251,9 +247,7 @@ const DiscussionBoard = () => {
                                             onChange={(e) => setReplyText(e.target.value)}
                                         />
                                     </div>
-                                    <button className="submit-btn">SUBMIT REPLY</button>
-                                    <button className="cancel-btn" onClick={handleCancelReply}>CANCEL</button>
-                                        
+                                    <button className="submit-btn">SUBMIT REPLY</button>                                        
                                 </form>
                                 
                                 {thread.replies && thread.replies.length > 0 ? (

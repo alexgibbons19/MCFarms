@@ -1,114 +1,138 @@
-body{
-  display: flex;
-  justify-content: center;
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
 }
+
 .home {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 40px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 40px auto;
 }
 
-.thread-flex-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.thread-container {
-  display: flex;
-  flex-direction: column;
+.thread-container, .reply-container {
+  background-color: #fff;
+  border-radius: 8px;
   margin: 20px 0;
-  max-width: 1000px;
-  min-width: 700px;
-  width: 100%;
-  border-width: 3px;
-  border-style: solid;
-  border-color: black;
+  padding: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.thread-contents, .reply-contents {
+  margin-bottom: 30px;
+}
+
+.thread-info, .reply-info {
+  margin-bottom: 20px;
+}
+
+.thread-title, .reply-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.thread-author, .reply-author {
+  font-size: 16px;
+  color: #777;
+}
+
+.thread-date, .reply-date {
+  font-size: 14px;
+  color: #999;
+}
+
+.thread-text, .reply-text {
+  border: 1px solid #ddd;
+  border-radius: 6px;
   padding: 20px;
+  font-size: 16px;
+  color: #555;
+  background-color: #f5f5f5;
 }
 
-.thread-contents {
-  display: flex;
-  flex-direction: row;
-  border-style:solid;
-  border-width: 3px;
-  border-color: blue;
+.create-thread-form, .create-reply-form {
+  margin-top: 30px;
 }
 
-.thread-text {
-  width: 100%;
-  border-style:solid;
-  border-width: 2px;
-  border-color: red;
+.submit-btn, .cancel-btn {
+  margin-right: 15px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
-.thread-info {
-  border-style: solid;
-  border-width: 1px;
-  border-color: pink;
+.submit-btn {
+  background-color: #007bff;
+  color: #fff;
 }
 
-.create-thread-container {
-  border-style: solid;
+.cancel-btn {
+  background-color: #dc3545;
+  color: #fff;
 }
 
-.thread-date {
-  border-style: solid;
-  border-color: lightgray;
-  border-width: 1px;
+.create-thread-btn {
+  margin-bottom: 30px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  background-color: #28a745;
+  color: #fff;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
 }
 
-.reply-flex-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.create-thread-btn:hover {
+  background-color: #218838;
 }
 
-.reply-container {
-  display: flex;
-  flex-direction: column;
-  margin: 20px 0;
-  max-width: 800px;
-  min-width: 400px;
-  width: 100%;
-  border-width: 3px;
-  border-style: solid;
-  border-color: white;
-  padding: 20px;
+.reply-count-text {
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 15px;
 }
 
-.reply-contents {
-  display: flex;
-  flex-direction: row;
-  border-style:solid;
-  border-width: 3px;
-  border-color: blue;
+.loading-text {
+  font-size: 18px;
+  color: #777;
 }
 
-.reply-text {
-  width: 100%;
-  border-style:solid;
-  border-width: 2px;
-  border-color: red;
+.error-text {
+  font-size: 18px;
+  color: #dc3545;
 }
 
-.reply-info {
-  border-style: solid;
-  border-width: 1px;
-  border-color: pink;
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .home {
+      padding: 20px;
+  }
 
-.create-reply-container {
-  border-style: solid;
-}
+  .thread-container, .reply-container {
+      padding: 20px;
+  }
 
-.reply-date {
-  border-style: solid;
-  border-color: lightgray;
-  border-width: .5px;
+  .thread-title, .reply-title {
+      font-size: 20px;
+  }
+
+  .thread-text, .reply-text {
+      padding: 15px;
+      font-size: 14px;
+  }
+
+  .submit-btn, .create-thread-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+  }
 }
