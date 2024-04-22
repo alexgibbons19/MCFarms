@@ -176,9 +176,6 @@ const DiscussionBoard = () => {
   return (
     <>
         <BurgerMenu />
-        <button className="remove-threads-btn" onClick={handleRemoveThreads}>
-            Remove All Threads from LocalStorage
-        </button>
         <main className='home'>
             {!showThreadForm && (
                 <button className='create-thread-btn' onClick={handleCreateThreadClick}>CREATE THREAD</button>
@@ -219,15 +216,10 @@ const DiscussionBoard = () => {
                 ) : (
                     threads.map((thread) => (
                         <div className='thread-container' key={thread.id}>
-                            <button className="remove-thread-btn" onClick={() => handleRemoveThisThread(thread.id)}>Remove Thread</button>
-                            <Link 
-                                to={`/thread/${thread.id}`} 
-                                className="thread-title"
-                                onClick={() => handleLinkClick(thread.id)}>
-                                <p>Title: {thread.title}</p>
-                            </Link>
+                            
                             <div className="thread-contents">
                                 <div className="thread-info">
+                                    <p className="thread-title">Title: {thread.title}</p>
                                     <p className="thread-author">{thread.author}</p>
                                     <div className="thread-date">
                                         <p className="date">
