@@ -98,8 +98,15 @@ export const addReply = async (replyData) => {
   }
 };
 
-export const getUser = async () => {
-    const currUser = userCredential.user.email;
-    return currUser;
-}
+export const getUser = () => {
+  const user = auth.currentUser;
+  if (user) {
+      const userEmail = user.email;
+      const emailWithoutDomain = userEmail.split('@')[0];
+      return emailWithoutDomain;
+  } else {
+      return null;
+  }
+};
+
 

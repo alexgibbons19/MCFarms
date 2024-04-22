@@ -21,6 +21,7 @@ const DiscussionBoard = () => {
     const [numReplies, setNumReplies] = useState(0);
     const [threadReplies, setThreadReplies] = useState([]);
     const [selectedThreadId, setSelectedThreadId] = useState(null);
+    const [currUser, setCurrUser] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,8 +37,9 @@ const DiscussionBoard = () => {
 
                 setThreads(threadsWithReplies);
                 setReplies(fetchedReplies);
-                const currUser = getUser;
+                const currUser = await getUser();
                 console.log(currUser);
+                setCurrUser(currUser);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -62,7 +64,7 @@ const DiscussionBoard = () => {
             id: uuidv4(),
             title: threadTitle, 
             text: threadText ,
-            author: 'Anonymous',
+            author: currUser,
             created_on: creationDate.toLocaleString(),
             numReplies: 0
         };
@@ -87,7 +89,7 @@ const DiscussionBoard = () => {
             threadId: thread.id,
             title: 'RE:' + thread.title,
             text: replyText,
-            author: 'Anonymous', // Assuming 'user' is the correct field name
+            author: currUser, // Assuming 'user' is the correct field name
             created_on: creationDate.toLocaleString()
         };
 
