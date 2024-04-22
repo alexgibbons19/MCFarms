@@ -17,29 +17,27 @@ const OptimalPlants = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true); // Set loading to true on submit
+    setIsLoading(true);
     axios.post('https://us-central1-mcgardens-bd0b1.cloudfunctions.net/askOptimalCrops/askOptimalCrops', { location })
       .then(response => {
-        setIsLoading(false); // Turn off loading once data is received
-        // Directly accessing response.data.crops since that's where your data is
+        setIsLoading(false);
         if (response.data && response.data.crops) {
           const optimalPlants = response.data.crops.split('\n').map(line => line.trim());
           setPlants(optimalPlants.filter(plant => plant !== ''));
-          setLastSearchedLocation(location); // Update the location for the title only after fetching
+          setLastSearchedLocation(location);
           setLocation(''); // Clear the input field
         } else {
-          // Handle case where data might be received but not as expected
           setPlants([]); // Clear any previous plants
           console.error('No crops data found in response:', response.data);
         }
       })
       .catch(error => {
         console.error('Failed to fetch optimal plants:', error);
-        setIsLoading(false); // Ensure loading is turned off on error too
-        setPlants([]); // Clear any previous plants on error
+        setIsLoading(false);
+        setPlants([]);
         setLocation(''); // Clear the input field even if there's an error
       });
-  };    
+  };
 
   const handlePlantClick = (plant) => {
     const plantName = plant.substring(plant.indexOf(' ') + 1);
@@ -47,11 +45,10 @@ const OptimalPlants = () => {
   };
 
   return (
-    <>
-      <BurgerMenu />
-      <Link to="/" className="home-page-link">Home</Link>
-      <p></p>
-      <Link to="/discussion-board" className="discussion-board-link">Discussion Board</Link>
+    <div>
+      <div className='top-nav'>
+        <BurgerMenu />
+      </div>
       <div className='optimal-plants-container'>
         <div className="search-bar-container">
           <h2>Find Optimal Plants For Your Garden</h2>
@@ -71,27 +68,34 @@ const OptimalPlants = () => {
             </div>
           </form>
         </div>
-        <div className="optimal-plants-list-container">
-          {isLoading ? (
-            <p>Generating Information...</p>
-          ) : plants.length > 0 ? (
-            <>
-              <h2>Optimal plants for {lastSearchedLocation}:</h2>
-              <div>
-                {plants.map((plant, index) => (
+        {isLoading ? (
+          <p>Generating Information...</p>
+        ) : plants.length > 0 ? (
+          <>
+            <h2>Optimal plants for {lastSearchedLocation}:</h2>
+            <div className="optimal-plants-list-container">
+              <div className="column">
+                {plants.slice(0, 10).map((plant, index) => (
                   <div key={index} className="plant-entry" onClick={() => handlePlantClick(plant)}>
                     {plant}
                   </div>
                 ))}
               </div>
-            </>
-          ) : (
-            <p>Enter location above to get list of plants.</p>
-          )}
-        </div>
+              <div className="column">
+                {plants.slice(10, 20).map((plant, index) => (
+                  <div key={index} className="plant-entry" onClick={() => handlePlantClick(plant)}>
+                    {plant}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          <p>Enter location above to get list of plants.</p>
+        )}
       </div>
-    </>
-  );
+    </div>
+  );  
 };
 
 export default OptimalPlants;

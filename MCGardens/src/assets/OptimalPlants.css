@@ -1,22 +1,106 @@
-.view-more:hover {
-  cursor: pointer;
-  color: blue;
+/* Top navigation styling */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  background: #f0f0f0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 
-.optimal-plants-entry:hover {
+/* Improved Search Bar and Button Styling */
+.search-bar-container {
+  margin-top: 70px; /* Increase this if necessary */
+  margin-bottom: 20px; /* Existing margin for the bottom */
+}
+
+.search-bar-parameters-container {
+  display: flex;
+  gap: 10px; /* Space between the input and the button */
+  align-items: center; /* Align items vertically */
+  width: 100%; /* Ensure full width */
+}
+
+.location-input {
+  flex-grow: 1; /* Allow input to take remaining space */
+  padding: 8px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-location {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  color: blue;
+  transition: background-color 0.3s ease;
+  white-space: nowrap; /* Prevent button text from wrapping */
+}
+
+.search-location:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.optimal-plants-list-container {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  gap: 20px; /* Adjust spacing between columns */
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Aligns plant entries in the center of the column */
 }
 
 .plant-entry {
+  width: 200px; /* Larger width as you requested */
+  height: 50px;
+  margin: 5px 0; /* Space between entries */
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   cursor: pointer;
-  padding: 8px;
-  margin: 5px 0;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .plant-entry:hover {
-  background-color: #007bff;  /* A shade of blue */
-  color: white;               /* Change text color to white for better visibility */
+  background-color: lightblue;
+}
+
+@media (max-width: 768px) {
+  .plant-entry {
+    width: 70%; /* Full width on smaller screens */
+    padding: 8px; /* Slightly reduced padding */
+  }
+
+  .optimal-plants-list-container {
+    flex-direction: column; /* Stack columns vertically */
+    align-items: center; /* Center align the columns */
+  }
+
+  .column {
+    width: 100%; /* Make each column take full width */
+  }
+}
+
+@media (max-width: 600px) {
+  .search-bar-parameters-container {
+    flex-direction: column; /* Stack input and button vertically */
+  }
+
+  .search-location {
+    width: 100%; /* Button width matches the input on small screens */
+  }
 }
