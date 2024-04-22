@@ -1,61 +1,93 @@
-.burger-menu {
-    position: relative;
-    z-index:1000;
-    width: 100px;
-    cursor: pointer;
-    padding-top: 100px;
-  }
-  
-  .burger-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .burger-line {
-    width: 30px;
-    height: 4px;
-    background-color: #333;
-    margin-bottom: 5px;
-    transition: all 0.3s ease;
-  }
-  
-  .open {
-    transform: rotate(-45deg);
-  }
-  
-  .menu {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100px;
-    transform: translate(-50%, -50%);
-    background-color: #60ff90;
-    margin-top: 250px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    display: none;
+/* BurgerMenu Stylesheet */
 
+.burger-menu {
+  position: relative;
+  z-index: 1;
+  width: 100px;  /* Adjust width as necessary */
+  cursor: pointer;
+  padding-top: 50px;  /* Adjust the top padding as necessary */
+}
+
+.burger-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.burger-line {
+  width: 30px;
+  height: 4px;
+  background-color: #333;
+  margin-bottom: 5px;  /* Space between burger lines */
+  transition: all 0.3s ease;
+}
+
+.burger-line.open {
+  transform: rotate(-45deg);
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;  /* Match the width of the burger-menu for alignment */
+  background-color: #60ff90;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  display: none;  /* Initially hidden */
+  z-index: 2;
+}
+
+.menu.open {
+  display: block;
+}
+
+.menu ul li:hover {
+  background-color: #f5f5f5;
+}
+
+.burger-menu-options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.burger-menu-options li {
+  display: flex;
+  align-items: center; /* Vertical centering */
+  justify-content: center; /* Horizontal centering */
+  border-bottom: 1px solid #eee;
+  margin: 0; /* No margin to ensure consistent alignment */
+  padding: 0; /* No padding here, control it within <a> for better alignment */
+}
+
+.burger-menu-options li a {
+  padding: 15px; /* Adjust padding as needed */
+  display: block; /* Changed to block to manage text alignment */
+  text-align: center; /* Centers text horizontally */
+  width: 100%; /* Ensure it fills the li for full clickable area */
+  height: 100%; /* Ensure it fills the li for full clickable area */
+  color: inherit; /* Inherits color from parent */
+  text-decoration: none; /* No underline */
+  font-size: 20px; /* Font size as needed */
+  line-height: 24px; /* Line height as needed */
+  white-space: normal; /* Allows text wrapping */
+}
+
+.burger-menu-options li:last-child {
+  border-bottom: none; /* No bottom border for the last item */
+}
+
+/* Additional responsiveness for smaller devices */
+@media (max-width: 600px) {
+  .burger-menu, .menu {
+    width: 150px;  /* Increased width for better visibility on small screens */
   }
-  
-  .menu.open {
-    display: block;
+
+  .burger-line, .burger-menu-options li a {
+    font-size: 14px;  /* Slightly larger font size for better readability */
   }
-  
-  .menu ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .menu ul li {
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-  }
-  
-  .menu ul li:hover {
-    background-color: #f5f5f5;
-  }
-  
+}
