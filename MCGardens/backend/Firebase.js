@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import {
+    onSnapshot,
     getDocs,
     collection,
     getFirestore,
@@ -115,15 +116,42 @@ export const fetchReplies = async () => {
     
 };
 
+export const listenForThreadsUpdates = (callback) => {
+  const colRef = collection(db, 'threads');
+  return onSnapshot(colRef, (snapshot) => {
+      const threads = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      callback(threads);
+  });
+};
+
 export const addThread = async(threadData) => {
   const threadRef = collection(db, 'threads');
   try {
-    await addDoc(threadRef, threadData);
-    console.log("Thread added successfully:", threadData);
+      await addDoc(threadRef, threadData);
+      console.log("Thread added successfully:", threadData);
   } catch (error) {
-    console.error("Error adding thread:", error);
-    throw error;
+      console.error("Error adding thread:", error);
+      throw error;
   }
+};
+
+export const deleteThread = async(threadId) => {
+  const threadRef = doc(db, 'threads', threadId);
+  try {
+      await deleteDoc(threadRef);
+      console.log("Thread deleted successfully:", threadId);
+  } catch (error) {
+      console.error("Error deleting thread:", error);
+      throw error;
+  }
+};
+
+export const listenForRepliesUpdates = (callback) => {
+  const colRef = collection(db, 'replies');
+  return onSnapshot(colRef, (snapshot) => {
+      const replies = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      callback(replies);
+  });
 };
 
 export const addReply = async (replyData) => {
@@ -133,6 +161,17 @@ export const addReply = async (replyData) => {
       console.log("Reply added successfully:", replyData);
   } catch (error) {
       console.error("Error adding reply:", error);
+      throw error;
+  }
+};
+
+export const deleteReply = async(replyId) => {
+  const replyRef = doc(db, 'replies', replyId);
+  try {
+      await deleteDoc(replyRef);
+      console.log("Reply deleted successfully:", replyId);
+  } catch (error) {
+      console.error("Error deleting reply:", error);
       throw error;
   }
 };

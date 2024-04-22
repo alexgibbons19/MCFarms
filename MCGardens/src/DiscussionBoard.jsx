@@ -5,6 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 import BurgerMenu from './BurgerMenu';
 import { 
     fetchThreads, fetchReplies, getUser,
+    listenForThreadsUpdates,
+    listenForRepliesUpdates,
+    deleteThread as deleteThreadFromDB,
+    deleteReply,
     addThread as addThreadToDB,
     addReply as addReplyToDB 
 } from '../backend/Firebase';
@@ -27,9 +31,9 @@ const DiscussionBoard = () => {
         const fetchData = async () => {
             try {
                 const fetchedThreads = await fetchThreads();
-                fetchedThreads.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
+                fetchedThreads.sort((a, b) => new Date(a.created_on) - new Date(b.created_on));
                 const fetchedReplies = await fetchReplies();
-                fetchedReplies.sort((a, b) => new Date(a.created_on) - new Date(b.created_on));
+                fetchedReplies.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
                 const threadsWithReplies = fetchedThreads.map(thread => ({
                     ...thread,
                     replies: fetchedReplies.filter(reply => reply.threadId === thread.id)
@@ -46,6 +50,19 @@ const DiscussionBoard = () => {
         };
 
         fetchData();
+
+        const unsubscribeThreads = listenForThreadsUpdates((updatedThreads) => {
+            setThreads(updatedThreads);
+        });
+        const unsubscribeReplies = listenForRepliesUpdates((updatedReplies) => {
+            setReplies(updatedReplies);
+        });
+
+
+        return () => {
+            unsubscribeThreads();
+            unsubscribeReplies();
+        }
     }, []);
 
     const handleCreateThreadClick = () => {
@@ -147,14 +164,14 @@ const DiscussionBoard = () => {
     localStorage.removeItem('replies');
     console.log('All Threads and Replies removed from localStorage.');
   };
-  const handleRemoveThisThread = (threadId) => {
-    const updatedThreads = threads.filter((thread) => thread.id !== threadId);
-    setThreads(updatedThreads);
-    const updatedReplies = replies.filter((reply) => reply.threadId !== threadId);
-    localStorage.setItem('threads', JSON.stringify(updatedThreads));
-    localStorage.setItem('replies', JSON.stringify(updatedReplies));
-    console.log('Thread and replies removed from localStorage.')
-  }
+  const handleRemoveThisThread = async (threadId) => {
+    try {
+        await deleteThreadFromDB(threadId);
+        console.log('Thread deleted successfully.');
+    } catch (error) {
+        console.error('Error deleting thread:', error);
+    }
+  };
 
   return (
     <>
