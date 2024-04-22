@@ -6,11 +6,12 @@ import BurgerMenu from './BurgerMenu';
 import defaultImg from './assets/logo.png';
 
 const PlantDetails = () => {
+    // Adjusted initial state to have more contextual initial messages
     const [plant, setPlant] = useState({
-        plantName: "Generating Information",
-        plantBio: "Please wait while generating.",
-        plantInst: ["Please wait while generating."],
-        plantCare: ["Please wait while generating."],
+        plantName: "Please enter a plant in the search.",
+        plantBio: "Here will be bio information",
+        plantInst: ["Planting instructions will appear here after a search."],
+        plantCare: ["Care information will be displayed here once you search for a plant."],
         plantImg: defaultImg
     });
     const [query, setQuery] = useState('');
@@ -21,12 +22,10 @@ const PlantDetails = () => {
     const plantQuery = searchParams.get('query');
 
     const splitInstructions = (text) => {
-        // This regex looks for numbers followed by a dot and space ("1. ", "2. ", etc.) to split into array elements
         return text.split(/(?=\d+\. )/).filter(line => line.trim() !== '');
     };
 
     const parsePlantDetails = (response) => {
-        // Directly use the structured data from the response
         if (response && response.bio && response.howToPlant && response.howToTakeCare) {
             setPlant({
                 plantName: plantQuery || "Unknown Plant",
@@ -44,10 +43,18 @@ const PlantDetails = () => {
                 plantCare: ["Data format error or request unsuccessful."]
             }));
         }
-    };       
-    
+    };
+
     useEffect(() => {
         if (plantQuery) {
+            setPlant({
+                plantName: "Generating Information",
+                plantBio: "Please wait while generating.",
+                plantInst: ["Please wait while generating."],
+                plantCare: ["Please wait while generating."],
+                plantImg: defaultImg
+            });
+
             const plantName = plantQuery.toLowerCase();
             axios.post('https://us-central1-mcgardens-bd0b1.cloudfunctions.net/askGpt/askGpt', { plantInput: plantName })
                 .then(response => {
@@ -55,26 +62,23 @@ const PlantDetails = () => {
                 })
                 .catch(error => {
                     console.error("API call failed:", error);
-                    setPlant(prevState => ({
-                    ...prevState,
-                    plantBio: "Failed to load data.",
-                    plantInst: ["Failed to load data."],
-                    plantCare: ["Failed to load data."]
-                    }));
+                    setPlant({
+                        plantName: "Failed to load data.",
+                        plantBio: "Failed to load data.",
+                        plantInst: ["Failed to load data."],
+                        plantCare: ["Failed to load data."],
+                        plantImg: defaultImg
+                    });
                 });
         }
     }, [location, plantQuery]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-    
-        // Check if the query is empty
         if (!query.trim()) {
-            alert('Please enter a valid plant name.'); // Display an alert if the input is empty
-            return; // Return to prevent further actions
+            alert('Please enter a valid plant name.');
+            return;
         }
-    
-        // Set plant to generating/loading state before navigating to the new URL
         setPlant({
             plantName: "Generating Information",
             plantBio: "Please wait while generating.",
@@ -82,28 +86,27 @@ const PlantDetails = () => {
             plantCare: ["Please wait while generating."],
             plantImg: defaultImg
         });
-    
-        // Clear the textbox by setting query to an empty string
-        setQuery('');
-    
-        // Use a slight delay to ensure the state update is rendered before the navigation
+        // Using a timeout to delay navigation until after the state updates
         setTimeout(() => {
             navigate(`/plant-details?query=${encodeURIComponent(query)}`);
+            setQuery(''); // Clear the search query right after submission
         }, 0);
     };
 
     return (
         <div className="plant-details">
-            <BurgerMenu />
-            <form onSubmit={handleSubmit} style={{ textAlign: 'center', margin: '20px' }}>
-                <input
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search for another plant..."
-                />
-                <button type="submit">Search</button>
-            </form>
+            <div className="top-nav">
+                <BurgerMenu />
+                <form onSubmit={handleSubmit} className="search-bar">
+                    <input
+                        type="text"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Please enter plant" // Updated placeholder text
+                    />
+                    <button type="submit">Search</button>
+                </form>
+            </div>
             <div className="left-container">
                 <div className="pic-container">
                     <img className="pic" src={plant.plantImg} alt="Plant" />
@@ -120,18 +123,18 @@ const PlantDetails = () => {
                 <div className="smaller-title">Planting Instructions</div>
                 <div className="inst-container">
                     {plant.plantInst.map((inst, idx) => (
-                        <p key={idx} className="instruction-text">{inst}</p> // Changed from list to paragraph
+                        <p key={idx} className="instruction-text">{inst}</p>
                     ))}
                 </div>
                 <div className="smaller-title">Care Instructions</div>
                 <div className="care-info-container">
                     {plant.plantCare.map((care, idx) => (
-                        <p key={idx} className="instruction-text">{care}</p> // Changed from list to paragraph
+                        <p key={idx} className="instruction-text">{care}</p>
                     ))}
                 </div>
             </div>
         </div>
-    );    
+    );
 };
 
 export default PlantDetails;

@@ -1,66 +1,176 @@
-.plant-details{
-    display:flex;
-    flex-direction: row;
-    width: 90vw; /* Set the width to 100% of the viewport's width */
-    height: 90vh; 
+/* General layout settings */
+.plant-details {
+    position: relative;
+    display: flex;
+    flex-direction: row; /* Ensures side-by-side layout */
+    width: 100vw;
+    min-height: 90vh;
+    overflow-y: auto; /* Allows scrolling of the entire page */
+    padding-top: 60px; /* Space for fixed nav bar */
 }
 
-.left-container{
-    flex-grow: 1;
+/* Top navigation styling */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    width:25%;
-    background-color:rgb(145, 244, 123);
-    border:1px solid black;
-    margin: 0 auto;
-    padding-left:10px;
+    width: 100%;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    background: #f0f0f0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
-.pic{
-    width:100%; 
-    height:auto;
-    margin: 10px auto;
-    background-size:cover;
-    background-position:center;
+/* Search bar form styling */
+.search-bar {
+    display: flex;
+    justify-content: center; /* Centers the form within the navigation bar */
+    align-items: center;
+    flex-grow: 1; /* Takes up available space but won't stretch the input unnecessarily */
+    padding-right: 20px;
 }
 
-.right-container{
-    flex-grow: 1;
+.search-bar input {
+    width: 30%; /* Restricts the input width to 30% of its parent */
+    padding: 8px; /* Adds padding for aesthetics and better touch */
+    margin: 0 10px; /* Automatically centers the input within the form */
+}
+
+.search-bar button {
+    padding: 8px 16px; /* Ensures the button has adequate spacing */
+    margin-left: 10px; /* Adds space between the input and the button */
+}
+
+/* Containers for content */
+.left-container {
+    flex: 1; /* Adjust proportion if needed */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(145, 244, 123); /* Light green background */
+    border-right: 1px solid #ccc; /* Adds a subtle border */
+    padding: 20px;
+}
+
+.right-container {
+    flex: 3; /* More space for the right container */
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    width:75%;
-    background-color:green;
+    background-color: green; /* Ensures background is green */
+    padding: 20px;
+    overflow: auto; /* Allows for scrolling within this container if content overflows */
 }
 
-.bio-container,.care-info-container{
-    text-align: left;
-    background-color:aliceblue;
-    color:black;
-    margin: 10px auto;
-    width: 80%;
-    border:1px solid black;
-    border-color:black;
-
+/* Image settings */
+.pic-container {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Centers the image */
 }
 
+.pic {
+    width: auto;
+    height: auto;
+    max-width: 300px; /* Ensures the image does not become too large */
+    max-height: 300px;
+}
 
-.title-banner{
+/* Text and information styling */
+.title-banner, .smaller-title {
     text-align: center;
     text-transform: uppercase;
     font-weight: bold;
-    font-size:50px;
-    color:azure;
+    color: azure;
 }
 
-.smaller-title{
-    text-align: left;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size:30px;
+.title-banner {
+    font-size: 50px;
+}
+
+.smaller-title {
+    font-size: 30px;
     padding-left: 10px;
-    color:azure;
+}
+
+/* Adjusted content containers for correct fitting */
+.bio-container, .inst-container, .care-info-container {
+    text-align: left;
+    background-color: aliceblue;
+    color: black;
+    width: 100%; /* Adjust width to 100% minus double the padding if needed */
+    box-sizing: border-box; /* Ensures padding and border are included in the width */
+    border: 1px solid black;
+    padding: 5px;
+    margin: 5px 0; /* Provides a little space between containers */
+    overflow: hidden; /* Change to 'auto' if you want scroll inside each container */
 }
 
 .instruction-text {
-    margin-bottom: 10px; /* Adds space between each instruction */
-    padding-left: 20px;  /* Adds some padding for better readability */
-    text-indent: -20px;  /* Optional: If you want to align the first line differently */
+    margin-bottom: 10px;
+    padding-left: 20px;
+    text-indent: 0px; /* Default no indent, adjust in media queries if needed */
+}
+
+/* Responsive adjustments for mobile screens */
+@media (max-width: 768px) {
+    .plant-details {
+        flex-direction: column; /* Stack containers vertically */
+        align-items: center;
+        padding-top: 70px;
+    }
+
+    .left-container, .right-container {
+        width: 90%; /* Adjust width for mobile */
+        flex: none; /* Disable flex growth */
+        border-right: none; /* Remove border */
+    }
+
+    .search-bar input {
+        width: 80%; /* Adjust input width for mobile */
+    }
+
+    .pic {
+        max-width: 90%; /* Adjust image max-width for mobile screens */
+        max-height: auto;
+    }
+
+    .top-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 10px 5px;
+    }
+
+    .burger-menu {
+        flex-grow: 0;
+        padding: 10px 0px;
+    }
+
+    .search-bar {
+        width: 100%; /* Allow search bar to fill width */
+        justify-content: center;
+        padding-left: 0px;
+        padding-right: 20px;
+    }
+
+    .search-bar input {
+        width: 100%; /* Fill width of search bar */
+        margin: 0;
+    }
+
+    .instruction-text {
+        text-indent: 0px; /* No negative indent on mobile */
+        padding-left: 10px; /* Adjust padding */
+    }
+}
+
+@media (min-width: 768px) {
+    .instruction-text {
+        text-indent: -10px; /* Only apply negative indent on larger screens if needed */
+    }
 }
