@@ -2,7 +2,8 @@ import { initializeApp } from "firebase/app";
 import {
     getDocs,
     collection,
-    getFirestore
+    getFirestore,
+    addDoc
 } from "firebase/firestore";
 import { 
     getAuth, 
@@ -83,3 +84,68 @@ export const resendVerificationEmail = async (email) => {
     }
     return { success: false, message: "User not found or already verified." };
 };
+
+
+
+
+  // Function to fetch threads
+export const fetchThreads = async () => {
+    const colRef = collection(db, 'threads');
+    try {
+      const snapshot = await getDocs(colRef);
+      const threads = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      return threads;
+    } catch (error) {
+      console.error("Error fetching threads:", error);
+      throw error;
+    }
+    
+};
+
+export const fetchReplies = async () => {
+	const colRef = collection(db, 'replies');
+  try{
+    const snapshot = await getDocs(colRef);
+    const replies = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    return replies;
+  } catch (error) {
+    console.error("Error fetching replies:",error);
+    throw error;
+  }
+    
+};
+
+export const addThread = async(threadData) => {
+  const threadRef = collection(db, 'threads');
+  try {
+    await addDoc(threadRef, threadData);
+    console.log("Thread added successfully:", threadData);
+  } catch (error) {
+    console.error("Error adding thread:", error);
+    throw error;
+  }
+};
+
+export const addReply = async (replyData) => {
+  const replyRef = collection(db, 'replies');
+  try {
+      await addDoc(replyRef, replyData);
+      console.log("Reply added successfully:", replyData);
+  } catch (error) {
+      console.error("Error adding reply:", error);
+      throw error;
+  }
+};
+
+export const getUser = () => {
+  const user = auth.currentUser;
+  if (user) {
+      const userEmail = user.email;
+      const emailWithoutDomain = userEmail.split('@')[0];
+      return emailWithoutDomain;
+  } else {
+      return null;
+  }
+};
+
+
