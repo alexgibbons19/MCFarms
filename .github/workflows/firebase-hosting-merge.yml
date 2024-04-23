@@ -17,3 +17,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MCGARDENS_BD0B1 }}'
           channelId: live
           projectId: mcgardens-bd0b1
+          entryPoint: ./MCGardens
