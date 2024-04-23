@@ -30,22 +30,13 @@ const CalendarPage = () => {
         const user = getUser();
         setThisUser(user);
 
-        const eventsData = await fetchEvents(thisUser);
+        const eventsData = await fetchEvents(user);
 
         console.log("from front1: ",eventsData);
         
-        const eventsWithIds = eventsData.map(event => {
-          const commentsArray = event.comments || []; // Use empty array if comments is null or undefined
+        setEvents(eventsData);
 
-          return {
-            ...event,
-            docID: event.id,
-            comments: commentsArray // Set comments to empty array if undefined or null
-          };
-        });
-
-        setEvents(eventsWithIds);
-        console.log("from front: ",eventsWithIds);
+        console.log("from front: ",events);
 
       } catch (error) {
         console.error("Error loading events:",error);
@@ -120,6 +111,7 @@ const handleSubmit = async (e) => {
 const handleAddComment = async () => {
   if (selectedEvent && commentInput.trim()) {
     try {
+      console.log("this id: ",selectedEvent.docID);
       const updatedEvent = await addCommentToEvent(selectedEvent.docID, commentInput);
 
       const updatedEvents = events.map(event =>
@@ -127,6 +119,7 @@ const handleAddComment = async () => {
       );
       
       setEvents(updatedEvents);
+
       setCommentInput('');
       setSelectedEvent(updatedEvent); 
     } catch (error) {
@@ -167,7 +160,10 @@ const handleDeleteEvent = async () => {
           defaultView="month"
           selectable={false}
           onSelectEvent={(event) => setSelectedEvent(event)}
-        />
+          eventPropGetter={(event) => ({
+            className: event.comments.length > 0 ? 'has-comments' : 'no-comments'
+          })}
+          />
         </div>
         {/* ADD COMMENTS / DELETE EVENT */}
         <div style={{ paddingTop: '10px',marginLeft: '20px' }}>
@@ -183,7 +179,7 @@ const handleDeleteEvent = async () => {
               <p>End: {moment(selectedEvent.endDate).format('LLL')}</p>
               <h4>Comments:</h4>
               <ul>
-              {Array.isArray(selectedEvent.comments) && selectedEvent.comments.map((comment, index) => (
+              {selectedEvent && selectedEvent.comments.map((comment, index) => (
                 <li key={index}>{comment}</li>
               ))}
               </ul>
@@ -239,3 +235,4 @@ const handleDeleteEvent = async () => {
 };
 
 export default CalendarPage;
+
