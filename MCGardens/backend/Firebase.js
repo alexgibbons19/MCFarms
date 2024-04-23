@@ -235,7 +235,13 @@ export const addCommentToEvent = async (docID, comment) => {
 
 export const deleteEvent = async (docID) => {
   const eventRef = collection(db,'calendar').doc(docID);
-  await eventRef.delete();
+  try {
+    await deleteDoc(eventRef);
+    console.log("Event deleted successfully:", eventID);
+} catch (error) {
+    console.error("Error deleting event:", error);
+    throw error;
+}
 };
 
 export const addEvent = async ({username,title, start, end}) => {
