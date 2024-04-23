@@ -70,27 +70,28 @@ const HomePage = () => {
         <BurgerMenu />
       </div>
       <h1>Home Page</h1>
-      
+     
       <div className="giant-box">
-        <div className="notification-box">
-          <img src="https://cdn3.vectorstock.com/i/1000x1000/79/72/notification-bell-icon-vector-34877972.jpg" alt="Bell Icon" width="30" />
-        </div>
         <h2>MC Farm</h2>
         <div className="flex-container">
-          <div className="square-box" style={{ marginRight: "10px" }}>
-            <h2>Weather</h2>
-            {weather ? (
-              <>
-                <h3>{weather.city}</h3>
-                <p>{weather.condition}</p>
-                <img src={`http://openweathermap.org/img/w/${weather.icon}.png`} alt="Weather Icon" width="50" />
-                <p>Max: {weather.max}°F</p>
-                <p>Min: {weather.min}°F</p>
-              </>
-            ) : (
-              <p>Loading weather...</p>
-            )}
-          </div>
+          <div className="square-box">
+          <a href="/weather" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
+            <div className="weather-preview">
+              <h2>Weather</h2>
+              {weather ? (
+                <>
+                  <h3>{weather.city}</h3>
+                  <p>{weather.condition}</p>
+                  <p>Max: {weather.max}°F</p>
+                  <p>Min: {weather.min}°F</p>
+                </>
+              ) : (
+                <p>Loading weather...</p>
+              )}
+              </div>
+              </a>
+            </div>
+          
           <div className="square-box" style={{ marginLeft: "10px" }}>
             <h3>Inventory</h3>
             <p>Corn: 188</p>
@@ -98,15 +99,17 @@ const HomePage = () => {
             <p>Tomatoes: 327</p>
           </div>
         </div>
-        <div className="rectangle" style={{ margin: "0 auto" }}>
-          <h3>Reminders</h3>
-          <p>28 Days to harvest Corn 245</p>
-          <hr />
-          <p>30 Days to sell Tomatoes</p>
-        </div>
+        <a href="/reminders" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
+          <div className="rectangle" style={{ margin: "0 auto" }}>
+            <h3>Reminders</h3>
+            <p>28 Days to harvest Corn 245</p>
+            <hr />
+            <p>30 Days to sell Tomatoes</p>
+          </div>
+        </a>
       </div>
     </div>
   );
 };
 
-export default HomePage;
+export default HomePage

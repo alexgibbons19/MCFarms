@@ -55,6 +55,13 @@
   text-align: center;
 }
 
+.weather-preview {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
 .rectangle {
   border: 1px solid black;
   margin-top: 20px;
