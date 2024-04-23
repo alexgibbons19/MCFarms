@@ -53,7 +53,11 @@ const DiscussionBoard = () => {
         fetchData();
 
         const unsubscribeThreads = listenForThreadsUpdates((updatedThreads) => {
-            setThreads(updatedThreads);
+            const threadsWithReplies = fetchedThreads.map(thread => ({
+                ...thread,
+                replies: fetchedReplies.filter(reply => reply.threadId === thread.id)
+            }));
+            setThreads(threadsWithReplies);
         });
         const unsubscribeReplies = listenForRepliesUpdates((updatedReplies) => {
             setReplies(updatedReplies);
