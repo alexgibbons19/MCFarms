@@ -56,9 +56,11 @@ const DiscussionBoard = () => {
 
         fetchData();
 
-        const unsubscribe = listenForUpdates(({ threads, replies }) => {
-            if (threads) {
-              const threadsWithReplies = threads.map(thread => ({
+        const unsubscribe = listenForUpdates(({ updatedThreads, updatedReplies }) => {
+            console.log("Listening...");
+            if (updatedThreads) {
+              console.log("HEARD THREAD");
+              const threadsWithReplies = updatedThreads.map(thread => ({
                 ...thread,
                 replies: replies.filter(reply => reply.threadId === thread.id)
               }));
@@ -66,9 +68,19 @@ const DiscussionBoard = () => {
               setThreads(threadsWithReplies);
             }
         
-            if (replies) {
+            if (updatedReplies) {
+              console.log("HEARD REPLY");
+              const threadsWithReplies = threads.map(thread => {
+                const newReplies = replies.filter(reply => reply.threadId === thread.id);
+                return {
+                  ...thread,
+                  replies: [...thread.replies, ...newReplies]
+                };
+              });
+              threadsWithReplies.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
+              setThreads(threadsWithReplies);
               replies.sort((a,b) => new Date(a.created_on) - new Date(b.created_on));
-              setReplies(replies);
+              setReplies(updatedReplies);
             }
           });
         
@@ -228,7 +240,7 @@ const DiscussionBoard = () => {
                             
                             <div className="thread-contents">
                                 <div className="thread-info">
-                                    <p className="thread-title">Title: {thread.title}</p>
+                                    <p className="thread-title">{thread.title}</p>
                                     <p className="thread-author">{thread.author}</p>
                                     <div className="thread-date">
                                         <p className="date">
