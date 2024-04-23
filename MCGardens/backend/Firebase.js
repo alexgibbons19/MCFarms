@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import {
     onSnapshot,
+    arrayUnion,
     getDoc,
     doc,
     updateDoc,
@@ -216,27 +217,19 @@ export const fetchEvents = async (username) => {
   }
 };
 
+
 export const addCommentToEvent = async (docID, comment) => {
   try {
     const eventRef = doc(db, 'calendar', docID);
-    const eventSnapshot = await getDoc(eventRef);
 
-    if (!eventSnapshot.exists()) {
-      throw new Error(`Event with docID ${docID} does not exist.`);
-    }
-
-    const eventData = eventSnapshot.data();
-
-    const currentComments = Array.isArray(eventData.comments) ? eventData.comments : [];
-    const updatedComments = [...(eventData.comments || []), comment];
-
-    await updateDoc(eventRef, { comments: updatedComments });
+    await updateDoc(eventRef, {
+      comments: arrayUnion(comment) // Use arrayUnion to safely add the new comment to the existing array (or create a new array if `comments` is `null`)
+    });
 
     console.log('Comment added successfully!');
-
   } catch (error) {
     console.error('Error adding comment:', error);
-    throw error;
+    throw error; // Rethrow the error for handling in the caller function
   }
 };
 
