@@ -29,14 +29,11 @@ const CalendarPage = () => {
       try{
         const user = getUser();
         setThisUser(user);
-
-        const eventsData = await fetchEvents(user);
-
-        console.log("from front1: ",eventsData);
-        
+        const eventsData = await fetchEvents(user);        
         setEvents(eventsData);
 
-        console.log("from front: ",events);
+        console.log("eventsData: ",eventsData);
+        console.log('events: ',events);
 
       } catch (error) {
         console.error("Error loading events:",error);
@@ -111,7 +108,6 @@ const handleSubmit = async (e) => {
 const handleAddComment = async () => {
   if (selectedEvent && commentInput.trim()) {
     try {
-      console.log("this id: ",selectedEvent.docID);
       const updatedEvent = await addCommentToEvent(selectedEvent.docID, commentInput);
 
       const updatedEvents = events.map(event =>
@@ -138,7 +134,6 @@ const handleDeleteEvent = async () => {
       setSelectedEvent(null);
 
       console.log('Event deleted successfully from Firestore and frontend display.');
-
 
     } catch (error) {
       console.error("Error deleting event:", error);
