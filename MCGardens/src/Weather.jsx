@@ -94,6 +94,7 @@ const Weather = () => {
                                 <div key={dt} className='dayForecast'>
                                     <h2>{new Date(dt * 1000).toLocaleDateString('en-US', { weekday: 'long' })}</h2>
                                     <p className='condition'>{weather[0].main}</p>
+                                    <img src={`http://openweathermap.org/img/w/${weather[0].icon}.png`} alt="Weather Icon" width="50" />
                                     <p>High: {temp.max}°F | Low: {temp.min}°F</p>
                                 </div>
                             ))}
