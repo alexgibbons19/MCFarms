@@ -190,6 +190,9 @@ export const deleteReply = async(replyId) => {
 };
 
 
+
+
+/* Calendar functions */
 export const fetchEvents = async (username) => {
   const colRef = collection(db,'calendar');
   const q = query(colRef, where('user','==',username));
@@ -222,7 +225,6 @@ export const fetchEvents = async (username) => {
     throw error;
   }
 };
-
 
 export const addCommentToEvent = async (docID, comment) => {
   try {
@@ -289,4 +291,4 @@ export const getUser = () => {
   }
 };
 
-
+export { auth };
