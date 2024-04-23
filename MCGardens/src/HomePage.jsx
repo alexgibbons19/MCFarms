@@ -37,10 +37,12 @@ const HomePage = () => {
 
   return (
     <div className="container">
+      <div className='top-nav'>
+        <BurgerMenu />
+      </div>
       <h1>Home Page</h1>
       
       <div className="giant-box">
-      <BurgerMenu />
         <div className="notification-box">
           <img src="https://cdn3.vectorstock.com/i/1000x1000/79/72/notification-bell-icon-vector-34877972.jpg" alt="Bell Icon" width="30" />
         </div>

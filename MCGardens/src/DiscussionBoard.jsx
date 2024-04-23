@@ -171,7 +171,9 @@ const DiscussionBoard = () => {
 
   return (
     <>
-        <BurgerMenu />
+        <div className='top-nav'>
+            <BurgerMenu />
+        </div>
         <main className='home'>
             {!showThreadForm && (
                 <button className='create-thread-btn' onClick={handleCreateThreadClick}>CREATE THREAD</button>

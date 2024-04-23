@@ -13,6 +13,21 @@
   z-index: 1000;
 }
 
+@media (max-width: 768px) {
+  .top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 25px 5px;
+  }
+
+  .burger-menu {
+      flex-grow: 0;
+      padding: 10px 0px;
+  }
+}
+
 /* Improved Search Bar and Button Styling */
 .search-bar-container {
   margin-top: 90px; /* Increase this if necessary */
@@ -77,6 +92,15 @@
 
 .plant-entry:hover {
   background-color: lightblue;
+  transition: 2000ms;
+}
+
+.enter-location {
+  font-size: 20px;
+}
+
+.enter-location-text {
+  text-align: center;
 }
 
 @media (max-width: 768px) {
@@ -98,6 +122,10 @@
 @media (max-width: 600px) {
   .search-bar-parameters-container {
     flex-direction: column; /* Stack input and button vertically */
+  }
+  
+  .location-input {
+    width: 95%;
   }
 
   .search-location {

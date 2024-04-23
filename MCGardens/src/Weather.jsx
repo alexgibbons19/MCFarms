@@ -48,7 +48,9 @@ const Weather = () => {
 
     return (
         <div>
-            <BurgerMenu />
+            <div className='top-nav'>
+                <BurgerMenu />
+            </div>
             <div className='weatherContainer'>
                 <h1 className='header'>Weekly Weather Forecast</h1>
                 <form onSubmit={handleSubmit}>

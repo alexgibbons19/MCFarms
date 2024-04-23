@@ -69,7 +69,7 @@ const OptimalPlants = () => {
           </form>
         </div>
         {isLoading ? (
-          <p>Generating Information...</p>
+          <p className='enter-location-text'>Generating Information...</p>
         ) : plants.length > 0 ? (
           <>
             <h2>Optimal plants for {lastSearchedLocation}:</h2>
@@ -91,7 +91,7 @@ const OptimalPlants = () => {
             </div>
           </>
         ) : (
-          <p>Enter location above to get list of plants.</p>
+          <p className='enter-location-text'>Enter location above to get list of plants.</p>
         )}
       </div>
     </div>

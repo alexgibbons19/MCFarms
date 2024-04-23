@@ -159,7 +159,9 @@ const handleDeleteEvent = () => {
 };
     return(
       <>
-      <BurgerMenu />
+      <div className='top-nav'>
+        <BurgerMenu />
+      </div>
       <div style={{display:'flex',height:"100vh",width:"150vh"}}>
       <div style={{height:"100%",width:"100%"}}> 
         <Calendar 
