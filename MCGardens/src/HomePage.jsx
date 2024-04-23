@@ -23,6 +23,10 @@ const HomePage = () => {
 
         const { latitude, longitude } = position.coords;
         localStorage.setItem('userLocation', JSON.stringify({ latitude, longitude }));
+        
+        // Fetch weather for the new location
+        fetchWeather(latitude, longitude);
+
       } catch (error) {
         console.error('Error getting location:', error);
       }
