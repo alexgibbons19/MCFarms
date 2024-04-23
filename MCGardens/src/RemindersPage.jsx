@@ -9,7 +9,9 @@ const Reminders = () => {
  
     return(
     <>
-    <BurgerMenu />
+    <div className='top-nav'>
+        <BurgerMenu />
+    </div>
     <div className="reminder-page-container">
         <h1>Reminders Page</h1>
         <div className="list-container">
