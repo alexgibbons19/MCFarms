@@ -1,39 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import './assets/HomePage.css';
-import DropdownMenu from './DropdownMenu';
 import BurgerMenu from './BurgerMenu';
 const HomePage = () => {
-  const toggleMenu = () => {
-    const dropdownMenu = document.getElementById("dropdownMenu");
-    dropdownMenu.classList.toggle("show");
-  };
 
-  const goToPage = (page) => {
-    alert("Navigating to " + page);
-    
-  };
-
-  const closeDropdowns = () => {
-    const dropdowns = document.getElementsByClassName("dropdown-content");
-    for (let i = 0; i < dropdowns.length; i++) {
-      const openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  };
-  window.onclick = (event) => {
-    if (!event.target.matches('.menu-button')) {
-      const dropdowns = document.getElementsByClassName("dropdown-content");
-      for (let i = 0; i < dropdowns.length; i++) {
-        const openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains('show')) {
-          openDropdown.classList.remove('show');
+  useEffect(() => {
+    const askForLocationPermission = async () => {
+      try {
+        const { geolocation } = navigator;
+        if(!geolocation) {
+          alert('Geolocation is not support by your browser');
+          return;
         }
+
+        const position = await new Promise((resolve, reject) => {
+          geolocation.getCurrentPosition(resolve, reject);
+        });
+
+        const { latitude, longitude } = position.coords;
+        localStorage.setItem('userLocation', JSON.stringify({ latitude, longitude }));
+      } catch (error) {
+        console.error('Error getting location:', error);
       }
-    }
-  };
+    };
+
+    askForLocationPermission();
+  }, []);
 
   return (
     <div className="container">

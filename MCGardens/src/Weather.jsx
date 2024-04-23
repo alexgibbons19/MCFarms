@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './assets/Weather.css';
 import BurgerMenu from './BurgerMenu';
 
@@ -6,6 +6,35 @@ const Weather = () => {
     const [weatherData, setWeatherData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [zipCode, setZipCode] = useState('');
+    const [currCity, setCurrCity] = useState("");
+
+
+    useEffect(() => {
+        const userLocation = JSON.parse(localStorage.getItem('userLocation'));
+        console.log(userLocation);
+        if (userLocation) {
+            const { latitude, longitude } = userLocation;
+            fetchWeatherDataByLocation(latitude, longitude);
+        }
+
+    }, []);
+    const fetchWeatherDataByLocation = async (lat, lon) => {
+        try {
+            const weatherResponse = await fetch(
+                `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lon}&cnt=7&units=imperial&appid=c2a91f3cea984faeb2c4779182b5272e`
+            );
+          const weatherData = await weatherResponse.json();
+          if (weatherData.list) {
+            setWeatherData(weatherData.list);
+            setIsLoading(false);
+            setCurrCity(weatherData.city.name);
+            console.log(weatherData);
+          }
+        } catch (error) {
+          console.error('Error fetching weather data:', error);
+        }
+      };
+
 
     const fetchWeatherData = async (zipCode) => {
         try {
@@ -22,6 +51,8 @@ const Weather = () => {
                 if (weatherData.list) {
                     setWeatherData(weatherData.list);
                     setIsLoading(false);
+                    setCurrCity(weatherData.city.name);
+                    console.log(weatherData);
                 }
             }
         } catch (error) {
@@ -35,16 +66,6 @@ const Weather = () => {
         fetchWeatherData(zipCode);
     };
 
-    // Retrieve credentials from local storage safely
-    let credentials = JSON.parse(localStorage.getItem('credentials')) || {};
-    console.log("From Weather");
-    if (!credentials.email) {
-        console.error("No credentials stored, redirecting to login.");
-        // navigate('/login'); // Use this if react-router is setup
-    } else {
-        console.log("Email:", credentials.email);
-        console.log("Password:", credentials.password);
-    }
 
     return (
         <div>
@@ -66,14 +87,17 @@ const Weather = () => {
                 {isLoading ? (
                     <p>Loading...</p>
                 ) : (
-                    <div className='forecast'>
-                        {weatherData.map(({ dt, temp, weather }) => (
-                            <div key={dt} className='dayForecast'>
-                                <h2>{new Date(dt * 1000).toLocaleDateString('en-US', { weekday: 'long' })}</h2>
-                                <p className='condition'>{weather[0].main}</p>
-                                <p>High: {temp.max}°F | Low: {temp.min}°F</p>
-                            </div>
-                        ))}
+                    <div>
+                        <h1>{currCity}</h1>
+                        <div className='forecast'>
+                            {weatherData.map(({ dt, temp, weather }) => (
+                                <div key={dt} className='dayForecast'>
+                                    <h2>{new Date(dt * 1000).toLocaleDateString('en-US', { weekday: 'long' })}</h2>
+                                    <p className='condition'>{weather[0].main}</p>
+                                    <p>High: {temp.max}°F | Low: {temp.min}°F</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 )}
             </div>
