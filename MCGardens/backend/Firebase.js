@@ -1,10 +1,16 @@
 import { initializeApp } from "firebase/app";
 import {
     onSnapshot,
+    getDoc,
+    doc,
+    updateDoc,
     getDocs,
     collection,
     getFirestore,
-    addDoc
+    addDoc,
+    query,
+    where,
+    Timestamp
 } from "firebase/firestore";
 import { 
     getAuth, 
@@ -172,6 +178,93 @@ export const deleteReply = async(replyId) => {
       console.log("Reply deleted successfully:", replyId);
   } catch (error) {
       console.error("Error deleting reply:", error);
+      throw error;
+  }
+};
+
+export const fetchEvents = async (username) => {
+  const colRef = collection(db,'calendar');
+  const q = query(colRef, where('user','==',username));
+  try{
+    const snapshot = await getDocs(q);
+    const events = snapshot.docs.map(doc => {
+      const eventData = doc.data();
+
+      const startDate = eventData.startDate.toDate(); 
+      const endDate = eventData.endDate.toDate(); 
+      const formattedStartDate = startDate.toISOString().slice(0, 16);
+      const formattedEndDate = endDate.toISOString().slice(0, 16);
+      
+      const comments = eventData.comments || [];
+      
+      return {
+        ...eventData,
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        comments
+      };
+    });
+    return events;
+
+  } catch (error) {
+    console.error("Error fetching events",error);
+    throw error;
+  }
+};
+
+export const addCommentToEvent = async (docID, comment) => {
+  try {
+    const eventRef = doc(db, 'calendar', docID);
+    const eventSnapshot = await getDoc(eventRef);
+
+    if (!eventSnapshot.exists()) {
+      throw new Error(`Event with docID ${docID} does not exist.`);
+    }
+
+    const eventData = eventSnapshot.data();
+
+    const currentComments = Array.isArray(eventData.comments) ? eventData.comments : [];
+    const updatedComments = [...(eventData.comments || []), comment];
+
+    await updateDoc(eventRef, { comments: updatedComments });
+
+    console.log('Comment added successfully!');
+
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    throw error;
+  }
+};
+
+export const deleteEvent = async (docID) => {
+  const eventRef = collection(db,'calendar').doc(docID);
+  await eventRef.delete();
+};
+
+export const addEvent = async ({username,title, start, end}) => {
+  console.log("params passed:",username,title,start,end);
+  
+  if(!username||!title||!start||!end){
+    throw new Error("Missing required parameters");
+  }  
+  
+  const calendarRef = collection(db,'calendar');
+  const newEvent = {
+      user: username,
+      title: title,
+      startDate: Timestamp.fromDate(start),
+      endDate: Timestamp.fromDate(end),
+      comments: []
+  }
+	try {
+      const docRef = await addDoc(calendarRef, newEvent);
+      console.log("Event added successfully:", newEvent);
+      console.log("Event has docId:", docRef.id);
+
+      return docRef.id;
+
+  } catch (error) {
+      console.error("Error adding event:", error);
       throw error;
   }
 };
