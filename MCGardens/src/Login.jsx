@@ -22,7 +22,7 @@ function Login() {
 
     try {
         await signIn(formValues.email, formValues.password);
-        navigate('/home-page');
+        navigate('/home');
     } catch (error) {
         console.error("Login error:", error);
         if (error.message.includes("verify your email")) {
