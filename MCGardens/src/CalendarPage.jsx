@@ -167,7 +167,7 @@ const handleDeleteEvent = async () => {
           />
         </div>
         {/* ADD COMMENTS / DELETE EVENT */}
-        <div style={{ paddingTop: '10px',marginLeft: '20px' }}>
+        <div style={{ paddingTop: '10px',marginLeft: '20px', marginTop: "70px" }}>
           {/* Event details and actions */}
           {selectedEvent && (
             <div style={{ border: '2px solid black', padding: '10px', position: 'relative' }}>
