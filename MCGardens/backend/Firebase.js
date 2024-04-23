@@ -190,10 +190,11 @@ export const fetchEvents = async (username) => {
     const events = snapshot.docs.map(doc => {
       const eventData = doc.data();
 
-      const startDate = eventData.startDate.toDate(); 
-      const endDate = eventData.endDate.toDate(); 
-      const formattedStartDate = startDate.toISOString().slice(0, 16);
-      const formattedEndDate = endDate.toISOString().slice(0, 16);
+      const start = eventData.startDate.toDate(); 
+      const end = eventData.endDate.toDate(); 
+
+      const formattedStartDate = start.toISOString().slice(0, 16);
+      const formattedEndDate = end.toISOString().slice(0, 16);
       
       const comments = eventData.comments || [];
       
