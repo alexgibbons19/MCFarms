@@ -10,6 +10,7 @@ import Weather from './Weather.jsx';
 import PlantDetails from './PlantDetails.jsx';
 import SignUp from './SignUp.jsx';
 import ForgotPassword from './ForgotPassword.jsx';
+import AboutUs from './AboutUs.jsx';
 
 
 function App() {
@@ -19,13 +20,14 @@ function App() {
         <Route exact path="/" element={<Login />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/home-page" element={<HomePage />}/>
+        <Route path="/home" element={<HomePage />}/>
         <Route path="/discussion-board" element={<DiscussionBoard />} />
         <Route path="/optimal-plants" element={<OptimalPlants />} />
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/reminders" element={<Reminders />} />
         <Route path="/weather" element={<Weather />} />
         <Route path="/plant-details" element={<PlantDetails />} />
+        <Route path="/about-us" element={<AboutUs />} />
         {/* <Route path="/inventory" element={<InventoryPage />} />  */}
       </Routes>
     </Router>      

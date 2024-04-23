@@ -18,7 +18,7 @@
     width: 100%;
     padding: 10px 20px;
     box-sizing: border-box;
-    background: #f0f0f0;
+    background: #D7D2CB;
     position: fixed;
     top: 0;
     left: 0;
@@ -76,7 +76,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: green; /* Ensures background is green */
+    background-color: #046A38; /* Ensures background is green */
     padding: 20px;
     overflow: auto; /* Allows for scrolling within this container if content overflows */
 }
