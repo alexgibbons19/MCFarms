@@ -24,5 +24,4 @@ dist-ssr
 
 .env
 credentials.json
-firebase.json
 .runtimeconfig.json
