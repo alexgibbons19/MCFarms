@@ -123,12 +123,24 @@ export const fetchReplies = async () => {
     
 };
 
-export const listenForThreadsUpdates = (callback) => {
-  const colRef = collection(db, 'threads');
-  return onSnapshot(colRef, (snapshot) => {
-      const threads = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-      callback(threads);
+export const listenForUpdates = (callback) => {
+  const threadsColRef = collection(db, 'threads');
+  const repliesColRef = collection(db, 'replies');
+
+  const threadsUnsubscribe = onSnapshot(threadsColRef, (threadsSnapshot) => {
+    const threads = threadsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    callback({ threads });
   });
+
+  const repliesUnsubscribe = onSnapshot(repliesColRef, (repliesSnapshot) => {
+    const replies = repliesSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    callback({ replies });
+  });
+
+  return () => {
+    threadsUnsubscribe();
+    repliesUnsubscribe();
+  };
 };
 
 export const addThread = async(threadData) => {
@@ -153,13 +165,7 @@ export const deleteThread = async(threadId) => {
   }
 };
 
-export const listenForRepliesUpdates = (callback) => {
-  const colRef = collection(db, 'replies');
-  return onSnapshot(colRef, (snapshot) => {
-      const replies = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-      callback(replies);
-  });
-};
+
 
 export const addReply = async (replyData) => {
   const replyRef = collection(db, 'replies');

@@ -5,8 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import BurgerMenu from './BurgerMenu';
 import { 
     fetchThreads, fetchReplies, getUser,
-    listenForThreadsUpdates,
-    listenForRepliesUpdates,
+    listenForUpdates,
     deleteThread as deleteThreadFromDB,
     deleteReply,
     addThread as addThreadToDB,
@@ -32,13 +31,18 @@ const DiscussionBoard = () => {
         const fetchData = async () => {
             try {
                 const fetchedThreads = await fetchThreads();
-                fetchedThreads.sort((a, b) => new Date(a.created_on) - new Date(b.created_on));
                 const fetchedReplies = await fetchReplies();
-                fetchedReplies.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
+
                 const threadsWithReplies = fetchedThreads.map(thread => ({
                     ...thread,
                     replies: fetchedReplies.filter(reply => reply.threadId === thread.id)
                 }));
+
+                // Sort threads by creation date in descending order
+                threadsWithReplies.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
+
+                // Sort replies by creation date in ascending order
+                fetchedReplies.sort((a, b) => new Date(a.created_on) - new Date(b.created_on));
 
                 setThreads(threadsWithReplies);
                 setReplies(fetchedReplies);
@@ -52,22 +56,25 @@ const DiscussionBoard = () => {
 
         fetchData();
 
-        const unsubscribeThreads = listenForThreadsUpdates((updatedThreads) => {
-            const threadsWithReplies = fetchedThreads.map(thread => ({
+        const unsubscribe = listenForUpdates(({ threads, replies }) => {
+            if (threads) {
+              const threadsWithReplies = threads.map(thread => ({
                 ...thread,
-                replies: fetchedReplies.filter(reply => reply.threadId === thread.id)
-            }));
-            setThreads(threadsWithReplies);
-        });
-        const unsubscribeReplies = listenForRepliesUpdates((updatedReplies) => {
-            setReplies(updatedReplies);
-        });
-
-
-        return () => {
-            unsubscribeThreads();
-            unsubscribeReplies();
-        }
+                replies: replies.filter(reply => reply.threadId === thread.id)
+              }));
+              threadsWithReplies.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
+              setThreads(threadsWithReplies);
+            }
+        
+            if (replies) {
+              replies.sort((a,b) => new Date(a.created_on) - new Date(b.created_on));
+              setReplies(replies);
+            }
+          });
+        
+          return () => {
+            unsubscribe();
+          };
     }, []);
 
     const handleCreateThreadClick = () => {
