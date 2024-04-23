@@ -182,6 +182,7 @@ export const deleteReply = async(replyId) => {
   }
 };
 
+
 export const fetchEvents = async (username) => {
   const colRef = collection(db,'calendar');
   const q = query(colRef, where('user','==',username));
@@ -202,9 +203,11 @@ export const fetchEvents = async (username) => {
         ...eventData,
         startDate: formattedStartDate,
         endDate: formattedEndDate,
-        comments
+        comments: comments,
+        docID: doc.id
       };
     });
+    console.log("from back: ",events);
     return events;
 
   } catch (error) {
