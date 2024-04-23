@@ -51,6 +51,10 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
+.thread-container {
+  box-shadow: 8px 8px 6px rgba(0, 0, 0, 0.05);
+}
+
 .thread-contents, .reply-contents {
   margin-bottom: 30px;
 }
@@ -165,4 +169,5 @@ body {
       padding: 10px 20px;
       font-size: 14px;
   }
+  
 }

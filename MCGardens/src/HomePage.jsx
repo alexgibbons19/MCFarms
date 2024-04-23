@@ -19,6 +19,8 @@ const HomePage = () => {
           geolocation.getCurrentPosition(resolve, reject);
         });
 
+        console.log(position);
+
         const { latitude, longitude } = position.coords;
         localStorage.setItem('userLocation', JSON.stringify({ latitude, longitude }));
       } catch (error) {
@@ -33,8 +35,10 @@ const HomePage = () => {
         );
         const data = await response.json();
         const weatherData = data.list[0];
+        console.log(weatherData);
         setWeather({
           city: data.city.name,
+          condition: weatherData.weather[0].main,
           max: weatherData.temp.max,
           min: weatherData.temp.min,
           icon: weatherData.weather[0].icon,
@@ -70,11 +74,12 @@ const HomePage = () => {
         <h2>MC Farm</h2>
         <div className="flex-container">
           <div className="square-box" style={{ marginRight: "10px" }}>
-            <h3>Weather</h3>
+            <h2>Weather</h2>
             {weather ? (
               <>
+                <h3>{weather.city}</h3>
+                <p>{weather.condition}</p>
                 <img src={`http://openweathermap.org/img/w/${weather.icon}.png`} alt="Weather Icon" width="50" />
-                <p>{weather.city}</p>
                 <p>Max: {weather.max}°F</p>
                 <p>Min: {weather.min}°F</p>
               </>

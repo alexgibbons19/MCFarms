@@ -215,7 +215,7 @@ const DiscussionBoard = () => {
                             onChange={(e) => setThreadTitle(e.target.value)}
                         />
                         <p></p>
-                        <label htmlFor='threadText'>Text(optional)</label>
+                        <label htmlFor='threadText'>Text</label>
                         <input
                             type='text'
                             id='threadText'
@@ -259,22 +259,6 @@ const DiscussionBoard = () => {
                                     </p>
                                 </div>
                                 
-                                <form className="create-reply-form" onSubmit={(e) => handleSubmitReply(e, thread)}>
-                                    <h2 className='create-reply-title'>Create a Reply</h2>
-                                    <div className='create-reply-container'>
-                                        <label htmlFor={`replyText-${thread.id}`}>Text</label>
-                                        <input
-                                            type='text'
-                                            id={`replyText-${thread.id}`}
-                                            name='replyText'
-                                            required
-                                            value={replyText}
-                                            onChange={(e) => setReplyText(e.target.value)}
-                                        />
-                                    </div>
-                                    <button className="submit-btn">SUBMIT REPLY</button>                                        
-                                </form>
-                                
                                 {thread.replies && thread.replies.length > 0 ? (
                                     thread.replies.map((reply) => (
                                         <div className="reply-container" key={reply.id}>
@@ -297,6 +281,21 @@ const DiscussionBoard = () => {
                                 ) : (
                                     <p>NO REPLIES YET! BE THE FIRST!</p>
                                 )}
+                                <form className="create-reply-form" onSubmit={(e) => handleSubmitReply(e, thread)}>
+                                    <h2 className='create-reply-title'>Create a Reply</h2>
+                                    <div className='create-reply-container'>
+                                        <label htmlFor={`replyText-${thread.id}`}>Text</label>
+                                        <input
+                                            type='text'
+                                            id={`replyText-${thread.id}`}
+                                            name='replyText'
+                                            required
+                                            value={replyText}
+                                            onChange={(e) => setReplyText(e.target.value)}
+                                        />
+                                    </div>
+                                    <button className="submit-btn">SUBMIT REPLY</button>                                        
+                                </form>
                             </div>
                         </div>
                     ))
