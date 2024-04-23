@@ -50,13 +50,14 @@ const BurgerMenu = () => {
             {/* Menu items - link to actual pages here but default is close */}
             <div className={`menu ${isOpen ? 'open' : ''}`}>
               <ul className="burger-menu-options">
-                <li><Link to="/home-page" onClick={closeMenu}>Home</Link></li>
+                <li><Link to="/home" onClick={closeMenu}>Home</Link></li>
                 <li><Link to="/plant-details" onClick={closeMenu}>Search</Link></li>
                 <li><Link to="/weather" onClick={closeMenu}>Weather</Link></li>
                 <li><Link to="/calendar" onClick={closeMenu}>Calendar</Link></li>
                 <li><Link to="/discussion-board" onClick={closeMenu}>Discussion Board</Link></li>
                 <li><Link to="/reminders" onClick={closeMenu}>Reminders</Link></li>
                 <li><Link to="/optimal-plants" onClick={closeMenu}>Optimal Plants</Link></li>
+                <li><Link to="/about-us" onClick={closeMenu}>About Us</Link></li>
                 <li><Link to="/" onClick={handleLogout}>Logout</Link></li>
               </ul>
             </div>
