@@ -143,7 +143,13 @@ const handleDeleteEvent = async () => {
 
     return(
       <>
-      <BurgerMenu />
+      <div className='top-nav'>
+        <BurgerMenu />
+        <div style={{paddingTop:"10px"}}>
+        {/* Button for Add Event modal */}
+          <button style={{color:"white",backgroundColor: "green"}} onClick={() => setShowAddEvent(true)}>Add Event Here!</button>
+      </div>
+      </div>
       <div style={{display:'flex',height:"100vh",width:"150vh"}}>
       <div style={{height:"100%",width:"100%"}}> 
         <Calendar 
@@ -161,7 +167,7 @@ const handleDeleteEvent = async () => {
           />
         </div>
         {/* ADD COMMENTS / DELETE EVENT */}
-        <div style={{ paddingTop: '10px',marginLeft: '20px' }}>
+        <div style={{ paddingTop: '10px',marginLeft: '20px', marginTop: "70px" }}>
           {/* Event details and actions */}
           {selectedEvent && (
             <div style={{ border: '2px solid black', padding: '10px', position: 'relative' }}>
@@ -220,10 +226,7 @@ const handleDeleteEvent = async () => {
       </div>
       )}
       </div>
-      <div style={{paddingTop:"10px"}}>
-        {/* Button for Add Event modal */}
-          <button style={{color:"white",backgroundColor: "green"}} onClick={() => setShowAddEvent(true)}>Add Event Here!</button>
-      </div>
+      
       </div>
       </>
     );
