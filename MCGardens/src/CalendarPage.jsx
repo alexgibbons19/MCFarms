@@ -31,6 +31,8 @@ const CalendarPage = () => {
         setThisUser(user);
 
         const eventsData = await fetchEvents(thisUser);
+
+        console.log("from front1: ",eventsData);
         
         const eventsWithIds = eventsData.map(event => {
           const commentsArray = event.comments || []; // Use empty array if comments is null or undefined
@@ -38,14 +40,12 @@ const CalendarPage = () => {
           return {
             ...event,
             docID: event.id,
-            startDate,
-            endDate,
             comments: commentsArray // Set comments to empty array if undefined or null
           };
         });
 
         setEvents(eventsWithIds);
-        console.log(events);
+        console.log("from front: ",eventsWithIds);
 
       } catch (error) {
         console.error("Error loading events:",error);
@@ -239,4 +239,3 @@ const handleDeleteEvent = async () => {
 };
 
 export default CalendarPage;
-
