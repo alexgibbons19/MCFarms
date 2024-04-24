@@ -9,6 +9,14 @@ const AboutUs = () => {
         window.location.href = 'mailto:mcgardens.reminders@gmail.com';
     };
 
+    // Team members data
+    const teamMembers = [
+        { name: "Alex Gibbons", github: "https://github.com/gibbbeh" },
+        { name: "Faddi Dabain", github: "https://github.com/FaddiADabain" },
+        { name: "Lauren Kowalski", github: "https://github.com/kaweckil" },
+        { name: "Thierno Diallo", github: "https://github.com/Thierno-M-Diallo" }
+    ];
+
     return (
         <div>
             <div className='top-nav'>
@@ -31,6 +39,17 @@ const AboutUs = () => {
                         </p>
                         <button onClick={handleEmailClick} className="contact-us-button">Contact Us</button>
                     </div>
+                </div>
+            </div>
+
+            <div className='github-section'>
+                <h2 className='github-title'>Our GitHubs</h2>
+                <div className='team-members'>
+                    {teamMembers.map((member, index) => (
+                        <div key={index} className='team-member'>
+                            <a href={member.github} target="_blank" rel="noopener noreferrer">{member.name}</a>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
