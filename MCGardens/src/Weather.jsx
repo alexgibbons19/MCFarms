@@ -72,37 +72,39 @@ const Weather = () => {
             <div className='top-nav'>
                 <BurgerMenu />
             </div>
-            <div className='weather-container'>
-                <h1 className='weather-header'>Weekly Weather Forecast</h1>
-                <form onSubmit={handleSubmit}>
-                    <label className='zipcode-label'htmlFor='zipCode'>Enter ZIP Code: </label>
-                    <input
-                        className='zipcode-input'
-                        type='text'
-                        id='zipCode'
-                        value={zipCode}
-                        onChange={(event) => setZipCode(event.target.value)}
-                    />
-                    <button className='submit-btn'type='submit'>Submit</button>
-                </form>
-                {isLoading ? (
-                    <p>Loading...</p>
-                ) : (
-                    <div>
-                        <h1 className='city-name'>{currCity}</h1>
-                        <div className='forecast'>
-                            {weatherData.map(({ dt, temp, weather }) => (
-                                <div key={dt} className='day-forecast'>
-                                    <h2 className='date'>{new Date(dt * 1000).toLocaleDateString('en-US', { weekday: 'long' })}</h2>
-                                    <p className='condition'>{weather[0].main}</p>
-                                    <img className='weather-icon' src={`http://openweathermap.org/img/w/${weather[0].icon}.png`} alt="Weather Icon" />
-                                    <p className='temp-high'>High: {temp.max.toFixed(1)}°F </p>
-                                    <p className='temp-low'>Low: {temp.min.toFixed(1)}°F</p>
-                                </div>
-                            ))}
+            <div className="weather-main">
+                <div className='weather-container'>
+                    <h1 className='weather-header'>Weekly Weather Forecast</h1>
+                    <form onSubmit={handleSubmit}>
+                        <label className='zipcode-label'htmlFor='zipCode'>Enter ZIP Code: </label>
+                        <input
+                            className='zipcode-input'
+                            type='text'
+                            id='zipCode'
+                            value={zipCode}
+                            onChange={(event) => setZipCode(event.target.value)}
+                        />
+                        <button className='submit-btn'type='submit'>Submit</button>
+                    </form>
+                    {isLoading ? (
+                        <p>Loading...</p>
+                    ) : (
+                        <div>
+                            <h1 className='city-name'>{currCity}</h1>
+                            <div className='forecast'>
+                                {weatherData.map(({ dt, temp, weather }) => (
+                                    <div key={dt} className='day-forecast'>
+                                        <h2 className='date'>{new Date(dt * 1000).toLocaleDateString('en-US', { weekday: 'long' })}</h2>
+                                        <p className='condition'>{weather[0].main}</p>
+                                        <img className='weather-icon' src={`http://openweathermap.org/img/w/${weather[0].icon}.png`} alt="Weather Icon" />
+                                        <p className='temp-high'>High: {temp.max.toFixed(1)}°F </p>
+                                        <p className='temp-low'>Low: {temp.min.toFixed(1)}°F</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );
