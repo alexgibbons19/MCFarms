@@ -87,7 +87,7 @@ export const resendVerificationEmail = async (email) => {
 };
 
 
-
+/*     DISC BOARD FUNCTION   */
 
   // Function to fetch threads
 export const fetchThreads = async () => {
@@ -95,6 +95,12 @@ export const fetchThreads = async () => {
     try {
       const snapshot = await getDocs(colRef);
       const threads = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+
+      threads.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
+      if(threads.replies){
+        threads.replies.sort((a,b) => new Date(a.created_on) - new Date(b.created_on));
+      }
+      console.log("Threads from firebase: ", threads);
       return threads;
     } catch (error) {
       console.error("Error fetching threads:", error);
@@ -103,36 +109,23 @@ export const fetchThreads = async () => {
     
 };
 
-export const fetchReplies = async () => {
-	const colRef = collection(db, 'replies');
-  try{
-    const snapshot = await getDocs(colRef);
-    const replies = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-    return replies;
-  } catch (error) {
-    console.error("Error fetching replies:",error);
-    throw error;
-  }
-    
-};
-
 export const listenForUpdates = (callback) => {
   const threadsColRef = collection(db, 'threads');
-  const repliesColRef = collection(db, 'replies');
 
-  const threadsUnsubscribe = onSnapshot(threadsColRef, (threadsSnapshot) => {
+  const unsubscribe = onSnapshot(threadsColRef, async (threadsSnapshot) => {
     const threads = threadsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-    callback({ threads });
+
+    threads.sort((a,b) => new Date(b.created_on) - new Date(a.created_on));
+    if(threads.replies){
+      threads.replies.sort((a,b) => new Date(a.created_on) - new Date(b.created_on));
+    }
+
+    callback({ threads: threads });
   });
 
-  const repliesUnsubscribe = onSnapshot(repliesColRef, (repliesSnapshot) => {
-    const replies = repliesSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-    callback({ replies });
-  });
 
   return () => {
-    threadsUnsubscribe();
-    repliesUnsubscribe();
+    unsubscribe();
   };
 };
 
@@ -143,6 +136,22 @@ export const addThread = async(threadData) => {
       console.log("Thread added successfully:", threadData);
   } catch (error) {
       console.error("Error adding thread:", error);
+      throw error;
+  }
+};
+
+export const addReply = async (replyData) => {
+  try {
+
+      // Update the corresponding thread document to include the new reply
+      const threadRef = doc(db, 'threads', replyData.threadId);
+      await updateDoc(threadRef, {
+          replies: arrayUnion(replyData)
+      });
+
+      console.log("Thread updated with new reply.");
+  } catch (error) {
+      console.error("Error adding reply:", error);
       throw error;
   }
 };
@@ -158,19 +167,6 @@ export const deleteThread = async(threadId) => {
   }
 };
 
-
-
-export const addReply = async (replyData) => {
-  const replyRef = collection(db, 'replies');
-  try {
-      await addDoc(replyRef, replyData);
-      console.log("Reply added successfully:", replyData);
-  } catch (error) {
-      console.error("Error adding reply:", error);
-      throw error;
-  }
-};
-
 export const deleteReply = async(replyId) => {
   const replyRef = doc(db, 'replies', replyId);
   try {
@@ -182,7 +178,7 @@ export const deleteReply = async(replyId) => {
   }
 };
 
-
+/*    END DISC BOARD FUNCTION   */
 
 
 /* Calendar functions */
