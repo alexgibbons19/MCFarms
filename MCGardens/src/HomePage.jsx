@@ -82,6 +82,7 @@ const HomePage = () => {
                 <>
                   <h3>{weather.city}</h3>
                   <p>{weather.condition}</p>
+                  <img className='weather-icon' src={`http://openweathermap.org/img/w/${weather.icon}.png`} alt="Weather Icon" />
                   <p>High: {Math.round(weather.max)}°F</p>
                   <p>Low: {Math.round(weather.min)}°F</p>
                 </>
