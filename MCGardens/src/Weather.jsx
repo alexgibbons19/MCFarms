@@ -68,7 +68,7 @@ const Weather = () => {
 
 
     return (
-        <div>
+        <div className='weather-body'>
             <div className='top-nav'>
                 <BurgerMenu />
             </div>
@@ -76,15 +76,17 @@ const Weather = () => {
                 <div className='weather-container'>
                     <h1 className='weather-header'>Weekly Weather Forecast</h1>
                     <form onSubmit={handleSubmit}>
-                        <label className='zipcode-label'htmlFor='zipCode'>Enter ZIP Code: </label>
-                        <input
-                            className='zipcode-input'
-                            type='text'
-                            id='zipCode'
-                            value={zipCode}
-                            onChange={(event) => setZipCode(event.target.value)}
-                        />
-                        <button className='submit-btn'type='submit'>Submit</button>
+                        <div className='input-wrapper'>
+                            <label className='zipcode-label' htmlFor='zipCode'>Enter ZIP Code:</label>
+                            <input
+                                className='zipcode-input'
+                                type='text'
+                                id='zipCode'
+                                value={zipCode}
+                                onChange={(event) => setZipCode(event.target.value)}
+                            />
+                            <button className='submit-btn' type='submit'>Submit</button>
+                        </div>
                     </form>
                     {isLoading ? (
                         <p>Loading...</p>

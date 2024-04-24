@@ -95,9 +95,24 @@
 
     .content {
         flex-direction: column;
+        align-items: center; /* Ensures everything is centered on smaller screens */
     }
 
     .about-us-title {
         margin-top: 20px;
+        font-size: 1.5rem; /* Adjust title size for smaller screens */
+    }
+
+    .team-member {
+        font-size: 1.3rem; /* Increase the font size for better readability */
+        margin-bottom: 10px; /* Adds some space below each team member */
+    }
+
+    .team-info {
+        font-size: 1.3rem; /* Adjusts the paragraph text size to be more readable */
+    }
+
+    .contact-us-button {
+        font-size: 1.2rem; /* Ensures the button text is not too large on mobile */
     }
 }

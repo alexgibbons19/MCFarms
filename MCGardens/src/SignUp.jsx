@@ -72,55 +72,55 @@ function SignUp() {
   }, [user, navigate]);
 
   return (
-    <div className="main">
-      <div className="center">
-        <div className="backbox">
+    <div className="login-main">
+      <div className="login-center">
+        <div className="login-backbox">
           <div>
-            <header className="App-header">
+            <header className="login-header">
               <h2> MCGardens Create User </h2>
             </header>
           </div>
-
-          <form onSubmit={handleRegistration}>
+  
+          <form onSubmit={handleRegistration} className="login-form">
             <div>
-              <label htmlFor="email"><b>Email</b></label><br />
+              <label htmlFor="email" className="login-label"><b>Email</b></label><br />
               <input 
                 type="email" 
                 id="email" 
                 name="email"
                 autoComplete="email"
                 placeholder="Email"
-                className="textbox"
+                className="login-textbox"
                 value={formValues.email || ""}
                 onChange={handleChange} 
                 required 
               /><br />
             </div>
-
+  
             <div>
-              <label htmlFor="password"><b>Password</b></label><br />
+              <label htmlFor="password" className="login-label"><b>Password</b></label><br />
               <input 
                 type="password" 
                 id="password" 
                 name="password"
                 autoComplete="new-password"
                 placeholder="Password" 
-                className="textbox" 
+                className="login-textbox" 
                 value={formValues.password || ""}
                 onChange={handleChange} 
                 required
               /><br />
             </div>
-
+  
             <div>
-              <label htmlFor="confirmPassword"><b>Confirm Password</b></label><br />
+              <label htmlFor="confirmPassword" className="login-label"><b>Confirm Password</b></label><br />
               <input
                 type="password"
                 id="confirmPassword"
                 name="confirmPassword"
                 autoComplete="new-password"
                 placeholder="Confirm Password"
-                className="textbox"
+                className="login-textbox"
                 value={formValues.confirmPassword || ""}
                 onChange={handleChange}
                 required
@@ -129,30 +129,30 @@ function SignUp() {
             
             <div>
               {!showResend ? (
-                <button type="submit" className="sign-in-button">Sign Up</button>
+                <button type="submit" className="login-button">Sign Up</button>
               ) : (
                 <button 
                   type="button" 
                   onClick={handleResendVerification} 
                   disabled={countdown > 0} 
-                  className="sign-in-button"
+                  className="login-button"
                 >
                   Resend Email {countdown > 0 ? `(${countdown}s)` : ""}
                 </button>
               )}
             </div>
           </form>
-
-          <div className="errorMessage">{error && <p className="error-message">{error}</p>}</div>
-
-          <div className="additionalOptions">
-            <a href="/">Sign In</a>
-            <a href="/forgot-password" style={{ cursor: 'pointer' }}>Forgot Password</a>
+  
+          <div className="login-errorMessage">{error && <p className="error-message">{error}</p>}</div>
+  
+          <div className="login-additionalOptions">
+            <a href="/" className="login-link">Sign In</a>
+            <a href="/forgot-password" className="login-link" style={{ cursor: 'pointer' }}>Forgot Password</a>
           </div>
         </div>
       </div>
     </div>
-  );
+  );  
 }
 
 export default SignUp;
