@@ -6,7 +6,6 @@ import BurgerMenu from './BurgerMenu';
 import defaultImg from './assets/logo.png';
 
 const PlantDetails = () => {
-    // Adjusted initial state to have more contextual initial messages
     const [plant, setPlant] = useState({
         plantName: "Please enter a plant in the search.",
         plantBio: "Here will be bio information",
@@ -21,57 +20,57 @@ const PlantDetails = () => {
     const searchParams = new URLSearchParams(location.search);
     const plantQuery = searchParams.get('query');
 
-    const splitInstructions = (text) => {
-        return text.split(/(?=\d+\. )/).filter(line => line.trim() !== '');
-    };
-
-    const parsePlantDetails = (response) => {
-        if (response && response.bio && response.howToPlant && response.howToTakeCare) {
-            setPlant({
-                plantName: plantQuery || "Unknown Plant",
-                plantBio: response.bio,
-                plantInst: splitInstructions(response.howToPlant),
-                plantCare: splitInstructions(response.howToTakeCare),
-                plantImg: defaultImg
-            });
-        } else {
-            console.error("Received data is in an unexpected format or not successful:", response);
-            setPlant(prevState => ({
-                ...prevState,
-                plantBio: "Data format error or request unsuccessful.",
-                plantInst: ["Data format error or request unsuccessful."],
-                plantCare: ["Data format error or request unsuccessful."]
-            }));
-        }
-    };
-
     useEffect(() => {
         if (plantQuery) {
-            setPlant({
-                plantName: "Generating Information",
-                plantBio: "Please wait while generating.",
-                plantInst: ["Please wait while generating."],
-                plantCare: ["Please wait while generating."],
-                plantImg: defaultImg
-            });
+            axios.post('https://us-central1-mcgardens-bd0b1.cloudfunctions.net/askGpt/askGpt', { plantInput: plantQuery.toLowerCase() })
+            .then(response => {
+                const { data } = response;
+                if (data && data.bio && data.howToPlant && data.howToTakeCare) {
+                    // Format and validate data here before fetching the image
+                    const formattedBio = data.bio;  // Assume some formatting is needed
+                    const formattedPlantInst = data.howToPlant.split(/(?=\d+\. )/).filter(line => line.trim() !== '');
+                    const formattedPlantCare = data.howToTakeCare.split(/(?=\d+\. )/).filter(line => line.trim() !== '');
 
-            const plantName = plantQuery.toLowerCase();
-            axios.post('https://us-central1-mcgardens-bd0b1.cloudfunctions.net/askGpt/askGpt', { plantInput: plantName })
-                .then(response => {
-                    parsePlantDetails(response.data);
-                })
-                .catch(error => {
-                    console.error("API call failed:", error);
-                    setPlant({
-                        plantName: "Failed to load data.",
-                        plantBio: "Failed to load data.",
-                        plantInst: ["Failed to load data."],
-                        plantCare: ["Failed to load data."],
-                        plantImg: defaultImg
+                    // Fetch the image from Unsplash
+                    axios.get(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(plantQuery)}&client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`)
+                    .then(imgResponse => {
+                        const image = imgResponse.data.results[0]?.urls.regular || defaultImg;
+                        setPlant({
+                            plantName: plantQuery || "Unknown Plant",
+                            plantBio: formattedBio,
+                            plantInst: formattedPlantInst,
+                            plantCare: formattedPlantCare,
+                            plantImg: image
+                        });
+                    })
+                    .catch(imgError => {
+                        console.error("Image fetch failed:", imgError);
+                        // Even if image fetch fails, update the rest of the data
+                        setPlant(prevState => ({
+                            ...prevState,
+                            plantBio: formattedBio,
+                            plantInst: formattedPlantInst,
+                            plantCare: formattedPlantCare,
+                            plantImg: defaultImg // Use default image if Unsplash call fails
+                        }));
                     });
-                });
+                } else {
+                    throw new Error("Data is missing some required fields.");
+                }
+            })
+            .catch(error => {
+                console.error("API call failed or data was incomplete:", error);
+                setPlant(prevState => ({
+                    ...prevState,
+                    plantName: "Failed to load data.",
+                    plantBio: "Failed to load data.",
+                    plantInst: ["Failed to load data."],
+                    plantCare: ["Failed to load data."],
+                    plantImg: defaultImg
+                }));
+            });
         }
-    }, [location, plantQuery]);
+    }, [plantQuery, location]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -79,18 +78,8 @@ const PlantDetails = () => {
             alert('Please enter a valid plant name.');
             return;
         }
-        setPlant({
-            plantName: "Generating Information",
-            plantBio: "Please wait while generating.",
-            plantInst: ["Please wait while generating."],
-            plantCare: ["Please wait while generating."],
-            plantImg: defaultImg
-        });
-        // Using a timeout to delay navigation until after the state updates
-        setTimeout(() => {
-            navigate(`/plant-details?query=${encodeURIComponent(query)}`);
-            setQuery(''); // Clear the search query right after submission
-        }, 0);
+        navigate(`/plant-details?query=${encodeURIComponent(query)}`);
+        setQuery('');
     };
 
     return (
@@ -102,7 +91,7 @@ const PlantDetails = () => {
                         type="text"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Please enter plant" // Updated placeholder text
+                        placeholder="Please enter plant"
                     />
                     <button type="submit">Search</button>
                 </form>
