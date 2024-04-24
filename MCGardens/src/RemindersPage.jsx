@@ -9,11 +9,12 @@ const EventsList = () => {
 
     useEffect(() => {
         const today = new Date();
-        const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
-
-        fetchEvents(username, today, nextMonth).then(events => {
+        const nextMonth = new Date();
+        nextMonth.setMonth(today.getMonth() + 1); // Ensures correct rolling over of year
+    
+        fetchEvents(username, today.toISOString(), nextMonth.toISOString()).then(events => {
             events.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-            setEvents(events);
+            setEvents(events.filter(event => new Date(event.startDate) >= today));
         }).catch(console.error);
     }, []);
 
