@@ -58,6 +58,7 @@ const BurgerMenu = () => {
                 <li><Link to="/reminders" onClick={closeMenu}>Reminders</Link></li>
                 <li><Link to="/optimal-plants" onClick={closeMenu}>Optimal Plants</Link></li>
                 <li><Link to="/about-us" onClick={closeMenu}>About Us</Link></li>
+                <li><Link to="/account-settings" onClick={closeMenu}>Account Settings</Link></li>
                 <li><Link to="/" onClick={handleLogout}>Logout</Link></li>
               </ul>
             </div>

@@ -11,7 +11,8 @@ import {
     addDoc,
     query,
     where,
-    Timestamp
+    Timestamp,
+    setDoc
 } from "firebase/firestore";
 import { 
     getAuth, 
@@ -22,27 +23,19 @@ import {
 } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBdBh6oBgnUZJ6dROPNOp5Wwxyvrr8epLQ",
-    authDomain: "mcgardens-bd0b1.firebaseapp.com",
-    databaseURL: "https://mcgardens-bd0b1-default-rtdb.firebaseio.com",
-    projectId: "mcgardens-bd0b1",
-    storageBucket: "mcgardens-bd0b1.appspot.com",
-    messagingSenderId: "102086093090",
-    appId: "1:102086093090:web:f8c4183ccf4594d6eedd7b",
-    measurementId: "G-G642QLL9KX"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
 initializeApp(firebaseConfig);
 const db = getFirestore();
-
-// Function to fetch users
-export const fetchUsers = async () => {
-    const colRef = collection(db, 'users');
-    const snapshot = await getDocs(colRef);
-    const users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-    return users;
-};
 
 // Initialize Firebase Authentication
 const auth = getAuth();
@@ -288,3 +281,35 @@ export const getUser = () => {
 };
 
 export { auth };
+
+
+
+
+// Account Settings Functions
+export const getUserEmailPreference = async (userEmail) => {
+  const userRef = doc(db, 'users', userEmail);
+  const docSnap = await getDoc(userRef);
+  return docSnap.exists() ? docSnap.data().receiveEmails : true; // default to true if not set
+};
+
+export const updateEmailPreference = async (userEmail, newPreference) => {
+  const userRef = doc(db, 'users', userEmail);
+
+  try {
+    await setDoc(userRef, { receiveEmails: newPreference }, { merge: true });
+    return newPreference; // Return the updated preference
+  } catch (error) {
+    console.error("Error updating email preference:", error);
+    throw error; // Rethrow the error to be handled or displayed by the calling component
+  }
+};
+
+export const changePassword = async (newPassword) => {
+  const user = auth.currentUser;
+  if (user) {
+    await user.updatePassword(newPassword);
+    return true;
+  } else {
+    throw new Error("No user logged in.");
+  }
+};

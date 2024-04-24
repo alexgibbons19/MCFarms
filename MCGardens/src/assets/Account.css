@@ -1,0 +1,134 @@
+/* Top navigation styling */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    background: #D7D2CB;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+  }
+  
+  @media (max-width: 768px) {
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 25px 5px;
+    }
+  
+    .burger-menu {
+        flex-grow: 0;
+        padding: 10px 0px;
+    }
+  }
+  
+/* AccountSettings.css */
+
+/* Body and layout */
+.body-style {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Container for form elements */
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 80px;
+}
+
+/* Styling for main headings */
+.main-heading {
+    font-size: 30px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Styling for subheadings */
+.sub-heading {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* General label styling */
+.label-style {
+    display: block;
+    margin: 10px 0;
+    color: #666;
+    font-size: 16px;
+}
+
+/* Checkbox specific styling */
+.checkbox-style {
+    margin-right: 10px;
+}
+
+/* Inputs and buttons */
+.input-field, .action-button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.action-button {
+    background-color: #5c67f2;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.action-button:hover {
+    background-color: #4a54e1;
+}
+
+/* General paragraph for messages */
+.message-text {
+    color: #28a745;
+    text-align: center;
+}
+
+/* Error message styling */
+.error-text {
+    color: #dc3545;
+}
+
+.user-email {
+    font-size: 20px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .form-container {
+        padding: 10px;
+    }
+
+    .main-heading, .sub-heading {
+        font-size: 20px;
+    }
+
+    .label-style, .input-field, .action-button {
+        font-size: 14px;
+    }
+}
