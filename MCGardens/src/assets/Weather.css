@@ -29,7 +29,7 @@
 }
 
 
-body {
+.weather-body {
   background-color: white;
   font-family: Arial, sans-serif;
 }
@@ -72,27 +72,6 @@ body {
 .temp-high, .temp-low {
   margin: 5px 0;
   color: #777;
-}
-
-/* Responsive styling */
-
-@media (max-width: 768px) {
-  .day-forecast {
-    width: 100%;
-  }
-
-  .forecast {
-    justify-content: flex-start;
-  }
-
-  .zipcode-input {
-    width: 60%;
-    margin-right: 10px;
-  }
-
-  .submit-btn {
-    width: 35%;
-  }
 }
 
 .weather-container {
@@ -140,4 +119,47 @@ body {
   margin: 0.25rem 0;
 }
 
+@media (max-width: 768px) {
+  .weather-header {
+    font-size: 1.8rem; /* Adjust the header font size for better visibility */
+  }
 
+  .zipcode-label {
+    display: block; /* Ensures that the label takes up its own line */
+    font-size: 1.2rem; /* Increases the font size for better readability */
+    margin-bottom: 0.5rem; /* Adds some space between the label and the input */
+    text-align: center; /* Centers the label text */
+  }
+
+  .zipcode-input {
+    width: 100%; /* Allows the input to grow with the content */
+    max-width: 90%; /* Ensures the input doesn't exceed 90% of its parent's width */
+    margin: 0 auto; /* Centers the input field */
+    display: block; /* Ensures the input takes up its own line */
+  }
+
+  .submit-btn {
+    width: 100%; /* Allows the button to grow with the content */
+    max-width: 90%; /* Ensures the button doesn't exceed 90% of its parent's width */
+    margin: 0.5rem auto; /* Centers the button and adds space for clarity */
+    display: block; /* Ensures the button takes up its own line */
+  }
+
+  .weather-container {
+    min-width: 0; /* No minimum width to adapt freely to the container */
+    width: 100%; /* Full width for mobile adjustment */
+    padding: 15px; /* Consistent padding around the contents */
+    box-sizing: border-box; /* Padding included in width calculation */
+  }
+
+  .day-forecast {
+    width: 100%; /* Full width to ensure responsiveness */
+    padding: 15px; /* Adequate padding for touch interaction */
+    margin: 5px 0; /* Reduces margin for compact layout */
+    box-sizing: border-box; /* Padding and borders counted within width */
+  }
+
+  .city-name, .condition, .temp-high, .temp-low {
+    font-size: 1.2rem; /* Increased font size for better readability on mobile */
+  }
+}

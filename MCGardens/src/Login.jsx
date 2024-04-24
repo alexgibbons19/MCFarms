@@ -34,25 +34,25 @@ function Login() {
   };
 
   return (
-    <div className="main">
-      <div className="center">
-        <div className="backbox">
+    <div className="login-main">
+      <div className="login-center">
+        <div className="login-backbox">
           <div>
-            <header className="App-header">
+            <header className="login-header">
               <h2> MCGardens Login </h2>
             </header>
           </div>
         
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="login-form">
             <div>
-              <label htmlFor="email"><b>Email</b></label><br />
+              <label htmlFor="email" className="login-label"><b>Email</b></label><br />
               <input 
                 type="email" 
                 id="email" 
                 name="email"
                 autoComplete="email"
                 placeholder="Email"
-                className="textbox"
+                className="login-textbox"
                 value={formValues.email || ""}
                 onChange={handleChange} 
                 required 
@@ -60,14 +60,14 @@ function Login() {
             </div>
 
             <div>
-              <label htmlFor="password"><b>Password</b></label><br />
+              <label htmlFor="password" className="login-label"><b>Password</b></label><br />
               <input 
                 type="password" 
                 id="password" 
                 name="password"
                 autoComplete="current-password"
                 placeholder="Password" 
-                className="textbox" 
+                className="login-textbox" 
                 value={formValues.password || ""}
                 onChange={handleChange} 
                 required
@@ -75,15 +75,15 @@ function Login() {
             </div>
             
             <div>
-              <button type="submit" className="sign-in-button">Sign In</button>
+              <button type="submit" className="login-button">Sign In</button>
             </div>
           </form>
 
-          <div className="errorMessage">{error && <p className="error-message">{error}</p>}</div>
+          <div className="login-errorMessage">{error && <p className="login-error-message">{error}</p>}</div>
 
-          <div className="additionalOptions">
-            <a href="/sign-up">Sign Up</a>
-            <a href="/forgot-password" style={{ cursor: 'pointer' }}>Forgot Password</a>
+          <div className="login-additionalOptions">
+            <a href="/sign-up" className="login-additionalOptions-link">Sign Up</a>
+            <a href="/forgot-password" className="login-additionalOptions-link" style={{ cursor: 'pointer' }}>Forgot Password</a>
           </div>
         </div>
       </div>

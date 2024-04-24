@@ -34,23 +34,23 @@ function ForgotPassword() {
   };
 
   return (
-    <div className="main">
-      <div className="center">
-        <div className="backbox">
-          <header className="App-header">
+    <div className="login-main">
+      <div className="login-center">
+        <div className="login-backbox">
+          <header className="login-header">
             <h2>Forgot Password</h2>
           </header>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="login-form">
             <div>
-              <label htmlFor="email"><b>Email</b></label><br />
+              <label htmlFor="email" className="login-label"><b>Email</b></label><br />
               <input 
                 type="email" 
                 id="email" 
                 name="email"
                 autoComplete="email"
                 placeholder="Email"
-                className="textbox"
+                className="login-textbox"
                 value={email}
                 onChange={handleChange} 
                 required 
@@ -58,15 +58,17 @@ function ForgotPassword() {
             </div>
             
             <div>
-              <button type="submit" className="sign-in-button">Reset Password</button>
+              <button type="submit" className="login-button">Reset Password</button>
             </div>
           </form>
 
-          {error && <p className="error-message">{error}</p>}
-          {successMessage && <p className="success-message">{successMessage}</p>}
+          <div className="login-errorMessage">
+            {error && <p className="error-message">{error}</p>}
+            {successMessage && <p className="success-message">{successMessage}</p>}
+          </div>
 
-          <div className="additionalOptions">
-            <a href="/">Back to Sign In</a>
+          <div className="login-additionalOptions">
+            <a href="/" className="login-link">Back to Sign In</a>
           </div>
         </div>
       </div>

@@ -1,35 +1,35 @@
-.main{
+.login-main {
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   color: rgb(61, 40, 88);
   font-size: 3vw;
 }
 
-.backbox{
+.login-backbox {
   background-color: rgb(125, 194, 190);
   width: 115%;
   border-radius: 25px;
-  padding-bottom: 15px;
+  padding: 15px;
 }
 
-.button{
+.login-button {
   cursor: pointer;
 }
 
-.center {
+.login-center {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-57%, -55%);
+  transform: translate(-50%, -50%);
 }
 
-.textbox{
-  width: 40vw;
-  height: 3vw;
+.login-textbox {
+  width: 80%; /* Changed from vw to percentage for better responsiveness */
+  height: 40px; /* Fixed height */
   background-color: whitesmoke;
   border: none;
   box-shadow: 0px 0px 5px inset black;
   padding-left: 20px;
-  font-size: 1.4vw;
+  font-size: 16px; /* Fixed font size */
   color: black;
 }
 
@@ -38,42 +38,79 @@ input:-webkit-autofill:focus {
     transition: background-color 600000s 0s, color 600000s 0s;
     -webkit-text-fill-color: black;
 }
+
 input[data-autocompleted] {
     background-color: transparent !important;
     -webkit-text-fill-color: black;
 }
 
-label{
-  font-size: 2vw;
+.login-label {
+  font-size: 18px; /* Fixed font size for better readability */
 }
 
-h2{
+.login-header h2 {
   text-align: center;
   top: 50%;
+  margin-top: 0;
+  margin-bottom: 30px;
 }
 
-form{
+.login-form {
   text-align: center;
 }
 
-a{
-  font-size: 1vw;
-  padding: 3vw 2vw;
+.login-link {
+  font-size: 16px; /* Increased font size for better readability */
+  padding: 5% 2%; /* Adjusted padding */
   text-align: left;
 }
 
-.additionalOptions{
+.login-additionalOptions {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin-left: 20px;
 }
 
-.additionalOptions a{
+.login-additionalOptions a {
   margin: 0px;
   padding: 5px 0px;
+  font-size: 15px;
 }
 
-.errorMessage{
+.login-errorMessage {
   margin-left: 5vw;
+}
+
+/* Media Query for devices with max-width of 768px */
+@media (max-width: 768px) {
+  .login-main {
+    font-size: 5vw; /* Larger font size for better readability */
+  }
+
+  .login-backbox {
+    width: 100%; /* Full width for better fit */
+    padding: 10px; /* Reduced padding */
+  }
+
+  .login-center {
+    transform: translate(-50%, -50%); /* Corrected centering */
+  }
+
+  .login-textbox {
+    width: 90%; /* Increased width for better use of space */
+    font-size: 14px; /* Adjusted font size */
+  }
+
+  .login-label {
+    font-size: 16px; /* Adjusted font size for labels */
+  }
+
+  .login-link {
+    font-size: 14px; /* Adjusted font size for links */
+  }
+
+  .login-errorMessage {
+    margin-left: 3vw; /* Adjusted margin for error messages */
+  }
 }
