@@ -61,6 +61,33 @@
     background-color: #00332a;
 }
 
+.team-members {
+    display: flex;
+    justify-content: space-around; /* Distributes space evenly between the elements */
+    margin-top: 20px; /* Space above the team member section */
+}
+
+.team-member {
+    flex: 1; /* Each team member takes equal width */
+    text-align: center; /* Centers the text horizontally */
+    padding: 10px; /* Padding around the text for better spacing */
+}
+
+.github-section {
+    border-radius: 20px;
+    margin-top: 40px; /* Adds space above the GitHub section */
+    text-align: center; /* Centers the title and the GitHub links */
+    padding: 20px;
+    background-color: #f0f0f0; /* A light background for the GitHub section */
+}
+
+.github-title {
+    font-size: 1.5rem;
+    color: #333; /* Darker text for better readability */
+    margin-bottom: 20px; /* Space below the title */
+}
+
+
 @media (max-width: 768px) {
     .about-us-pic {
         max-width: 50%;
