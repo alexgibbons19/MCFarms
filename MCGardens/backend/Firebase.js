@@ -11,7 +11,8 @@ import {
     addDoc,
     query,
     where,
-    Timestamp
+    Timestamp,
+    setDoc
 } from "firebase/firestore";
 import { 
     getAuth, 
@@ -35,14 +36,6 @@ const firebaseConfig = {
 // Initialize Firebase
 initializeApp(firebaseConfig);
 const db = getFirestore();
-
-// Function to fetch users
-export const fetchUsers = async () => {
-    const colRef = collection(db, 'users');
-    const snapshot = await getDocs(colRef);
-    const users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-    return users;
-};
 
 // Initialize Firebase Authentication
 const auth = getAuth();
@@ -292,3 +285,35 @@ export const getUser = () => {
 };
 
 export { auth };
+
+
+
+
+// Account Settings Functions
+export const getUserEmailPreference = async (userEmail) => {
+  const userRef = doc(db, 'users', userEmail);
+  const docSnap = await getDoc(userRef);
+  return docSnap.exists() ? docSnap.data().receiveEmails : true; // default to true if not set
+};
+
+export const updateEmailPreference = async (userEmail, newPreference) => {
+  const userRef = doc(db, 'users', userEmail);
+
+  try {
+    await setDoc(userRef, { receiveEmails: newPreference }, { merge: true });
+    return newPreference; // Return the updated preference
+  } catch (error) {
+    console.error("Error updating email preference:", error);
+    throw error; // Rethrow the error to be handled or displayed by the calling component
+  }
+};
+
+export const changePassword = async (newPassword) => {
+  const user = auth.currentUser;
+  if (user) {
+    await user.updatePassword(newPassword);
+    return true;
+  } else {
+    throw new Error("No user logged in.");
+  }
+};
