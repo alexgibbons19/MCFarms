@@ -82,8 +82,8 @@ const HomePage = () => {
                 <>
                   <h3>{weather.city}</h3>
                   <p>{weather.condition}</p>
-                  <p>High: {weather.max.toFixed(1)}°F</p>
-                  <p>Low: {weather.min.toFixed(1)}°F</p>
+                  <p>High: {Math.round(weather.max)}°F</p>
+                  <p>Low: {Math.round(weather.min)}°F</p>
                 </>
               ) : (
                 <p>Loading weather...</p>

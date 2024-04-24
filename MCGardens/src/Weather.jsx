@@ -97,8 +97,8 @@ const Weather = () => {
                                         <h2 className='date'>{new Date(dt * 1000).toLocaleDateString('en-US', { weekday: 'long' })}</h2>
                                         <p className='condition'>{weather[0].main}</p>
                                         <img className='weather-icon' src={`http://openweathermap.org/img/w/${weather[0].icon}.png`} alt="Weather Icon" />
-                                        <p className='temp-high'>High: {temp.max.toFixed(1)}°F </p>
-                                        <p className='temp-low'>Low: {temp.min.toFixed(1)}°F</p>
+                                        <p className='temp-high'>High: {Math.round(temp.max)}°F </p>
+                                        <p className='temp-low'>Low: {Math.round(temp.min)}°F</p>
                                     </div>
                                 ))}
                             </div>
