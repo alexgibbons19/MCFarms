@@ -13,7 +13,7 @@ const AboutUs = () => {
     const teamMembers = [
         { name: "Alex Gibbons", github: "https://github.com/gibbbeh" },
         { name: "Faddi Dabain", github: "https://github.com/FaddiADabain" },
-        { name: "Lauren Kawolski", github: "https://github.com/kaweckil" },
+        { name: "Lauren Kowalski", github: "https://github.com/kaweckil" },
         { name: "Thierno Diallo", github: "https://github.com/Thierno-M-Diallo" }
     ];
 
