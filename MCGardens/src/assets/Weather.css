@@ -30,8 +30,12 @@
 
 
 body {
-  background-color: rgb(145, 244, 123);
+  background-color: white;
   font-family: Arial, sans-serif;
+}
+
+.weather-main {
+  background-color: (145, 244, 123);
 }
 
 .zipcode-label {
