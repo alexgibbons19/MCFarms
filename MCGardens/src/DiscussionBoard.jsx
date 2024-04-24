@@ -1,53 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
 import './assets/DiscussionBoard.css';
 import { v4 as uuidv4 } from 'uuid';
 import BurgerMenu from './BurgerMenu';
 import { 
-    fetchThreads, fetchReplies, getUser,
+    fetchThreads, getUser,
     listenForUpdates,
-    deleteThread as deleteThreadFromDB,
-    deleteReply,
     addThread as addThreadToDB,
     addReply as addReplyToDB 
 } from '../backend/Firebase';
 
 const DiscussionBoard = () => {
     const [threads, setThreads] = useState([]);
-    const [replies, setReplies] = useState([]);
     const [showThreadForm, setShowThreadForm] = useState(false);
-    const [showReplyForm, setShowReplyForm] = useState(false);
     const [threadTitle, setThreadTitle] = useState("");
     const [threadText, setThreadText] = useState("");
-    const [replyTitle, setReplyTitle] = useState("");
     const [replyText, setReplyText] = useState("");
-    const [numReplies, setNumReplies] = useState(0);
-    const [threadReplies, setThreadReplies] = useState([]);
-    const [selectedThreadId, setSelectedThreadId] = useState(null);
     const [currUser, setCurrUser] = useState("");
     
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const fetchedThreads = await fetchThreads();
-                const fetchedReplies = await fetchReplies();
-
-                const threadsWithReplies = fetchedThreads.map(thread => ({
-                    ...thread,
-                    replies: fetchedReplies.filter(reply => reply.threadId === thread.id)
-                }));
-
-                // Sort threads by creation date in descending order
-                threadsWithReplies.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
-
-                // Sort replies by creation date in ascending order
-                fetchedReplies.sort((a, b) => new Date(a.created_on) - new Date(b.created_on));
-
-                setThreads(threadsWithReplies);
-                setReplies(fetchedReplies);
+                const fetchedThreads = await fetchThreads();        
+                setThreads(fetchedThreads);
                 const currUser = await getUser();
-                console.log(currUser);
+                console.log("Current User:",currUser);
                 setCurrUser(currUser);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -56,31 +33,11 @@ const DiscussionBoard = () => {
 
         fetchData();
 
-        const unsubscribe = listenForUpdates(({ updatedThreads, updatedReplies }) => {
+        const unsubscribe = listenForUpdates(({ threads }) => {
             console.log("Listening...");
-            if (updatedThreads) {
-              console.log("HEARD THREAD");
-              const threadsWithReplies = updatedThreads.map(thread => ({
-                ...thread,
-                replies: replies.filter(reply => reply.threadId === thread.id)
-              }));
-              threadsWithReplies.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
-              setThreads(threadsWithReplies);
-            }
-        
-            if (updatedReplies) {
-              console.log("HEARD REPLY");
-              const threadsWithReplies = threads.map(thread => {
-                const newReplies = replies.filter(reply => reply.threadId === thread.id);
-                return {
-                  ...thread,
-                  replies: [...thread.replies, ...newReplies]
-                };
-              });
-              threadsWithReplies.sort((a, b) => new Date(b.created_on) - new Date(a.created_on));
-              setThreads(threadsWithReplies);
-              replies.sort((a,b) => new Date(a.created_on) - new Date(b.created_on));
-              setReplies(updatedReplies);
+          
+            if (threads) {
+              setThreads(threads);
             }
           });
         
@@ -93,11 +50,6 @@ const DiscussionBoard = () => {
         setShowThreadForm(true);
     };
 
-    const handleCreateReplyClick = (threadId) => {
-        setSelectedThreadId(threadId);
-        setShowReplyForm(true);     
-    };
-
     const handleSubmitThread = async (e) => {
         e.preventDefault();
         const creationDate = new Date();
@@ -107,12 +59,9 @@ const DiscussionBoard = () => {
             text: threadText ,
             author: currUser,
             created_on: creationDate.toLocaleString(),
-            numReplies: 0
         };
         try {
             await addThreadToDB(newThread);
-            const updatedThreads = [newThread, ...threads];
-            setThreads(updatedThreads);
             console.log("New Thread added successfully:", newThread);
         } catch (error) {
             console.error("Error adding thread:", error);
@@ -136,19 +85,7 @@ const DiscussionBoard = () => {
 
         try {
             await addReplyToDB(newReply);
-            const updatedReplies = [...replies, newReply];
-            setReplies(updatedReplies);
-
-            // Refetch threads and replies after a new reply is posted
-            const fetchedThreads = await fetchThreads();
-            const fetchedReplies = await fetchReplies();
-
-            const threadsWithReplies = fetchedThreads.map(thread => ({
-                ...thread,
-                replies: fetchedReplies.filter(reply => reply.threadId === thread.id)
-            }));
-
-            setThreads(threadsWithReplies);
+            console.log("Reply successfully added to DB:", newReply);
             setReplyText(""); // Clear reply text input
         } catch (error) {
             console.error("Error adding reply:", error);
@@ -160,37 +97,6 @@ const DiscussionBoard = () => {
         setThreadText("");
         setShowThreadForm(false);
     }
-
-
-    const handleLinkClick = (id) => {
-        console.log("Clicked thread ID: ", id);
-    };
-
-    const updateNumReplies = (threadId, numReplies) => {
-        const updatedThreads = threads.map(thread => {
-            if (thread.id === threadId) {
-                return { ...thread, numReplies: numReplies };
-            }
-            return thread;
-        });
-        setThreads(updatedThreads);
-        localStorage.setItem("threads", JSON.stringify(updatedThreads));
-    };
-
-    // TESTING
-  const handleRemoveThreads = () => {
-    localStorage.removeItem('threads');
-    localStorage.removeItem('replies');
-    console.log('All Threads and Replies removed from localStorage.');
-  };
-  const handleRemoveThisThread = async (threadId) => {
-    try {
-        await deleteThreadFromDB(threadId);
-        console.log('Thread deleted successfully.');
-    } catch (error) {
-        console.error('Error deleting thread:', error);
-    }
-  };
 
   return (
     <>
