@@ -109,37 +109,46 @@ const DiscussionBoard = () => {
             )}
             {showThreadForm && (
                 <form className='create-thread-form' onSubmit={handleSubmitThread}>
-                    <h2 className='create-title'>Create a Thread</h2>
+                    <h2 className='create-thread-header'>Create a Thread</h2>
                     <div className='create-thread-container'>
-                        <label htmlFor='threadTitle'>Title</label>
-                        <input
-                            type='text'
-                            id='threadTitle'
-                            name='threadTitle'
-                            required
-                            value={threadTitle}
-                            onChange={(e) => setThreadTitle(e.target.value)}
-                        />
-                        <p></p>
-                        <label htmlFor='threadText'>Text</label>
-                        <input
-                            type='text'
-                            id='threadText'
-                            name='threadText'
-                            required
-                            value={threadText}
-                            onChange={(e) => setThreadText(e.target.value)}
-                        />
+                        <div className="create-thread-title-container">
+                            <label className='create-thread-title-label' htmlFor='threadTitle'>Title</label>
+                            <input
+                                className='create-thread-title-input'
+                                type='text'
+                                id='threadTitle'
+                                name='threadTitle'
+                                required
+                                value={threadTitle}
+                                onChange={(e) => setThreadTitle(e.target.value)}
+                            />
+                        </div>
+                        <div className="create-thread-text-container">
+                            <label className='create-thread-text-label'htmlFor='threadText'>Text</label>
+                            <input
+                                className='create-thread-text-input'
+                                type='text'
+                                id='threadText'
+                                name='threadText'
+                                required
+                                value={threadText}
+                                onChange={(e) => setThreadText(e.target.value)}
+                            />
+                        </div>
+                        
                     </div>
-                    <button className="submit-btn">SUBMIT THREAD</button>
-                    <button className="cancel-btn" onClick={handleCancelThread}>CANCEL POST</button>
+                    <div className="create-thread-btn-container">
+                        <button className="submit-btn">SUBMIT THREAD</button>
+                        <button className="cancel-btn" onClick={handleCancelThread}>CANCEL POST</button>
+                    </div>
+                    
                 </form>
             )}
 
             <div className="thread-flex-container">
                 <h2 className='home-title'>Check out these posts!</h2>
                 {threads.length === 0 ? (
-                    <p>NO THREADS HAVE BEEN POSTED, BE THE FIRST!</p>
+                    <p className='no-threads-text'>NO THREADS HAVE BEEN POSTED, BE THE FIRST!</p>
                 ) : (
                     threads.map((thread) => (
                         <div className='thread-container' key={thread.id}>
@@ -147,15 +156,18 @@ const DiscussionBoard = () => {
                             <div className="thread-contents">
                                 <div className="thread-info">
                                     <p className="thread-title">{thread.title}</p>
-                                    <p className="thread-author">{thread.author}</p>
-                                    <div className="thread-date">
-                                        <p className="date">
-                                            Created On: {thread.created_on}
-                                        </p>
+                                    <div className="post-details">
+                                        <p className="thread-author">{thread.author}</p>
+                                        <div className="thread-date">
+                                            <p className="date">
+                                                Created On: {thread.created_on}
+                                            </p>
+                                        </div>
                                     </div>
+                                    
                                 </div>
-                                <div className="thread-text">
-                                    {thread.text}
+                                <div className="thread-text-container">
+                                    <p className='thread-text'>{thread.text}</p>
                                 </div>
                             </div>
                             <div className="replies-container">
@@ -171,34 +183,40 @@ const DiscussionBoard = () => {
                                             <div className="reply-contents">
                                                 <div className="reply-info">
                                                     <p className="reply-title">{reply.title}</p>
-                                                    <p className="reply-author">{reply.author}</p>
-                                                    <div className="reply-date">
-                                                        <p className="date">
-                                                            Created On: {reply.created_on}
-                                                        </p>
+                                                    <div className="post-details">
+                                                        <p className="reply-author">{reply.author}</p>
+                                                        <div className="reply-date">
+                                                            <p className="date">
+                                                                Created On: {reply.created_on}
+                                                            </p>
+                                                        </div>
                                                     </div>
+                                                    
                                                 </div>
-                                                <div className="reply-text">
-                                                    {reply.text}
+                                                <div className="reply-text-container">
+                                                    <p className="reply-text">{reply.text}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     )) 
                                 ) : (
-                                    <p>NO REPLIES YET! BE THE FIRST!</p>
+                                    <p className='no-replies-text'>NO REPLIES YET! BE THE FIRST!</p>
                                 )}
                                 <form className="create-reply-form" onSubmit={(e) => handleSubmitReply(e, thread)}>
-                                    <h2 className='create-reply-title'>Create a Reply</h2>
+                                    <h2 className='create-reply-header'>Create a Reply</h2>
                                     <div className='create-reply-container'>
-                                        <label htmlFor={`replyText-${thread.id}`}>Text</label>
-                                        <input
-                                            type='text'
-                                            id={`replyText-${thread.id}`}
-                                            name='replyText'
-                                            required
-                                            value={replyText}
-                                            onChange={(e) => setReplyText(e.target.value)}
-                                        />
+                                        <div className="create-thread-text-container">
+                                            <label className='create-reply-text-label'htmlFor={`replyText-${thread.id}`}>Text</label>
+                                            <input
+                                                className='create-reply-text-input'
+                                                type='text'
+                                                id={`replyText-${thread.id}`}
+                                                name='replyText'
+                                                required
+                                                value={replyText}
+                                                onChange={(e) => setReplyText(e.target.value)}
+                                            />
+                                        </div>
                                     </div>
                                     <button className="submit-btn">SUBMIT REPLY</button>                                        
                                 </form>
