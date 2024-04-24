@@ -1,76 +1,122 @@
 import 'dotenv/config';
-import nodemailer from "nodemailer";
-import cron from "node-cron";
+import nodemailer from 'nodemailer';
+import { initializeApp, getApp, getApps } from 'firebase/app';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import admin from 'firebase-admin';
+import { createRequire } from 'module';
+import cron from 'node-cron';
+const require = createRequire(import.meta.url);
 
-// Adjusted Email sending function to accept tasks and an email address
-const sendEmail = async (email, tasks, test = false) => {
-  let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+// Initialize Firebase
+const app = !getApps().length ? initializeApp({
+  apiKey: process.env.VITE_FIREBASE_API_KEY,
+  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+}) : getApp();
+const db = getFirestore(app);
+
+// Initialize Firebase Admin SDK
+const serviceAccount = require('../credentials.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: process.env.VITE_FIREBASE_DATABASE_URL,
+});
+
+// Email sending function
+const sendEmail = async (email, events) => {
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
     port: 465,
     secure: true,
     auth: {
-      user: process.env.EMAIL_USER, // Your SMTP user
-      pass: process.env.EMAIL_PASS, // Your SMTP password
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 
-  // Generate tasks content for email
-  let tasksHtml = tasks.length ? tasks.map(task => `<li>${task}</li>`).join('') : "<li>No specific tasks for today.</li>";
-  let tasksText = tasks.length ? tasks.join(', ') : "No specific tasks for today.";
+  const eventsHtml = events.map(event => `<li>${event.title} from ${event.startDate} to ${event.endDate}</li>`).join('');
+  const eventsText = events.map(event => `${event.title} from ${event.startDate} to ${event.endDate}`).join(', ');
 
-  let emailSubject = test ? "Test Email" : "Your Daily Tasks";
-  let emailTextBody = test ? "This is a test email. " : "Here are your tasks for today: ";
-  emailTextBody += tasksText;
-  let emailHtmlBody = test ? "<b>This is a test email.</b> " : "<b>Here are your tasks for today:</b><ul>";
-  emailHtmlBody += `${tasksHtml}</ul>`;
-
-  let info = await transporter.sendMail({
+  await transporter.sendMail({
     from: '"MCGardens" <mcgardens.reminders@gmail.com>',
-    to: email, // Use the dynamically provided email address
-    subject: emailSubject,
-    text: emailTextBody,
-    html: emailHtmlBody,
+    to: email,
+    subject: "Your Events Today",
+    text: "Here are your events for today: " + eventsText,
+    html: "<b>Here are your events for today:</b><ul>" + eventsHtml + "</ul>",
   });
 
-  console.log("Message sent: %s", info.messageId);
+  console.log("Email sent to: %s", email);
 };
 
-// Function that fetches user-specific tasks and email addresses
-// This is a placeholder function; replace it with your actual data fetching logic
-const fetchUserTasksAndEmails = async () => {
-  // Example users with tasks
-  return [
-    { email: "user1@example.com", tasks: ["Task 1 for User 1", "Task 2 for User 1"] },
-    { email: "user2@example.com", tasks: ["Task 1 for User 2", "Task 2 for User 2"] },
-    // Add more users and tasks as needed
-  ];
-};
-
-// Schedule the task to send an email every day at 8 AM
-cron.schedule("0 8 * * *", async () => {
-  console.log("Fetching user tasks and scheduling emails...");
-  const usersWithTasks = await fetchUserTasksAndEmails();
-
-  usersWithTasks.forEach(user => {
-    sendEmail(user.email, user.tasks);
+// Function to format date to a 12-hour string
+function formatDateTo12Hour(date) {
+  return date.toLocaleString('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true
   });
-});
+}
 
-// Function to send personalized tasks email, accepts email and tasks as parameters
-const sendPersonalizedTasksEmail = (email, tasks) => {
-  console.log(`Preparing to send personalized tasks email to ${email}...`);
-  sendEmail(email, tasks);
+// Updated fetchEventsForToday function
+const fetchEventsForToday = async (localPartEmail) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Start of today
+  const endOfDay = new Date(today);
+  endOfDay.setDate(today.getDate() + 1); // Start of the next day
+
+  // Firestore queries
+  const eventsRef = collection(db, 'calendar');
+  const q = query(eventsRef, where('user', '==', localPartEmail));
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs
+    .map(doc => ({ ...doc.data(), id: doc.id }))
+    .filter(event => {
+      const eventStart = event.startDate.toDate();
+      return eventStart >= today && eventStart < endOfDay;
+    })
+    .map(event => ({
+      ...event,
+      // Format the start and end dates to 12-hour format
+      startDate: formatDateTo12Hour(event.startDate.toDate()),
+      endDate: formatDateTo12Hour(event.endDate.toDate())
+    }));
 };
 
-// Function to send a test email, now accepts an email address and tasks
-const sendTestEmail = (email, tasks) => {
-  console.log(`Sending test email to ${email}...`);
-  sendEmail(email, tasks, true);
+// Main function to get verified users and send them an email with today's events
+const sendDailyEventsToVerifiedUsers = async () => {
+  const listUsersResult = await admin.auth().listUsers();
+  const verifiedUsers = listUsersResult.users.filter(user => user.emailVerified);
+
+  for (const user of verifiedUsers) {
+    const localPartEmail = user.email.split('@')[0];
+    const events = await fetchEventsForToday(localPartEmail);
+
+    if (events.length > 0) {
+      await sendEmail(user.email, events);
+      console.log(`Events sent to ${user.email}`);
+    } else {
+      console.log(`No events for today for user ${user.email}`);
+    }
+  }
 };
 
-// Example usage:
-// For sending a test email with tasks:
-sendTestEmail("fdabain01@gmail.com", ["Test task 1", "Test task 2"]);
+// sendDailyEventsToVerifiedUsers().catch(console.error);
 
-// For sending personalized daily tasks (could be triggered by specific events in your application):
-// sendPersonalizedTasksEmail("example@gmail.com", ["Complete project report", "Call back the clients", "Review meeting notes"]);
+
+
+// A function to call your fetchEventsForTodayByEmail and log results
+const logEventsForUser = async (localPartEmail) => {
+  try {
+    const events = await fetchEventsForToday(localPartEmail);
+    console.log(`Events for ${localPartEmail}:`, events);
+  } catch (error) {
+    console.error(`Error fetching events for ${localPartEmail}:`, error);
+  }
+};
+
+// Now call this function instead of just logging the promise
+// logEventsForUser('dottycr02');

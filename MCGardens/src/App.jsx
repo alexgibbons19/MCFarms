@@ -11,6 +11,7 @@ import PlantDetails from './PlantDetails.jsx';
 import SignUp from './SignUp.jsx';
 import ForgotPassword from './ForgotPassword.jsx';
 import AboutUs from './AboutUs.jsx';
+import AccountSettings from './Account.jsx';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/weather" element={<Weather />} />
         <Route path="/plant-details" element={<PlantDetails />} />
         <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/account-settings" element={<AccountSettings />} />
         {/* <Route path="/inventory" element={<InventoryPage />} />  */}
       </Routes>
     </Router>      
