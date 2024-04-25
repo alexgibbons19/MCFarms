@@ -138,11 +138,14 @@ const handleAddComment = async () => {
     }
   }
 };
+
 const handleDeleteEvent = async () => {
   if (selectedEvent) {
     try {
+    // remove from db
       await deleteEvent(selectedEvent.docID);
-
+    
+    // remove from local
       const filteredEvents = events.filter(event => event.docID !== selectedEvent.docID);
       setEvents(filteredEvents);
       setSelectedEvent(null);
