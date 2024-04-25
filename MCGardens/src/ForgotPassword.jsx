@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './assets/Login.css';
 import { resetPassword } from '../backend/Firebase';
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,14 @@ function ForgotPassword() {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
+
+  useEffect(() => {
+    if (successMessage) {
+      setTimeout(() => {
+        navigate('/');
+      }, 3000); // Redirect after 3 seconds (adjust as needed)
+    }
+  }, [successMessage, navigate]);
   const handleChange = (e) => {
     setEmail(e.target.value);
     setError('');
