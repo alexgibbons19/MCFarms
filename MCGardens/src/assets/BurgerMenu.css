@@ -34,7 +34,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: 120px;  /* Match the width of the burger-menu for alignment */
-  background-color: #60ff90;
+  background-color: rgb(145, 244, 123);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   display: none;  /* Initially hidden */
