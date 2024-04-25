@@ -108,22 +108,36 @@ const handleSubmit = async (e) => {
 const handleAddComment = async () => {
   if (selectedEvent && commentInput.trim()) {
     try {
-      const updatedEvent = await addCommentToEvent(selectedEvent.docID, commentInput);
-
-      const updatedEvents = events.map(event =>
-        event.docID === selectedEvent.docID ? updatedEvent : event
-      );
+    // commits changes to db
+      await addCommentToEvent(selectedEvent.docID, commentInput);
       
+      const updatedEvents = events.map(event => {
+        if (event.docID === selectedEvent.docID) {
+        // updates the comments field of selected event locally
+          return {
+            ...event,
+            comments: [...event.comments, commentInput] 
+          };
+        }
+      // returns the updated and old events
+        return event; 
+      });
+
+    // update the events state
       setEvents(updatedEvents);
 
+    // update the current selected event
+      setSelectedEvent({
+        ...selectedEvent,
+        comments: [...selectedEvent.comments, commentInput] 
+      });
+
       setCommentInput('');
-      setSelectedEvent(updatedEvent); 
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   }
 };
-
 const handleDeleteEvent = async () => {
   if (selectedEvent) {
     try {
