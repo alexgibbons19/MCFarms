@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './assets/HomePage.css';
 import BurgerMenu from './BurgerMenu';
+import { getUser, fetchCurrentWeeksEvents } from '../backend/Firebase.js';
 
 const HomePage = () => {
   const [weather, setWeather] = useState(null);
+  const [events,setEvents] = useState([]);
+  const user = getUser();
 
   useEffect(() => {
     const askForLocationPermission = async () => {
@@ -61,7 +64,18 @@ const HomePage = () => {
       fetchWeather(40.9039, -73.9142);
     }
 
+    const fetchWeeksEvents = async () => {
+      try {
+        const eventsData = await fetchCurrentWeeksEvents(user);
+        setEvents(eventsData);
+        console.log(eventsData);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+    fetchWeeksEvents();
     askForLocationPermission();
+
   }, []);
 
   return (
@@ -102,8 +116,18 @@ const HomePage = () => {
         </div>
         <a href="/reminders" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
           <div className="rectangle" style={{ margin: "0 auto" }}>
-            <h1>This Weeks Events</h1>
-            {/* MAKE A FIREBASE FUNCTION TO GET AND FILTER EVENTS - LAUREN todo */}
+             <h1>This Weeks Events</h1>
+            {events.length > 0 ? (
+            <u1>
+              {events.map((event) => (
+                <li key={event.id}>
+                  {event.title} - {event.startDate} to {event.endDate}
+                </li>
+              ))}
+            </u1>
+            ): (
+              <p>No events this week.</p>
+            )}
           </div>
         </a>
       </div>
