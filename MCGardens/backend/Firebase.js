@@ -245,8 +245,18 @@ export const deleteEvent = async (docID) => {
 export const updateEvent = async(docID,eventData) => {
   try {
     const eventRef = doc(db,'calendar',docID);
-
-    await updateDoc(eventRef,eventData);
+    const start = new Date(eventData.startDate);
+    const end = new Date(eventData.endDate);
+    console.log("uE:",start);
+    console.log("uE:",end);
+    const updatedEvent = {
+      user: eventData.user,
+      title: eventData.title,
+      startDate: Timestamp.fromDate(start),
+      endDate: Timestamp.fromDate(end),
+      comments: eventData.comments
+    }
+    await updateDoc(eventRef,updatedEvent);
     console.log('Event updated in firebase');
 
   } catch (error) {

@@ -166,15 +166,18 @@ const handleEditEvent = () => {
 const handleSubmitEdit = async (e) => {
   e.preventDefault();
   const { title, startDate, endDate } = formData;
-
+  console.log("Edited Event:",formData);
   if (!title || !startDate || !endDate) {
     alert('Please fill out all required fields.');
     return;
   }
+  console.log("hi",selectedEvent);
 
   try {
+    const user = selectedEvent.user;
+    const comments = selectedEvent.comments;
     // Update the selected event with new details
-    await updateEvent(selectedEvent.docID, { title, startDate, endDate });
+    await updateEvent(selectedEvent.docID, { title, startDate, endDate, user, comments });
 
     // Update the events array with the updated event
     const updatedEvents = events.map((event) => 
@@ -282,8 +285,8 @@ const handleSubmitEdit = async (e) => {
                 <input
                   type="datetime-local"
                   name="startDate"
-                  value={moment(formData.startDate).format('YYYY-MM-DDTHH:mm')}
-                  onChange={(e) => setFormData({ ...formData, startDate: new Date(e.target.value) })}
+                  value={formData.startDate}
+                  onChange={handleInputChange}
                   required
                 />
               </label>
@@ -293,8 +296,8 @@ const handleSubmitEdit = async (e) => {
                 <input
                   type="datetime-local"
                   name="endDate"
-                  value={moment(formData.endDate).format('YYYY-MM-DDTHH:mm')}
-                  onChange={(e) => setFormData({ ...formData, endDate: new Date(e.target.value) })}
+                  value={formData.endDate}
+                  onChange={handleInputChange}
                   required
                 />
               </label>
