@@ -33,6 +33,7 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
+import {startOfWeek, endOfWeek} from 'date-fns';
 
 // Initialize Firebase
 initializeApp(firebaseConfig);
@@ -215,6 +216,51 @@ export const fetchEvents = async (username) => {
     throw error;
   }
 };
+
+
+export const fetchCurrentWeeksEvents = async (username) =>{
+  const colRef = collection(db, 'calendar');
+  const today = new Date();
+  const startOfCurrentWeek = startOfWeek(today); // Start of the current week (Sunday)
+  const endOfCurrentWeek = endOfWeek(today); // End of the current week (Saturday)
+
+  const q = query(colRef, 
+    where('user', '==', username,
+    'AND','startDate', '>=', startOfCurrentWeek,
+    'AND','endDate', '<=', endOfCurrentWeek)
+  );
+
+  try {
+    const snapshot = await getDocs(q);
+    const events = snapshot.docs.map(doc => {
+      const eventData = doc.data();
+
+      const start = eventData.startDate.toDate(); 
+      const end = eventData.endDate.toDate(); 
+
+      const formattedStartDate = start.toISOString().slice(0, 16);
+      const formattedEndDate = end.toISOString().slice(0, 16);
+      
+      const comments = eventData.comments || [];
+      
+      return {
+        ...eventData,
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        comments: comments,
+        docID: doc.id
+      };
+    });
+
+    console.log("Filtered events for the current week:", events);
+    return events;
+
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    throw error;
+  }
+};
+
 
 export const addCommentToEvent = async (docID, comment) => {
   try {
