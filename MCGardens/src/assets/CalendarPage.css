@@ -89,3 +89,17 @@
   width: 90%;
   max-width: 600px;
 }
+
+
+.rbc-event{
+  background-color: green !important;
+}
+.rbc-today {
+  background-color: rgb(235, 255, 205) !important; /* Light green color */
+}
+
+.rbc-header{
+  background-color: green;
+  color:white;
+  font-weight:bold;
+}
