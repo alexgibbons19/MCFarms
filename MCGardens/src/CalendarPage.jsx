@@ -42,7 +42,7 @@ const CalendarPage = () => {
 
     loadEvents();
 
-  },[events]);
+  },[]);
 
 
   const handleSelectEvent = (event) => {
