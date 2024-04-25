@@ -90,7 +90,12 @@ export const resendVerificationEmail = async (email) => {
 
 
 /*     DISC BOARD FUNCTION   */
-
+// Function to fetch most recent thread
+export const fetchMostRecentThread = async () => {
+  const threads = await fetchThreads();
+  threads.sort((a,b) => new Date(b.created_on) - new Date(a.created_on));
+  return threads[0];
+}
   // Function to fetch threads
 export const fetchThreads = async () => {
     const colRef = collection(db, 'threads');

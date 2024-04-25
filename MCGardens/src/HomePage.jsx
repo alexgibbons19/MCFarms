@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './assets/HomePage.css';
 import BurgerMenu from './BurgerMenu';
-import { getUser, fetchCurrentWeeksEvents } from '../backend/Firebase.js';
+import { getUser, fetchCurrentWeeksEvents, fetchMostRecentThread } from '../backend/Firebase.js';
 
 const HomePage = () => {
   const [weather, setWeather] = useState(null);
   const [events,setEvents] = useState([]);
   const user = getUser();
+  const [mostRecentThread, setMostRecentThread] = useState([]);
 
   useEffect(() => {
     const askForLocationPermission = async () => {
@@ -73,6 +74,17 @@ const HomePage = () => {
         console.error('Error fetching events:', error);
       }
     };
+
+    const fetchThread = async () => {
+      try {
+        const threadData = await fetchMostRecentThread();
+        console.log("MRE:", threadData);
+        setMostRecentThread(threadData);
+      } catch (error) {
+        console.error("Error fetching thread:", error);
+      }
+    }
+    fetchThread();
     fetchWeeksEvents();
     askForLocationPermission();
 
@@ -106,13 +118,22 @@ const HomePage = () => {
               </div>
               </a>
             </div>
-          
-          <div className="square-box" style={{ marginLeft: "10px" }}>
-            <h2>Most recent thread</h2>
-            {/* this needs to pull something else from the db*/}
-            {/* fetch replies and filter to the most recent thread - lauren todo */}
+            <div className="square-box" style={{ marginLeft: "10px" }}>
+              <a href="/discussion-board" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
+                <div className="recent-threads-container">
+                  <h2>Most recent thread</h2>
+                  <div className="thread-title">
+                    {mostRecentThread.title}
+                  </div>
+                  <div className="thread-author">
+                    {mostRecentThread.author}
+                  </div>
+                </div>
+              </a>
+            </div>
+           
 
-          </div>
+          
         </div>
         <a href="/reminders" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
           <div className="rectangle" style={{ margin: "0 auto" }}>
