@@ -247,8 +247,6 @@ export const updateEvent = async(docID,eventData) => {
     const eventRef = doc(db,'calendar',docID);
     const start = new Date(eventData.startDate);
     const end = new Date(eventData.endDate);
-    console.log("uE:",start);
-    console.log("uE:",end);
     const updatedEvent = {
       user: eventData.user,
       title: eventData.title,

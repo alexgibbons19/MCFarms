@@ -183,7 +183,14 @@ const handleSubmitEdit = async (e) => {
     const updatedEvents = events.map((event) => 
     event.docID === selectedEvent.docID ? { ...event, title, startDate, endDate } : event
   );
+    console.log("updatedEvents:",updatedEvents);
     setEvents(updatedEvents);
+    console.log("eD:",endDate);
+    setSelectedEvent({
+      ...selectedEvent,
+      startDate: startDate,
+      endDate: endDate,
+    });
 
     // Exit edit mode and reset form data
     setIsEditMode(false);
