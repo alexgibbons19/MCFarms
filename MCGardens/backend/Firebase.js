@@ -242,6 +242,19 @@ export const deleteEvent = async (docID) => {
 }
 };
 
+export const updateEvent = async(docID,eventData) => {
+  try {
+    const eventRef = doc(db,'calendar',docID);
+
+    await updateDoc(eventRef,eventData);
+    console.log('Event updated in firebase');
+
+  } catch (error) {
+    console.error("Error updating event in firebase",error);
+  }
+};
+
+
 export const addEvent = async ({username,title, start, end}) => {
   console.log("params passed:",username,title,start,end);
   
