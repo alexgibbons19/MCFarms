@@ -5,6 +5,7 @@ import {
     getDoc,
     doc,
     updateDoc,
+    deleteDoc,
     getDocs,
     collection,
     getFirestore,
@@ -231,10 +232,10 @@ export const addCommentToEvent = async (docID, comment) => {
 };
 
 export const deleteEvent = async (docID) => {
-  const eventRef = collection(db,'calendar').doc(docID);
   try {
+    const eventRef = doc(db,'calendar',docID);
     await deleteDoc(eventRef);
-    console.log("Event deleted successfully:", eventID);
+    console.log("Event deleted successfully:", docID);
 } catch (error) {
     console.error("Error deleting event:", error);
     throw error;
