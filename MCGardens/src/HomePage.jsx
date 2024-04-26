@@ -130,27 +130,26 @@ const HomePage = () => {
                   </div>
                 </div>
               </a>
-            </div>
-           
-
-          
+            </div>   
         </div>
         <a href="/reminders" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
+        </a>
+
           <div className="rectangle" style={{ margin: "0 auto" }}>
              <h1>This Weeks Events</h1>
             {events.length > 0 ? (
-            <u1>
-              {events.map((event) => (
-                <li key={event.id}>
-                  {event.title} - {event.startDate} to {event.endDate}
+            <o1 style={{listStyleType: 'none',paddingleft:0}}>
+              {events.map((event,index) => (
+                <li key={event.id} style={{ textAlgin:"left"}}>
+                  <span style={{display: 'inline-block',width:'30px'}}>{index+1}.</span>
+                  {event.title} - ends on {new Date(event.endDate).toLocaleTimeString('en-US', {month: 'short', day: 'numeric',hour:'numeric',minute:'2-digit'})}
                 </li>
               ))}
-            </u1>
+            </o1>
             ): (
               <p>No events this week.</p>
             )}
           </div>
-        </a>
       </div>
     </div>
   );
