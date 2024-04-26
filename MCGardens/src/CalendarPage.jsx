@@ -230,7 +230,7 @@ const handleSubmitEdit = async (e) => {
         </div>
         {/* ADD COMMENTS / EDIT EVENT /DELETE EVENT */}
         {/* not edit mode */}
-        <div style={{ paddingTop: '10px', marginLeft: '20px', marginTop: '70px' }}>
+        <div style={{ color:'black',backgroundColor:'rgb(235, 255, 205)',paddingTop: '10px', marginLeft: '20px', marginTop: '70px' }}>
           {selectedEvent && !isEditMode && (
             <div style={{ border: '2px solid black', padding: '10px', position: 'relative' }}>
               <span
@@ -273,7 +273,7 @@ const handleSubmitEdit = async (e) => {
           )}
           {/* EDIT MODE */}
           {selectedEvent && isEditMode && (
-            <div style={{display:'flex',justifyContent:'center', border: '2px solid black', padding: '10px', position: 'relative' }}>
+            <div style={{color:'black',backgroundColor:'rgb(235, 255, 205)',display:'flex',justifyContent:'center', border: '2px solid black', padding: '10px', position: 'relative' }}>
               <h2>Edit your event :</h2>
             <form onSubmit={handleSubmitEdit}>
               <label>
