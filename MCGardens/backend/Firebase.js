@@ -289,7 +289,7 @@ export { auth };
 export const getUserEmailPreference = async (userEmail) => {
   const userRef = doc(db, 'users', userEmail);
   const docSnap = await getDoc(userRef);
-  return docSnap.exists() ? docSnap.data().receiveEmails : true; // default to true if not set
+  return docSnap.exists() ? docSnap.data().receiveEmails : false; // default to true if not set
 };
 
 export const updateEmailPreference = async (userEmail, newPreference) => {
