@@ -5,6 +5,7 @@ import {
     getDoc,
     doc,
     updateDoc,
+    deleteDoc,
     getDocs,
     collection,
     getFirestore,
@@ -32,6 +33,7 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
+import {startOfWeek, endOfWeek} from 'date-fns';
 
 // Initialize Firebase
 initializeApp(firebaseConfig);
@@ -88,7 +90,12 @@ export const resendVerificationEmail = async (email) => {
 
 
 /*     DISC BOARD FUNCTION   */
-
+// Function to fetch most recent thread
+export const fetchMostRecentThread = async () => {
+  const threads = await fetchThreads();
+  threads.sort((a,b) => new Date(b.created_on) - new Date(a.created_on));
+  return threads[0];
+}
   // Function to fetch threads
 export const fetchThreads = async () => {
     const colRef = collection(db, 'threads');
@@ -215,6 +222,51 @@ export const fetchEvents = async (username) => {
   }
 };
 
+
+export const fetchCurrentWeeksEvents = async (username) =>{
+  const colRef = collection(db, 'calendar');
+  const today = new Date();
+  const startOfCurrentWeek = startOfWeek(today); // Start of the current week (Sunday)
+  const endOfCurrentWeek = endOfWeek(today); // End of the current week (Saturday)
+
+  const q = query(colRef, 
+    where('user', '==', username,
+    'AND','startDate', '>=', startOfCurrentWeek,
+    'AND','endDate', '<=', endOfCurrentWeek)
+  );
+
+  try {
+    const snapshot = await getDocs(q);
+    const events = snapshot.docs.map(doc => {
+      const eventData = doc.data();
+
+      const start = eventData.startDate.toDate(); 
+      const end = eventData.endDate.toDate(); 
+
+      const formattedStartDate = start.toISOString().slice(0, 16);
+      const formattedEndDate = end.toISOString().slice(0, 16);
+      
+      const comments = eventData.comments || [];
+      
+      return {
+        ...eventData,
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        comments: comments,
+        docID: doc.id
+      };
+    });
+
+    console.log("Filtered events for the current week:", events);
+    return events;
+
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    throw error;
+  }
+};
+
+
 export const addCommentToEvent = async (docID, comment) => {
   try {
     const eventRef = doc(db, 'calendar', docID);
@@ -231,15 +283,36 @@ export const addCommentToEvent = async (docID, comment) => {
 };
 
 export const deleteEvent = async (docID) => {
-  const eventRef = collection(db,'calendar').doc(docID);
   try {
+    const eventRef = doc(db,'calendar',docID);
     await deleteDoc(eventRef);
-    console.log("Event deleted successfully:", eventID);
+    console.log("Event deleted successfully:", docID);
 } catch (error) {
     console.error("Error deleting event:", error);
     throw error;
 }
 };
+
+export const updateEvent = async(docID,eventData) => {
+  try {
+    const eventRef = doc(db,'calendar',docID);
+    const start = new Date(eventData.startDate);
+    const end = new Date(eventData.endDate);
+    const updatedEvent = {
+      user: eventData.user,
+      title: eventData.title,
+      startDate: Timestamp.fromDate(start),
+      endDate: Timestamp.fromDate(end),
+      comments: eventData.comments
+    }
+    await updateDoc(eventRef,updatedEvent);
+    console.log('Event updated in firebase');
+
+  } catch (error) {
+    console.error("Error updating event in firebase",error);
+  }
+};
+
 
 export const addEvent = async ({username,title, start, end}) => {
   console.log("params passed:",username,title,start,end);

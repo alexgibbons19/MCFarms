@@ -2,9 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './assets/HomePage.css';
 import BurgerMenu from './BurgerMenu';
+import { getUser, fetchCurrentWeeksEvents, fetchMostRecentThread } from '../backend/Firebase.js';
 
 const HomePage = () => {
   const [weather, setWeather] = useState(null);
+  const [events,setEvents] = useState([]);
+  const user = getUser();
+  const [mostRecentThread, setMostRecentThread] = useState([]);
 
   useEffect(() => {
     const askForLocationPermission = async () => {
@@ -61,7 +65,29 @@ const HomePage = () => {
       fetchWeather(40.9039, -73.9142);
     }
 
+    const fetchWeeksEvents = async () => {
+      try {
+        const eventsData = await fetchCurrentWeeksEvents(user);
+        setEvents(eventsData);
+        console.log(eventsData);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    const fetchThread = async () => {
+      try {
+        const threadData = await fetchMostRecentThread();
+        console.log("MRE:", threadData);
+        setMostRecentThread(threadData);
+      } catch (error) {
+        console.error("Error fetching thread:", error);
+      }
+    }
+    fetchThread();
+    fetchWeeksEvents();
     askForLocationPermission();
+
   }, []);
 
   return (
@@ -72,7 +98,7 @@ const HomePage = () => {
       <h1>Home Page</h1>
      
       <div className="giant-box">
-        <h2>MC Farm</h2>
+        <h2>MC Farms</h2>
         <div className="flex-container">
           <div className="square-box">
           <a href="/weather" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
@@ -92,22 +118,38 @@ const HomePage = () => {
               </div>
               </a>
             </div>
-          
-          <div className="square-box" style={{ marginLeft: "10px" }}>
-            <h3>Inventory</h3>
-            <p>Corn: 188</p>
-            <p>Wheat: 238</p>
-            <p>Tomatoes: 327</p>
-          </div>
+            <div className="square-box" style={{ marginLeft: "10px" }}>
+              <a href="/discussion-board" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
+                <div className="recent-threads-container">
+                  <h2>Most recent thread</h2>
+                  <div className="thread-title">
+                    {mostRecentThread.title}
+                  </div>
+                  <div className="thread-author">
+                    {mostRecentThread.author}
+                  </div>
+                </div>
+              </a>
+            </div>   
         </div>
         <a href="/reminders" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
-          <div className="rectangle" style={{ margin: "0 auto" }}>
-            <h3>Reminders</h3>
-            <p>28 Days to harvest Corn 245</p>
-            <hr />
-            <p>30 Days to sell Tomatoes</p>
-          </div>
         </a>
+
+          <div className="rectangle" style={{ margin: "0 auto" }}>
+             <h1>This Weeks Events</h1>
+            {events.length > 0 ? (
+            <o1 style={{listStyleType: 'none',paddingleft:0}}>
+              {events.map((event,index) => (
+                <li key={event.id} style={{ textAlgin:"left"}}>
+                  <span style={{display: 'inline-block',width:'30px'}}>{index+1}.</span>
+                  {event.title} - ends on {new Date(event.endDate).toLocaleTimeString('en-US', {month: 'short', day: 'numeric',hour:'numeric',minute:'2-digit'})}
+                </li>
+              ))}
+            </o1>
+            ): (
+              <p>No events this week.</p>
+            )}
+          </div>
       </div>
     </div>
   );
