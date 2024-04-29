@@ -20,14 +20,25 @@ async function checkPlantInFirebase(plantName) {
     const docSnap = await plantRef.get();
     if (docSnap.exists) {
         const data = docSnap.data();
-        // Return as an object with specific keys
         return {
             bio: data.bio,
             howToPlant: data['how to plant'],
             howToTakeCare: data['how to take care']
         };
     } else {
-        return null;
+        // Call askGpt if the plant is not in the database
+        const gptResponse = await askGpt(plantName);
+        if (gptResponse) {
+            // Save the new plant information in the database using the correct field names
+            const saveData = {
+                bio: gptResponse.bio,
+                'how to plant': gptResponse.howToPlant, // Correcting the field name
+                'how to take care': gptResponse.howToTakeCare // Correcting the field name
+            };
+            await plantRef.set(saveData);
+            return gptResponse;
+        }
+        return null; // Return null if askGpt failed to return valid data
     }
 }
 
@@ -85,7 +96,7 @@ appPlant.post('/askGpt', async (req, res) => {
         return res.status(400).send('The function must be called with one argument "plantInput".');
     }
     try {
-        const plantDetails = await checkPlantInFirebase(plantInput) || await askGpt(plantInput);
+        const plantDetails = await checkPlantInFirebase(plantInput);
         res.send(plantDetails);
     } catch (error) {
         console.error('Error:', error);
