@@ -25,32 +25,42 @@ const CalendarPage = () => {
 
 
 // hook to initialize calendar with database info
-  useEffect(() => {
-    const loadEvents = async () => {
-      try{
+useEffect(() => {
+    const loadUser = () => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setThisUser(storedUser);
+      } else {
         const user = getUser();
         setThisUser(user);
-        const eventsData = await fetchEvents(user);  
-        
-        const eventsWithDateObjects = eventsData.map(event => ({
-          ...event,
-          startDate: new Date(event.startDate),
-          endDate: new Date(event.endDate)
-        }));  
-        setEvents(eventsWithDateObjects);
-
-        console.log("eventsData: ",eventsData);
-        console.log('events: ',events);
-
-      } catch (error) {
-        console.error("Error loading events:",error);
+        // Store user in localStorage for persistence
+        localStorage.setItem('user', user);
       }
     };
 
+    const loadEvents = async () => {
+      try {
+        const user = localStorage.getItem('user');
+        if (user) {
+          const eventsData = await fetchEvents(user);
+
+          const eventsWithDateObjects = eventsData.map(event => ({
+            ...event,
+            startDate: new Date(event.startDate),
+            endDate: new Date(event.endDate)
+          }));
+
+          setEvents(eventsWithDateObjects);
+        }
+      } catch (error) {
+        console.error("Error loading events:", error);
+      }
+    };
+
+    loadUser();
     loadEvents();
 
   },[]);
-
 
 const handleInputChange = (e) => {
   const { name, value } = e.target;
