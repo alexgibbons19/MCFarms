@@ -30,8 +30,14 @@ const CalendarPage = () => {
       try{
         const user = getUser();
         setThisUser(user);
-        const eventsData = await fetchEvents(user);        
-        setEvents(eventsData);
+        const eventsData = await fetchEvents(user);  
+        
+        const eventsWithDateObjects = eventsData.map(event => ({
+          ...event,
+          startDate: new Date(event.startDate),
+          endDate: new Date(event.endDate)
+        }));  
+        setEvents(eventsWithDateObjects);
 
         console.log("eventsData: ",eventsData);
         console.log('events: ',events);
