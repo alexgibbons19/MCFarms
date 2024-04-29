@@ -22,6 +22,14 @@ const PlantDetails = () => {
 
     useEffect(() => {
         if (plantQuery) {
+            setPlant({
+                plantName: "Fetching Information....",
+                plantBio: "Fetching Information...",
+                plantInst: ["Fetching Information..."],
+                plantCare: ["Fetching Information..."],
+                plantImg: defaultImg
+            });
+
             axios.post('https://us-central1-mcgardens-bd0b1.cloudfunctions.net/askGpt/askGpt', { plantInput: plantQuery.toLowerCase() })
             .then(response => {
                 const { data } = response;
@@ -78,6 +86,7 @@ const PlantDetails = () => {
             alert('Please enter a valid plant name.');
             return;
         }
+        
         navigate(`/plant-details?query=${encodeURIComponent(query)}`);
         setQuery('');
     };
