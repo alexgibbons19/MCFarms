@@ -5,12 +5,24 @@ import BurgerMenu from './BurgerMenu';
 import { getUser, fetchCurrentWeeksEvents, fetchMostRecentThread } from '../backend/Firebase.js';
 
 const HomePage = () => {
+  const [thisUser,setThisUser]=useState(null);
   const [weather, setWeather] = useState(null);
   const [events, setEvents] = useState([]);
   const user = getUser();
   const [mostRecentThread, setMostRecentThread] = useState([]);
 
   useEffect(() => {
+    const loadUser = () => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setThisUser(storedUser);
+      } else {
+        const user = getUser();
+        setThisUser(user);
+        // Store user in localStorage for persistence
+        localStorage.setItem('user', user);
+      }
+    };
     const askForLocationPermission = async () => {
       try {
         const { geolocation } = navigator;
@@ -86,6 +98,8 @@ const HomePage = () => {
     fetchThread();
     fetchWeeksEvents();
     askForLocationPermission();
+    loadUser();
+
   }, []);
 
   return (
