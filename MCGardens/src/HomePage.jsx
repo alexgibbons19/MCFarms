@@ -27,7 +27,7 @@ const HomePage = () => {
 
         const { latitude, longitude } = position.coords;
         localStorage.setItem('userLocation', JSON.stringify({ latitude, longitude }));
-        
+       
         // Fetch weather for the new location
         fetchWeather(latitude, longitude);
 
@@ -35,7 +35,7 @@ const HomePage = () => {
         console.error('Error getting location:', error);
       }
     };
-    
+   
     const fetchWeather = async (latitude, longitude) => {
       try {
         const response = await fetch(
@@ -91,37 +91,36 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="container">
-      <div className='top-nav'>
-        <BurgerMenu />
+    <div style={{backgroundColor: 'lightgreen'}}>
+      <div className="outer-container">
+        <div className="container">
+          <div className='top-nav'>
+            <BurgerMenu />
+          </div>
+          <h1>Home Page</h1>
+        </div>
       </div>
-      <h1>Home Page</h1>
-     
-      <div className="giant-box">
-        <h2>MC Farms</h2>
-        <div className="flex-container">
-          <div className="square-box">
-          <a href="/weather" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
-            <div className="weather-preview">
-              <h2>Weather</h2>
+      <div className="container">
+        <div className="giant-box" style={{backgroundColor: 'white'}}>
+          <h2>MC Farms</h2>
+          <div className="flex-container">
+            <Link to="/weather" className="square-box" style={{ textDecoration: 'none', color: 'black' }}>
+              <h2 style={{ borderBottom: '1px solid black', paddingBottom: '5px' }}>Weather</h2>
               {weather ? (
-                <>
+                <div className="weather-preview">
                   <h3>{weather.city}</h3>
                   <p>{weather.condition}</p>
-                  {/* <img className='weather-icon' src={`http://openweathermap.org/img/w/${weather.icon}.png`} alt="Weather Icon" /> */}
                   <p>High: {Math.round(weather.max)}°F</p>
                   <p>Low: {Math.round(weather.min)}°F</p>
-                </>
+                </div>
               ) : (
                 <p>Loading weather...</p>
               )}
-              </div>
-              </a>
-            </div>
+            </Link>
             <div className="square-box" style={{ marginLeft: "10px" }}>
+              <h2 style={{ borderBottom: '1px solid black', paddingBottom: '5px' }}>Most Recent Thread</h2>
               <a href="/discussion-board" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
                 <div className="recent-threads-container">
-                  <h2>Most recent thread</h2>
                   <div className="thread-title">
                     {mostRecentThread.title}
                   </div>
@@ -130,29 +129,27 @@ const HomePage = () => {
                   </div>
                 </div>
               </a>
-            </div>   
-        </div>
-        <a href="/reminders" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
-        </a>
-
+            </div>
+          </div>
           <div className="rectangle" style={{ margin: "0 auto" }}>
-             <h1>This Weeks Events</h1>
+            <h2 style={{ borderBottom: '1px solid black', paddingBottom: '5px' }}>This Week's Events</h2>
             {events.length > 0 ? (
-            <o1 style={{listStyleType: 'none',paddingleft:0}}>
-              {events.map((event,index) => (
-                <li key={event.id} style={{ textAlgin:"left"}}>
-                  <span style={{display: 'inline-block',width:'30px'}}>{index+1}.</span>
-                  {event.title} - ends on {new Date(event.endDate).toLocaleTimeString('en-US', {month: 'short', day: 'numeric',hour:'numeric',minute:'2-digit'})}
-                </li>
-              ))}
-            </o1>
+              <o1 style={{listStyleType: 'none', paddingleft: 0}}>
+                {events.map((event,index) => (
+                  <li key={event.id} style={{ textAlign: "left"}}>
+                    <span style={{ display: 'inline-block', width: '30px'}}>{index+1}.</span>
+                    {event.title} - ends on {new Date(event.endDate).toLocaleTimeString('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'})}
+                  </li>
+                ))}
+              </o1>
             ): (
               <p>No events this week.</p>
             )}
           </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default HomePage
+export default HomePage;
