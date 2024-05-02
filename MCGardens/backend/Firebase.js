@@ -229,15 +229,17 @@ export const fetchCurrentWeeksEvents = async (username) =>{
   const startOfCurrentWeek = startOfWeek(today); // Start of the current week (Sunday)
   const endOfCurrentWeek = endOfWeek(today); // End of the current week (Saturday)
 
-  const q = query(colRef, 
-    where('user', '==', username),
-    where('endDate', '>=', startOfCurrentWeek),
-    where('endDate', '<=', endOfCurrentWeek)
-  );
+  console.log(today);
+  console.log("start:",startOfCurrentWeek);
+  console.log("end:",endOfCurrentWeek);
 
+  const q = query(colRef, 
+    where('user', '==', username));
 
   try {
     const snapshot = await getDocs(q);
+
+    console.log("snap,",snapshot);
     const events = snapshot.docs.map(doc => {
       const eventData = doc.data();
 
@@ -258,14 +260,21 @@ export const fetchCurrentWeeksEvents = async (username) =>{
       };
     });
 
-    console.log("Filtered events for the current week:", events);
-    return events;
+      // Filter events for the current week
+      const eventsInCurrentWeek = events.filter(event => {
+        const eventEndDate = new Date(event.endDate);
+        return eventEndDate >= startOfCurrentWeek && eventEndDate <= endOfCurrentWeek;
+      });
+  
+      console.log("Filtered events for the current week:", eventsInCurrentWeek);
+      return eventsInCurrentWeek;
 
   } catch (error) {
     console.error("Error fetching events:", error);
     throw error;
   }
 };
+
 
 
 export const addCommentToEvent = async (docID, comment) => {
