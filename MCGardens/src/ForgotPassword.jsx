@@ -13,7 +13,7 @@ function ForgotPassword() {
     if (successMessage) {
       setTimeout(() => {
         navigate('/');
-      }, 1000); // Redirect after 1 second
+      }, 5000);
     }
   }, [successMessage, navigate]);
 
