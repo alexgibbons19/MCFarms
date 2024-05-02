@@ -1,5 +1,4 @@
 /* HomePage.css */
-
 /* Top navigation styling */
 .top-nav {
   display: flex;
@@ -17,120 +16,98 @@
 
 @media (max-width: 768px) {
   .top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
     padding: 25px 5px;
   }
 
   .burger-menu {
-    flex-grow: 0;
-    padding: 10px 0px;
+      flex-grow: 0;
+      padding: 10px 0px;
   }
 }
 
-/* Container styling */
+.home-page {
+  background-color: lightgreen;
+  min-height: 100vh;
+  padding-top: 60px; /* padding-top to push content below fixed top-nav */
+}
+
 .container {
-  position: relative;
+  max-width: 1200px; /* Adjust based on your design */
+  margin: 0 auto;
+  padding: 20px;
+  padding-top: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 50px;
 }
 
-/* Giant box styling */
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* Adjust width to fit content side by side */
+}
+
 .giant-box {
-  border: none; /* Remove border */
+  width: 100%;
   padding: 20px;
-  margin-bottom: 20px;
-  width: 80%;
-  max-width: 600px;
-  text-align: center;
-  position: relative;
-  background-color: #f2f2f2; /* Add background color */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: #fff;
+  border-radius: 8px;
 }
 
-/* Square box styling */
 .square-box {
-  border: none; /* Remove border */
-  padding: 10px;
-  margin-bottom: 20px;
-  width: 40%;
-  max-width: 200px;
-  text-align: center;
-  background-color: #f2f2f2; /* Add background color */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+  flex: 1; /* Make boxes flexible */
+  margin: 10px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
 }
 
-/* Weather preview styling */
+.rectangle {
+  width: 95%;
+  margin-top: 20px;
+  margin-left: 10px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
 .weather-preview {
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
+
 }
 
-/* Rectangle styling */
-.rectangle {
-  border: none; /* Remove border */
-  margin-top: 20px;
-  padding: 20px;
-  width: 80%;
-  max-width: 600px;
-  text-align: center;
-  background-color: #f2f2f2; /* Add background color */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+.weather-preview h3, .weather-preview p, .thread-title, .thread-author, .event-list li {
+  margin: 5px 0;
 }
 
-/* Flex container styling */
-.flex-container {
-  display: flex;
-  justify-content: space-between;
-}
-
-/* Notification box styling */
-.notification-box {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
-/* Menu button styling */
-.menu-button {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  cursor: pointer;
-  border: none;
-  background: none;
-  padding: 0;
-}
-
-/* Menu icon styling */
-.menu-icon {
-  font-size: 24px;
-}
-
-/* Dropdown content styling */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 120px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
+.rectangle-link, .discussion-link, .square-box {
   text-decoration: none;
-  display: block;
+  color: black;
 }
 
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
+.event-list {
+  list-style-type: none;
+  padding-left: 0;
 }
 
-/* Show dropdown content */
-.show {
-  display: block;
+.event-index {
+  display: inline-block;
+  width: 30px;
+}
+
+.home-page-title {
+  position: absolute; /* or 'fixed' depending on use-case */
+  padding-top: 20px;
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust the exact center of the element */
 }
