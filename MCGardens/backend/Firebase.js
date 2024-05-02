@@ -230,10 +230,11 @@ export const fetchCurrentWeeksEvents = async (username) =>{
   const endOfCurrentWeek = endOfWeek(today); // End of the current week (Saturday)
 
   const q = query(colRef, 
-    where('user', '==', username,
-    'AND','startDate', '>=', startOfCurrentWeek,
-    'AND','endDate', '<=', endOfCurrentWeek)
+    where('user', '==', username),
+    where('endDate', '>=', startOfCurrentWeek),
+    where('endDate', '<=', endOfCurrentWeek)
   );
+
 
   try {
     const snapshot = await getDocs(q);
