@@ -1,3 +1,5 @@
+/* HomePage.css */
+
 /* Top navigation styling */
 .top-nav {
   display: flex;
@@ -15,19 +17,16 @@
 
 @media (max-width: 768px) {
   .top-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
     padding: 25px 5px;
   }
 
   .burger-menu {
-      flex-grow: 0;
-      padding: 10px 0px;
+    flex-grow: 0;
+    padding: 10px 0px;
   }
 }
 
+/* Container styling */
 .container {
   position: relative;
   display: flex;
@@ -36,25 +35,32 @@
   padding-top: 50px;
 }
 
+/* Giant box styling */
 .giant-box {
-  border: 1px solid black;
+  border: none; /* Remove border */
   padding: 20px;
   margin-bottom: 20px;
   width: 80%;
   max-width: 600px;
   text-align: center;
   position: relative;
+  background-color: #f2f2f2; /* Add background color */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
 }
 
+/* Square box styling */
 .square-box {
-  border: 1px solid black;
+  border: none; /* Remove border */
   padding: 10px;
   margin-bottom: 20px;
   width: 40%;
   max-width: 200px;
   text-align: center;
+  background-color: #f2f2f2; /* Add background color */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
 }
 
+/* Weather preview styling */
 .weather-preview {
   display: flex;
   flex-direction: column;
@@ -62,26 +68,32 @@
   text-align: center;
 }
 
+/* Rectangle styling */
 .rectangle {
-  border: 1px solid black;
+  border: none; /* Remove border */
   margin-top: 20px;
   padding: 20px;
   width: 80%;
   max-width: 600px;
   text-align: center;
+  background-color: #f2f2f2; /* Add background color */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
 }
 
+/* Flex container styling */
 .flex-container {
   display: flex;
   justify-content: space-between;
 }
 
+/* Notification box styling */
 .notification-box {
   position: absolute;
   top: 10px;
   right: 10px;
 }
 
+/* Menu button styling */
 .menu-button {
   position: absolute;
   top: 10px;
@@ -92,10 +104,12 @@
   padding: 0;
 }
 
+/* Menu icon styling */
 .menu-icon {
   font-size: 24px;
 }
 
+/* Dropdown content styling */
 .dropdown-content {
   display: none;
   position: absolute;
@@ -116,6 +130,7 @@
   background-color: #f1f1f1;
 }
 
+/* Show dropdown content */
 .show {
   display: block;
 }
