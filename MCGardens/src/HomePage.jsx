@@ -89,7 +89,9 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div style={{ backgroundColor: 'lightgreen' }}>
+    <div style={{ backgroundColor: 'lightgreen', minHeight: '100vh' }}>
+
+
       <div className="outer-container">
         <div className="container">
           <div className='top-nav'>
@@ -129,21 +131,23 @@ const HomePage = () => {
               </a>
             </div>
           </div>
-          <div className="rectangle" style={{ margin: "0 auto", border: 'none' }}>
-            <h2 style={{ borderBottom: '1px solid black', paddingBottom: '15px' }}>This Week's Events</h2>
-            {events.length > 0 ? (
-              <ol style={{ listStyleType: 'none', paddingLeft: 0 }}>
-                {events.map((event, index) => (
-                  <li key={event.id} style={{ textAlign: "left" }}>
-                    <span style={{ display: 'inline-block', width: '30px' }}>{index + 1}.</span>
-                    {event.title} - ends on {new Date(event.endDate).toLocaleTimeString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <p>No events this week.</p>
-            )}
-          </div>
+          <Link to="/calendar" style={{ textDecoration: 'none', color: 'black', border: 'none' }}>
+            <div className="rectangle" style={{ margin: "0 auto", border: 'none' }}>
+              <h2 style={{ borderBottom: '1px solid black', paddingBottom: '15px' }}>This Week's Events</h2>
+              {events.length > 0 ? (
+                <ol style={{ listStyleType: 'none', paddingLeft: 0 }}>
+                  {events.map((event, index) => (
+                    <li key={event.id} style={{ textAlign: "left" }}>
+                      <span style={{ display: 'inline-block', width: '30px' }}>{index + 1}.</span>
+                      {event.title} - ends on {new Date(event.endDate).toLocaleTimeString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p>No events this week.</p>
+              )}
+            </div>
+          </Link>
         </div>
       </div>
     </div>
