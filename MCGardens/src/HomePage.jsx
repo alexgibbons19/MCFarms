@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import './assets/HomePage.css';
+import './assets/HomePage.css'; // Make sure to import your CSS file
 import BurgerMenu from './BurgerMenu';
 import { getUser, fetchCurrentWeeksEvents, fetchMostRecentThread } from '../backend/Firebase.js';
 
 const HomePage = () => {
   const [weather, setWeather] = useState(null);
-  const [events,setEvents] = useState([]);
+  const [events, setEvents] = useState([]);
   const user = getUser();
   const [mostRecentThread, setMostRecentThread] = useState([]);
 
@@ -27,15 +27,14 @@ const HomePage = () => {
 
         const { latitude, longitude } = position.coords;
         localStorage.setItem('userLocation', JSON.stringify({ latitude, longitude }));
-       
+
         // Fetch weather for the new location
         fetchWeather(latitude, longitude);
-
       } catch (error) {
         console.error('Error getting location:', error);
       }
     };
-   
+
     const fetchWeather = async (latitude, longitude) => {
       try {
         const response = await fetch(
@@ -83,15 +82,16 @@ const HomePage = () => {
       } catch (error) {
         console.error("Error fetching thread:", error);
       }
-    }
+    };
     fetchThread();
     fetchWeeksEvents();
     askForLocationPermission();
-
   }, []);
 
   return (
-    <div style={{backgroundColor: 'lightgreen'}}>
+    <div style={{ backgroundColor: 'lightgreen', minHeight: '100vh' }}>
+
+
       <div className="outer-container">
         <div className="container">
           <div className='top-nav'>
@@ -101,11 +101,11 @@ const HomePage = () => {
         </div>
       </div>
       <div className="container">
-        <div className="giant-box" style={{backgroundColor: 'white'}}>
-          <h2>MC Farms</h2>
+        <div className="giant-box" style={{ backgroundColor: 'lightgray' }}>
+          <h2 style={{ border: 'none' }}>MC Gardens</h2>
           <div className="flex-container">
-            <Link to="/weather" className="square-box" style={{ textDecoration: 'none', color: 'black' }}>
-              <h2 style={{ borderBottom: '1px solid black', paddingBottom: '5px' }}>Weather</h2>
+            <Link to="/weather" className="square-box" style={{ textDecoration: 'none', color: 'black', border: 'none' }}>
+              <h2 style={{ paddingBottom: '45px', borderBottom: '1px solid black' }}>Weather</h2>
               {weather ? (
                 <div className="weather-preview">
                   <h3>{weather.city}</h3>
@@ -117,10 +117,10 @@ const HomePage = () => {
                 <p>Loading weather...</p>
               )}
             </Link>
-            <div className="square-box" style={{ marginLeft: "10px" }}>
-              <h2 style={{ borderBottom: '1px solid black', paddingBottom: '5px' }}>Most Recent Thread</h2>
+            <div className="square-box" style={{ marginLeft: "10px", border: 'none' }}>
               <a href="/discussion-board" style={{ textDecoration: 'none', color: 'black', display: 'inline-block', width: '100%' }}>
                 <div className="recent-threads-container">
+                  <h2 style={{ borderBottom: '1px solid black', paddingBottom: '15px' }}>Most Recent Thread</h2>
                   <div className="thread-title">
                     {mostRecentThread.title}
                   </div>
@@ -131,21 +131,23 @@ const HomePage = () => {
               </a>
             </div>
           </div>
-          <div className="rectangle" style={{ margin: "0 auto" }}>
-            <h2 style={{ borderBottom: '1px solid black', paddingBottom: '5px' }}>This Week's Events</h2>
-            {events.length > 0 ? (
-              <o1 style={{listStyleType: 'none', paddingleft: 0}}>
-                {events.map((event,index) => (
-                  <li key={event.id} style={{ textAlign: "left"}}>
-                    <span style={{ display: 'inline-block', width: '30px'}}>{index+1}.</span>
-                    {event.title} - ends on {new Date(event.endDate).toLocaleTimeString('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'})}
-                  </li>
-                ))}
-              </o1>
-            ): (
-              <p>No events this week.</p>
-            )}
-          </div>
+          <Link to="/calendar" style={{ textDecoration: 'none', color: 'black', border: 'none' }}>
+            <div className="rectangle" style={{ margin: "0 auto", border: 'none' }}>
+              <h2 style={{ borderBottom: '1px solid black', paddingBottom: '15px' }}>This Week's Events</h2>
+              {events.length > 0 ? (
+                <ol style={{ listStyleType: 'none', paddingLeft: 0 }}>
+                  {events.map((event, index) => (
+                    <li key={event.id} style={{ textAlign: "left" }}>
+                      <span style={{ display: 'inline-block', width: '30px' }}>{index + 1}.</span>
+                      {event.title} - ends on {new Date(event.endDate).toLocaleTimeString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p>No events this week.</p>
+              )}
+            </div>
+          </Link>
         </div>
       </div>
     </div>

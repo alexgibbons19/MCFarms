@@ -9,14 +9,14 @@ function ForgotPassword() {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-
   useEffect(() => {
     if (successMessage) {
       setTimeout(() => {
         navigate('/');
-      }, 3000); // Redirect after 3 seconds (adjust as needed)
+      }, 1000); // Redirect after 1 second
     }
   }, [successMessage, navigate]);
+
   const handleChange = (e) => {
     setEmail(e.target.value);
     setError('');
